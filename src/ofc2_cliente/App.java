@@ -6,6 +6,7 @@
  */
 package ofc2_cliente;
 
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,15 +18,31 @@ import javafx.stage.Stage;
  * @author 2dam
  */
 public class App extends Application {
-    
+
+    private Logger logger = Logger.getLogger(App.class.getName());
+
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
-        
-        Scene scene = new Scene(root);
-        
-        stage.setScene(scene);
-        stage.show();
+        LOGGER.info("Starting SingInWindow");
+        try {
+            //link to get the FXML file
+            URL viewLink = getClass().getResource("/model/views/SignInWindow.fxml");
+            //initialization the loader witk the FXML file
+            FXMLLoader loader = new FXMLLoader(viewLink);
+            //initialization the root (Parent) with the FXML Loader.load
+            Parent root = (Parent) loader.load();
+            //initialization the singInController
+            SignInWindowController mainStageController
+                    = ((SignInWindowController) loader.getController());
+            //set the Stage to the controll
+            mainStageController.setStage(primaryStage);
+            //Start the Stage
+            mainStageController.initStage(root);
+            LOGGER.info("Started SingInWindow");
+
+        } catch (IOException ex) {
+            Logger.getLogger(App.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+        }
     }
 
     /**
@@ -34,5 +51,5 @@ public class App extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
+
 }
