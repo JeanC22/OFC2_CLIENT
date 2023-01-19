@@ -6,11 +6,11 @@
  */
 package ofc2_cliente;
 
+import java.net.URL;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
@@ -19,7 +19,7 @@ import javafx.stage.Stage;
  */
 public class App extends Application {
 
-    private Logger logger = Logger.getLogger(App.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(App.class.getName());
 
     @Override
     public void start(Stage stage) throws Exception {
