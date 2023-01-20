@@ -5,9 +5,11 @@
  */
 package ofc2_cliente.logic;
 
-import javax.ws.rs.ClientErrorException;
+import java.util.logging.Logger;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
+import sun.net.www.content.text.Generic;
 
 /**
  * Jersey REST client generated for REST resource:ComentFacadeREST
@@ -22,9 +24,12 @@ import javax.ws.rs.client.WebTarget;
  *
  * @author 2dam
  */
-public class CommetRESTClient {
+public class CommetRESTClient implements CommentManager {
 
+    private CommetRESTClient commentRestClient;
     private WebTarget webTarget;
+    private static final Logger LOGGER = Logger.getLogger(CommetRESTClient.class.getName());
+
     private Client client;
     private static final String BASE_URI = "http://localhost:8080/ofc_clon/webresources";
 
@@ -33,103 +38,125 @@ public class CommetRESTClient {
         webTarget = client.target(BASE_URI).path("comments");
     }
 
-    public <T> T findOrderByLessRate_XML(Class<T> responseType) throws ClientErrorException {
+    @Override
+    public <T> T findOrderByLessRate_XML(GenericType<T> responseType) throws BusinessLogicException {
         WebTarget resource = webTarget;
         resource = resource.path("findOrderByLessRate");
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    public <T> T findOrderByLessRate_JSON(Class<T> responseType) throws ClientErrorException {
+    @Override
+    public <T> T findOrderByLessRate_JSON(GenericType<T> responseType) throws BusinessLogicException {
         WebTarget resource = webTarget;
         resource = resource.path("findOrderByLessRate");
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 
-    public <T> T findMyComments_XML(Class<T> responseType, String clientID) throws ClientErrorException {
+    @Override
+    public <T> T findMyComments_XML(GenericType<T> responseType, String clientID) throws BusinessLogicException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findMyComments/{0}", new Object[]{clientID}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    public <T> T findMyComments_JSON(Class<T> responseType, String clientID) throws ClientErrorException {
+    @Override
+    public <T> T findMyComments_JSON(GenericType<T> responseType, String clientID) throws BusinessLogicException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findMyComments/{0}", new Object[]{clientID}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 
-    public void editComent_XML(Object requestEntity) throws ClientErrorException {
+    @Override
+
+    public void editComent_XML(Object requestEntity) throws BusinessLogicException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
 
-    public void editComent_JSON(Object requestEntity) throws ClientErrorException {
+    @Override
+    public void editComent_JSON(Object requestEntity) throws BusinessLogicException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
     }
 
-    public <T> T findAllComents_XML(Class<T> responseType) throws ClientErrorException {
+    @Override
+    public <T> T findAllComents_XML(GenericType<T> responseType) throws BusinessLogicException {
         WebTarget resource = webTarget;
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    public <T> T findAllComents_JSON(Class<T> responseType) throws ClientErrorException {
+    @Override
+    public <T> T findAllComents_JSON(GenericType<T> responseType) throws BusinessLogicException {
         WebTarget resource = webTarget;
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 
-    public void createComent_XML(Object requestEntity) throws ClientErrorException {
+    @Override
+    public void createComent_XML(Object requestEntity) throws BusinessLogicException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
 
-    public void createComent_JSON(Object requestEntity) throws ClientErrorException {
+    @Override
+    public void createComent_JSON(Object requestEntity) throws BusinessLogicException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
     }
 
-    public <T> T findOrderByLastPublicate_XML(Class<T> responseType) throws ClientErrorException {
+    @Override
+    public <T> T findOrderByLastPublicate_XML(GenericType<T> responseType) throws BusinessLogicException {
         WebTarget resource = webTarget;
         resource = resource.path("findOrderByLastPublicate");
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    public <T> T findOrderByLastPublicate_JSON(Class<T> responseType) throws ClientErrorException {
+    @Override
+    public <T> T findOrderByLastPublicate_JSON(GenericType<T> responseType) throws BusinessLogicException {
         WebTarget resource = webTarget;
         resource = resource.path("findOrderByLastPublicate");
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 
-    public <T> T find_XML(Class<T> responseType, String subject) throws ClientErrorException {
+    @Override
+    public <T> T find_XML(GenericType<T> responseType, String subject) throws BusinessLogicException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findBySubject/{0}", new Object[]{subject}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    public <T> T find_JSON(Class<T> responseType, String subject) throws ClientErrorException {
+    @Override
+
+    public <T> T find_JSON(GenericType<T> responseType, String subject) throws BusinessLogicException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findBySubject/{0}", new Object[]{subject}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 
-    public void deleteComent(String clientID, String evetID) throws ClientErrorException {
+    @Override
+
+    public void deleteComent(String clientID, String evetID) throws BusinessLogicException {
         webTarget.path(java.text.MessageFormat.format("deleteComent/{0}/{1}", new Object[]{clientID, evetID})).request().delete();
     }
 
-    public <T> T findOrderByMoreRate_XML(Class<T> responseType) throws ClientErrorException {
+    @Override
+    public <T> T findOrderByMoreRate_XML(GenericType<T> responseType) throws BusinessLogicException {
         WebTarget resource = webTarget;
         resource = resource.path("findOrderByMoreRate");
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    public <T> T findOrderByMoreRate_JSON(Class<T> responseType) throws ClientErrorException {
+    @Override
+    public <T> T findOrderByMoreRate_JSON(GenericType<T> responseType) throws BusinessLogicException {
         WebTarget resource = webTarget;
         resource = resource.path("findOrderByMoreRate");
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 
-    public <T> T findOrderByMoreRecent_XML(Class<T> responseType) throws ClientErrorException {
+    @Override
+    public <T> T findOrderByMoreRecent_XML(GenericType<T> responseType) throws BusinessLogicException {
         WebTarget resource = webTarget;
         resource = resource.path("findOrderByMoreRecent");
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    public <T> T findOrderByMoreRecent_JSON(Class<T> responseType) throws ClientErrorException {
+    @Override
+    public <T> T findOrderByMoreRecent_JSON(GenericType<T> responseType) throws BusinessLogicException {
         WebTarget resource = webTarget;
         resource = resource.path("findOrderByMoreRecent");
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
@@ -138,5 +165,5 @@ public class CommetRESTClient {
     public void close() {
         client.close();
     }
-    
+
 }

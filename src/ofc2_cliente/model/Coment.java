@@ -5,12 +5,12 @@
  */
 package ofc2_cliente.model;
 
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
@@ -21,7 +21,6 @@ import javax.xml.bind.annotation.XmlTransient;
  *
  * @author Jeanpierr Caraballo
  */
-
 public class Coment implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -30,23 +29,33 @@ public class Coment implements Serializable {
      */
     private ComentId comentid;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date publication_date;
+    private SimpleObjectProperty<Date> publication_date;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date modification_date;
+    private SimpleObjectProperty<Date> modification_date;
 
-    private String message;
+    private SimpleStringProperty message;
 
-    private Integer valoration;
+    private SimpleIntegerProperty valoration;
 
-    private Boolean privacity;
+    private SimpleIntegerProperty privacity;
 
-    private String subject;
+    private SimpleStringProperty subject;
 
     private Client comClie;
 
     private Event event;
+
+    public Coment() {
+        this.publication_date = new SimpleObjectProperty();
+        this.modification_date = new SimpleObjectProperty();
+        this.message = new SimpleStringProperty();
+        this.valoration = new SimpleIntegerProperty();
+        this.privacity = new SimpleIntegerProperty();
+        this.subject = new SimpleStringProperty();
+        this.comClie = new Client();
+        this.event = new Event();
+
+    }
 
     public ComentId getComentid() {
         return comentid;
@@ -57,51 +66,51 @@ public class Coment implements Serializable {
     }
 
     public Date getPublication_date() {
-        return publication_date;
+        return publication_date.get();
     }
 
     public void setPublication_date(Date publication_date) {
-        this.publication_date = publication_date;
+        this.publication_date.set(publication_date);
     }
 
     public Date getModification_date() {
-        return modification_date;
+        return modification_date.get();
     }
 
     public void setModification_date(Date modification_date) {
-        this.modification_date = modification_date;
+        this.modification_date.set(modification_date);
     }
 
     public String getMessage() {
-        return message;
+        return message.get();
     }
 
     public void setMessage(String message) {
-        this.message = message;
+        this.message.set(message);
     }
 
-    public Integer getValoration() {
+    public SimpleIntegerProperty getValoration() {
         return valoration;
     }
 
     public void setValoration(Integer valoration) {
-        this.valoration = valoration;
+        this.valoration.set(valoration);
     }
 
-    public Boolean getPrivacity() {
-        return privacity;
+    public int getPrivacity() {
+        return privacity.get();
     }
 
-    public void setPrivacity(Boolean privacity) {
-        this.privacity = privacity;
+    public void setPrivacity(Integer privacity) {
+        this.privacity.set(privacity);
     }
 
     public String getSubject() {
-        return subject;
+        return subject.get();
     }
 
     public void setSubject(String subject) {
-        this.subject = subject;
+        this.subject.set(subject);
     }
 
     @XmlTransient
@@ -126,7 +135,7 @@ public class Coment implements Serializable {
     public String toString() {
         return "Coment{" + "comentid=" + comentid + ", publication_date=" + publication_date + ", modification_date=" + modification_date + ", message=" + message + ", valoration=" + valoration + ", privacity=" + privacity + ", subject=" + subject + ", comClie=" + comClie + ", event=" + event + '}';
     }
-
+    
     @Override
     public int hashCode() {
         int hash = 3;
