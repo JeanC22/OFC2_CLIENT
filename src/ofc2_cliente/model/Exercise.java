@@ -7,47 +7,24 @@ package ofc2_cliente.model;
 
 import java.io.Serializable;
 import java.util.Set;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author Aritz
  */
-@Entity
-@Table(name = "EXERCISES", schema = "OFC_DB")
-@NamedQueries({
-    @NamedQuery(name="consultExerciseByName", query="SELECT e FROM Exercise e WHERE e.exercise= :exercise"),
-    
-    @NamedQuery(name="consultAllExercises", query="SELECT e FROM Exercise e"),
-    
-    @NamedQuery(name= "consultExerciseById", query="SELECT e FROM Exercise e WHERE e.id= :id"),
-})
-@XmlRootElement
 public class Exercise implements Serializable {
 
    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+   
     private Long id;
     
     private Float time;
     
-    @ManyToMany(mappedBy= "exercises", fetch= FetchType.EAGER)
+  
     private Set<Routine> routines;
     
-    @Enumerated(EnumType.STRING)
+   
     private Exercises exercise;
 
      public Long getId() {
