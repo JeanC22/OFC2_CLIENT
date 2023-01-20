@@ -1,0 +1,153 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package ofc2_cliente.controller;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+import ofc2_cliente.logic.BusinessLogicException;
+import ofc2_cliente.logic.SponsorManager;
+import ofc2_cliente.model.Sponsor;
+
+/**
+ * FXML Controller class
+ *
+ * @author 2dam
+ */
+public class SponsorWindowController{
+    private SponsorManager sponsor;
+    private ObservableList<Sponsor> sponsorList;
+    private Stage stage;
+    @FXML
+    private Pane sponsorPane;
+    @FXML
+    private TableView tbvSponsor;
+    @FXML
+    private TableColumn clName;
+    @FXML
+    private TableColumn clEmail;
+    @FXML
+    private TableColumn clState;
+    @FXML
+    private TableColumn clDate;
+    @FXML
+    private TableColumn clPhone;
+    @FXML
+    private TableColumn clEvents;
+    @FXML
+    private TextField txtfFind;
+    @FXML
+    private Button createBtn;
+    @FXML
+    private Text txtSponsor;
+    @FXML
+    private Button modifyBtn;
+    @FXML
+    private Button deleteBtn;
+    @FXML
+    private Button findBtn;
+    @FXML
+    private ComboBox cbxFilter;
+    @FXML
+    private Button reportBtn;
+    @FXML
+    private TableColumn clAdType;
+    @FXML
+    private ContextMenu contextMenu;
+    @FXML
+    private MenuItem mItModify;
+    @FXML
+    private MenuItem mItDelete;
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    /**
+     * This method will start the window
+     *
+     * @author Jp
+     * @param root
+     * @throws ofc2_cliente.logic.BusinessLogicException
+     */
+    public void initStage(Parent root) {
+        //Create a scene associated to the node graph root.
+        Scene scene = new Scene(root);
+
+        //Associate scene to primaryStage(Window)
+        stage.setScene(scene);
+        //title of the window: OFC SIGN IN.
+        stage.setTitle("OFC Sponsor");
+        stage.setResizable(false);
+        stage.setOnShowing(this::windowShowing);
+        createBtn.setOnAction(this::formSponsorWindow);
+        
+        clName.setCellFactory(new PropertyValueFactory<>("name"));
+        clEmail.setCellFactory(new PropertyValueFactory<>("email"));
+        clState.setCellFactory(new PropertyValueFactory<>("status"));
+        clDate.setCellFactory(new PropertyValueFactory<>("date"));
+        clPhone.setCellFactory(new PropertyValueFactory<>("phone"));
+        clAdType.setCellFactory(new PropertyValueFactory<>("ad"));
+        clEvents.setCellFactory(new PropertyValueFactory<>("events"));
+        //sponsorList = FXCollections.observableArrayList(sponsor.findAllSponsors_XML(new GenericType<List<Sponsor>>() {}));
+        tbvSponsor.setItems(sponsorList);
+        //Show window
+        stage.show();
+
+    }
+    
+    private void windowShowing(WindowEvent event) {
+        createBtn.setDisable(false);
+        modifyBtn.setDisable(true);
+        deleteBtn.setDisable(true);
+    }
+    
+    @FXML
+    private void formSponsorWindow(ActionEvent event) {
+        try {
+             Stage mainStage = new Stage();
+            URL viewLink = getClass().getResource(
+                    "/ofc2_cliente/ui/FormSponsorWindow.fxml");
+            // initialition loader
+            FXMLLoader loader = new FXMLLoader(viewLink);
+            //make the root with the loader
+            Parent root = (Parent) loader.load();
+            //Get the controller
+            FormSponsorWindowController mainStageController
+                    = ((FormSponsorWindowController) loader.getController());
+            //set the stage
+            mainStageController.setStage(mainStage);
+            //start the stage
+            mainStageController.initStage(root);
+
+            this.stage.close();
+            
+        } catch (IOException ex) {
+            Logger.getLogger(SponsorWindowController.class.getName())
+                    .log(Level.SEVERE, ex.getMessage(), ex);
+        }
+    }
+}
+

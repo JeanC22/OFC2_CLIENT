@@ -7,158 +7,139 @@ package ofc2_cliente.model;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Objects;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ObservableList;
+
 
 /**
  * Entity for Sponsor
  * @author Elias
  */
-@XmlRootElement
 public class Sponsor implements Serializable {
 
-  private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private final SimpleLongProperty id;
+    private final SimpleStringProperty name;
+    private final SimpleIntegerProperty phone;
+    private final SimpleStringProperty email;
+    private final SimpleStringProperty date;
+    private final SimpleBooleanProperty status;
+    private final SimpleListProperty<Event> events;
+    private final SimpleObjectProperty<Admin> admin;
+    private final SimpleObjectProperty<AdType> ad;
 
-    private String name;
-
-    private Integer phone;
-
-    private String email;
-
-    @Temporal(TemporalType.DATE)
-    private Date date;
-
-    private Boolean status;
-    
-    @ManyToMany(fetch = FetchType.EAGER)
-    private List<Event> events;
-    
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Admin admin;
-
-    @Enumerated(EnumType.STRING)
-    private AdType ad;
-    
-    
-
-    public Sponsor() {
-        super();
+    public Sponsor(Long id, String name, Integer phone, String email, String date, 
+            Boolean status, List<Event> events, Admin admin, AdType ad) {
+        this.id = new SimpleLongProperty(id);
+        this.name = new SimpleStringProperty(name);
+        this.phone = new SimpleIntegerProperty(phone);
+        this.email = new SimpleStringProperty(email);
+        this.date = new SimpleStringProperty(date);
+        this.status = new SimpleBooleanProperty(status);
+        this.events = new SimpleListProperty<>((ObservableList<Event>) events);
+        this.admin = new SimpleObjectProperty(admin);
+        this.ad = new  SimpleObjectProperty(ad);
     }
 
-    public Long getId() {
+    public SimpleLongProperty getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
+    public SimpleStringProperty getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getPhone() {
+    public SimpleIntegerProperty getPhone() {
         return phone;
     }
 
-    public void setPhone(Integer phone) {
-        this.phone = phone;
-    }
-
-    public String getEmail() {
+    public SimpleStringProperty getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Date getDate() {
+    public SimpleStringProperty getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public Boolean getStatus() {
+    public SimpleBooleanProperty getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
-        this.status = status;
-    }
-
-    public List<Event> getEvents() {
+    public SimpleListProperty<Event> getEvents() {
         return events;
     }
 
-    public void setEvents(List<Event> events) {
-        this.events = events;
-    }
-
-    public Admin getAdmin() {
+    public SimpleObjectProperty<Admin> getAdmin() {
         return admin;
     }
 
-    public void setAdmin(Admin admin) {
-        this.admin = admin;
-    }
-
-    public AdType getAd() {
+    public SimpleObjectProperty<AdType> getAd() {
         return ad;
     }
 
-    public void setAd(AdType ad) {
-        this.ad = ad;
-    }
-
-    
-
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        int hash = 7;
+        hash = 79 * hash + Objects.hashCode(this.id);
+        hash = 79 * hash + Objects.hashCode(this.name);
+        hash = 79 * hash + Objects.hashCode(this.phone);
+        hash = 79 * hash + Objects.hashCode(this.email);
+        hash = 79 * hash + Objects.hashCode(this.date);
+        hash = 79 * hash + Objects.hashCode(this.status);
+        hash = 79 * hash + Objects.hashCode(this.events);
+        hash = 79 * hash + Objects.hashCode(this.admin);
+        hash = 79 * hash + Objects.hashCode(this.ad);
         return hash;
     }
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Sponsor)) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
             return false;
         }
-        Sponsor other = (Sponsor) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Sponsor other = (Sponsor) obj;
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        if (!Objects.equals(this.phone, other.phone)) {
+            return false;
+        }
+        if (!Objects.equals(this.email, other.email)) {
+            return false;
+        }
+        if (!Objects.equals(this.date, other.date)) {
+            return false;
+        }
+        if (!Objects.equals(this.status, other.status)) {
+            return false;
+        }
+        if (!Objects.equals(this.events, other.events)) {
+            return false;
+        }
+        if (!Objects.equals(this.admin, other.admin)) {
+            return false;
+        }
+        if (!Objects.equals(this.ad, other.ad)) {
             return false;
         }
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "entities.User1[ id=" + id + " ]";
-    }
+    
     
     
 }
