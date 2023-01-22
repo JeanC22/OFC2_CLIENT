@@ -27,14 +27,13 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import ofc2_cliente.logic.BusinessLogicException;
 import ofc2_cliente.logic.SponsorManager;
 import ofc2_cliente.model.Sponsor;
 
 /**
  * FXML Controller class
  *
- * @author 2dam
+ * @author Elias
  */
 public class SponsorWindowController{
     private SponsorManager sponsor;
@@ -88,9 +87,8 @@ public class SponsorWindowController{
     /**
      * This method will start the window
      *
-     * @author Jp
+     * @author Elias
      * @param root
-     * @throws ofc2_cliente.logic.BusinessLogicException
      */
     public void initStage(Parent root) {
         //Create a scene associated to the node graph root.
