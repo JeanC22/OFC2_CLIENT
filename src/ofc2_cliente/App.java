@@ -28,7 +28,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        LOGGER.info("Starting SingInWindow");
+        LOGGER.info("Starting RoutineWindow");
         try {
             //link to get the FXML file
             URL viewLink = getClass().getResource("/ofc2_cliente/ui/RoutineWindow.fxml");
@@ -43,7 +43,7 @@ public class App extends Application {
             mainStageController.setStage(primaryStage);
             //Start the Stage
             mainStageController.initStage(root);
-            LOGGER.info("Started SingInWindow");
+            LOGGER.info("Started RoutineWindow");
 
         } catch (IOException ex) {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Cifrado;
+package ofc2_cliente.cifrado;
 
 import java.security.KeyFactory;
 import java.security.PublicKey;

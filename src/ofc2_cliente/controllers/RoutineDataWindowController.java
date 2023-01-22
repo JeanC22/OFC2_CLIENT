@@ -23,6 +23,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -34,7 +35,7 @@ import javafx.stage.WindowEvent;
  *
  * @author 2dam
  */
-public class RoutineController implements Initializable {
+public class RoutineDataWindowController implements Initializable {
     
     private Stage stage;
     @FXML
@@ -44,25 +45,24 @@ public class RoutineController implements Initializable {
     private TextField nameTxTF;
             
     @FXML
-    private ComboBox filterCB;
+    private ComboBox exerciseCB;
             
     @FXML
-    private Button timeTxTF;
-            
-            
-    @FXML
-    private Button createBtn;
+    private Button exerciseBtn;
             
     @FXML
-    private Button deleteBtn;
-            
+    private DatePicker endDateDT;
             
     @FXML
-    private TableView exerciseTable;
+    private Button createOrupdateBtn;
+            
+    @FXML
+    private Button returnBtn;
+                            
             
             
             
-    private static final Logger LOGGER = Logger.getLogger("of2_cliente.controllers.ExerciseCpontroller");
+    private static final Logger LOGGER = Logger.getLogger("of2_cliente.controllers.RoutineDataWindowController");
     
     @FXML
     private void handleButtonAction(ActionEvent event) {
@@ -80,7 +80,7 @@ public class RoutineController implements Initializable {
     }
      
     public void initStage(Parent root) {
-        LOGGER.info("starting initStage(SignIN)");
+        LOGGER.info("starting initStage(RoutineDataWindow)");
         //Create a scene associated to the node graph root.
         Scene scene = new Scene(root);
 
@@ -89,7 +89,7 @@ public class RoutineController implements Initializable {
         //title of the window: OFC SIGN IN.
         stage.setTitle("OFC SING IN");
         stage.setResizable(false);
-        stage.setOnShowing(this::windowShowing);
+       // stage.setOnShowing(this::windowShowing);
         //findBtn.setOnAction(this::signIn);
         //createBtn.setOnAction(this::signUpWindow);
         //updateBtn.setOnAction(this::routineDataWindow);
@@ -100,35 +100,35 @@ public class RoutineController implements Initializable {
 
     }
     
-     @FXML
+    /* @FXML
     private void routineDataWindow(ActionEvent event) {
         LOGGER.info("Method signUpWindow is starting");
 
         try {
             Stage mainStage = new Stage();
             URL viewLink = getClass().getResource(
-                    "/ofc2_cliente/ui/RoutineDataWindow.fxml");
+                    "/model/views/SignUpWindow.fxml");
             // initialition loader
             FXMLLoader loader = new FXMLLoader(viewLink);
             //make the root with the loader
             Parent root = (Parent) loader.load();
             //Get the controller
-            RoutineDataWindowController mainStageController
-                    = ((RoutineDataWindowController) loader.getController());
+            RoutineDataWindow mainStageController
+                    = ((RoutineDataWindow) loader.getController());
             //set the stage
             mainStageController.setStage(mainStage);
             //start the stage
             mainStageController.initStage(root);
 
             this.stage.close();
-            LOGGER.info("Method routineDataWindow is finished");
+            LOGGER.info("Method signUpWindow is finished");
 
         } catch (IOException ex) {
             Logger.getLogger(SignInWindowController.class.getName())
                     .log(Level.SEVERE, ex.getMessage(), ex);
         }
 
-    }
+    }*/
     
     
    
@@ -156,9 +156,9 @@ public class RoutineController implements Initializable {
         LOGGER.info("Method windowShowing is starting ");
 
         //The field (userNameTxTF) has the focus
-        nameTxTF.requestFocus();
+        //nameTxTF.requestFocus();
         //The field (userNameTxTF) will be shown with a ToolTip the message “max 15 characters”. 
-        filterCB.setTooltip(new Tooltip("Filter by name or exercise"));
+        //nameTxTF.setTooltip(new Tooltip("max 15 characters"));
         //The field (usernameTT) will be shown with a ToolTip the message “max 15 characters”. 
         //Tooltip.install(usernameTT, new Tooltip("max 15 characters"));
         //The field (passwdTxPF) will be shown with a ToolTip the message “min 6 max 12 characters”

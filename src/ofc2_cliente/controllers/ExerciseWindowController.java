@@ -34,7 +34,7 @@ import javafx.stage.WindowEvent;
  *
  * @author 2dam
  */
-public class RoutineController implements Initializable {
+public class ExerciseWindowController implements Initializable {
     
     private Stage stage;
     @FXML
@@ -47,8 +47,10 @@ public class RoutineController implements Initializable {
     private ComboBox filterCB;
             
     @FXML
-    private Button timeTxTF;
+    private Button findBtn;
             
+    @FXML
+    private Button reportBtn;
             
     @FXML
     private Button createBtn;
@@ -56,13 +58,15 @@ public class RoutineController implements Initializable {
     @FXML
     private Button deleteBtn;
             
+    @FXML
+    private Button updateBtn;
             
     @FXML
-    private TableView exerciseTable;
+    private TableView routineTable;
             
             
             
-    private static final Logger LOGGER = Logger.getLogger("of2_cliente.controllers.ExerciseCpontroller");
+    private static final Logger LOGGER = Logger.getLogger("of2_cliente.controllers.RoutineController");
     
     @FXML
     private void handleButtonAction(ActionEvent event) {
@@ -92,7 +96,7 @@ public class RoutineController implements Initializable {
         stage.setOnShowing(this::windowShowing);
         //findBtn.setOnAction(this::signIn);
         //createBtn.setOnAction(this::signUpWindow);
-        //updateBtn.setOnAction(this::routineDataWindow);
+        updateBtn.setOnAction(this::routineDataWindow);
         stage.setOnCloseRequest(this::cerrarVentana);
         //Show window
         stage.show();
