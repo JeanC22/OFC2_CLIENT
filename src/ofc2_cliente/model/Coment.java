@@ -11,6 +11,8 @@ import java.util.Objects;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
@@ -21,6 +23,7 @@ import javax.xml.bind.annotation.XmlTransient;
  *
  * @author Jeanpierr Caraballo
  */
+@XmlRootElement(name = "coments")
 public class Coment implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -54,9 +57,21 @@ public class Coment implements Serializable {
         this.subject = new SimpleStringProperty();
         this.comClie = new Client();
         this.event = new Event();
+    }
+
+    public Coment(Client userId, Event eventID, Date publication_date,
+            Date modification_date, String message,
+            Integer valoration, Integer privacity, String subject) {
+        this.publication_date = new SimpleObjectProperty(publication_date);
+        this.modification_date = new SimpleObjectProperty(modification_date);
+        this.message = new SimpleStringProperty(message);
+        this.valoration = new SimpleIntegerProperty(valoration);
+        this.privacity = new SimpleIntegerProperty(privacity);
+        this.subject = new SimpleStringProperty(subject);
 
     }
 
+    @XmlElement(name = "comentid")
     public ComentId getComentid() {
         return comentid;
     }
@@ -65,6 +80,7 @@ public class Coment implements Serializable {
         this.comentid = comentid;
     }
 
+    @XmlElement(name = "publication_date")
     public Date getPublication_date() {
         return publication_date.get();
     }
@@ -72,6 +88,8 @@ public class Coment implements Serializable {
     public void setPublication_date(Date publication_date) {
         this.publication_date.set(publication_date);
     }
+
+    @XmlElement(name = "modification_date")
 
     public Date getModification_date() {
         return modification_date.get();
@@ -81,6 +99,8 @@ public class Coment implements Serializable {
         this.modification_date.set(modification_date);
     }
 
+    @XmlElement(name = "message")
+
     public String getMessage() {
         return message.get();
     }
@@ -88,6 +108,8 @@ public class Coment implements Serializable {
     public void setMessage(String message) {
         this.message.set(message);
     }
+
+    @XmlElement(name = "valoration")
 
     public SimpleIntegerProperty getValoration() {
         return valoration;
@@ -97,6 +119,8 @@ public class Coment implements Serializable {
         this.valoration.set(valoration);
     }
 
+    @XmlElement(name = "privacity")
+
     public int getPrivacity() {
         return privacity.get();
     }
@@ -104,6 +128,8 @@ public class Coment implements Serializable {
     public void setPrivacity(Integer privacity) {
         this.privacity.set(privacity);
     }
+
+    @XmlElement(name = "subject")
 
     public String getSubject() {
         return subject.get();
@@ -113,7 +139,6 @@ public class Coment implements Serializable {
         this.subject.set(subject);
     }
 
-    @XmlTransient
     public Client getComClie() {
         return comClie;
     }
@@ -122,7 +147,6 @@ public class Coment implements Serializable {
         this.comClie = client;
     }
 
-    @XmlTransient
     public Event getEvent() {
         return event;
     }
@@ -135,7 +159,7 @@ public class Coment implements Serializable {
     public String toString() {
         return "Coment{" + "comentid=" + comentid + ", publication_date=" + publication_date + ", modification_date=" + modification_date + ", message=" + message + ", valoration=" + valoration + ", privacity=" + privacity + ", subject=" + subject + ", comClie=" + comClie + ", event=" + event + '}';
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 3;

@@ -5,11 +5,11 @@
  */
 package ofc2_cliente.logic;
 
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
-import sun.net.www.content.text.Generic;
 
 /**
  * Jersey REST client generated for REST resource:ComentFacadeREST
@@ -27,11 +27,13 @@ import sun.net.www.content.text.Generic;
 public class CommetRESTClient implements CommentManager {
 
     private CommetRESTClient commentRestClient;
-    private WebTarget webTarget;
+    private final WebTarget webTarget;
     private static final Logger LOGGER = Logger.getLogger(CommetRESTClient.class.getName());
 
-    private Client client;
-    private static final String BASE_URI = "http://localhost:8080/ofc_clon/webresources";
+    private final Client client;
+    private static final String BASE_URI
+            = ResourceBundle.getBundle("ofc2_cliente.config.RESTful")
+                    .getString("RESTful.baseURI");
 
     public CommetRESTClient() {
         client = javax.ws.rs.client.ClientBuilder.newClient();

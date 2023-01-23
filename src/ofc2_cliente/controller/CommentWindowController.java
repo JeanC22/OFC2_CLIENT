@@ -5,6 +5,7 @@
  */
 package ofc2_cliente.controller;
 
+import java.util.List;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,6 +20,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javax.ws.rs.core.GenericType;
+import ofc2_cliente.logic.BusinessLogicException;
 import ofc2_cliente.logic.CommentFactoryManager;
 import ofc2_cliente.logic.CommetRESTClient;
 import ofc2_cliente.model.Coment;
@@ -31,10 +33,10 @@ import ofc2_cliente.model.Coment;
 public class CommentWindowController {
 
     private static final Logger LOGGER = Logger.getLogger(CommentWindowController.class.getName());
-
+    private List<Coment> commentList;
     private Stage stage;
     @FXML
-    private TableView<?> commentTableView;
+    private TableView commentTableView;
     @FXML
     private TextField findCommentTxTF;
     @FXML
@@ -46,23 +48,23 @@ public class CommentWindowController {
     @FXML
     private Button informeBtn;
     @FXML
-    private TableColumn<?, ?> subjectComment;
+    private TableColumn subjectComment;
     @FXML
-    private TableColumn<?, ?> eventComment;
+    private TableColumn eventComment;
     @FXML
-    private TableColumn<?, ?> clientComment;
+    private TableColumn clientComment;
     @FXML
-    private TableColumn<?, ?> PrivacityComment;
+    private TableColumn PrivacityComment;
     @FXML
-    private TableColumn<?, ?> dateComment;
+    private TableColumn dateComment;
     @FXML
-    private TableColumn<?, ?> messageComment;
+    private TableColumn messageComment;
     private ObservableList<Coment> comments;
-  
+
     CommentFactoryManager commentFactory = new CommentFactoryManager();
     CommetRESTClient commentRest = (CommetRESTClient) commentFactory.createOfcManager();
     @FXML
-    private TableColumn<?, ?> ratingComment;
+    private TableColumn ratingComment;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -73,8 +75,9 @@ public class CommentWindowController {
      *
      * @author Jp
      * @param root
+     * @throws ofc2_cliente.logic.BusinessLogicException
      */
-    public void initStage(Parent root) {
+    public void initStage(Parent root) throws BusinessLogicException {
 
         LOGGER.info("starting initStage(SignIN)");
         //Create a scene associated to the node graph root.
@@ -94,14 +97,17 @@ public class CommentWindowController {
         PrivacityComment.setCellValueFactory(
                 new PropertyValueFactory<>("privacity"));
         dateComment.setCellValueFactory(
-                new PropertyValueFactory<>("perfil"));
+                new PropertyValueFactory<>("publication_date"));
         messageComment.setCellValueFactory(
-                new PropertyValueFactory<>("perfil"));
+                new PropertyValueFactory<>("message"));
         ratingComment.setCellValueFactory(
                 new PropertyValueFactory<>("valoration"));
         //Show window.messageComment.setCellValueFactory(
-        comments = FXCollections.observableArrayList(commentRest.findAllComents_XML(GenericType<List<Coment>>));
+        comments = FXCollections.observableArrayList(commentRest.findAllComents_XML(new GenericType<List<Coment>>() {
+        }));
+        commentTableView.setItems(comments);
         //Show window
+
         stage.show();
         LOGGER.info("finished initStage(CommentWindow)");
     }

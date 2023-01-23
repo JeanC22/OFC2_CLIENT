@@ -8,22 +8,24 @@ package ofc2_cliente.model;
 import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Embeddable;
+import javax.xml.bind.annotation.XmlElement;
 
 /**
  *
  * @author Jeanpierr Caraballo
  */
 @Embeddable
-public class ComentId implements Serializable{
-    
-    private Long event_id;    
+public class ComentId implements Serializable {
+
+    private Long event_id;
     private Long client_id;
-    
-    public ComentId(){
-        
+
+    public ComentId() {
+
     }
-    
-    
+
+    @XmlElement(name = "event_id")
+
     public Long getEvent_id() {
         return event_id;
     }
@@ -31,6 +33,8 @@ public class ComentId implements Serializable{
     public void setEvent_id(Long event_id) {
         this.event_id = event_id;
     }
+
+    @XmlElement(name = "client_id")
 
     public Long getClient_id() {
         return client_id;
@@ -68,5 +72,5 @@ public class ComentId implements Serializable{
         }
         return true;
     }
-    
+
 }
