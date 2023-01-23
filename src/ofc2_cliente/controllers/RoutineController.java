@@ -55,6 +55,9 @@ public class RoutineController implements Initializable {
             
     @FXML
     private Button deleteBtn;
+    
+    @FXML
+    private Button updateBtn;
             
             
     @FXML
@@ -89,10 +92,12 @@ public class RoutineController implements Initializable {
         //title of the window: OFC SIGN IN.
         stage.setTitle("OFC SING IN");
         stage.setResizable(false);
+        deleteBtn.setDisable(true);
+        updateBtn.setDisable(true);
+        createBtn.setOnAction(this::routineDataWindowCreate);
         stage.setOnShowing(this::windowShowing);
         //findBtn.setOnAction(this::signIn);
-        //createBtn.setOnAction(this::signUpWindow);
-        //updateBtn.setOnAction(this::routineDataWindow);
+        updateBtn.setOnAction(this::routineDataWindowUpdate);
         stage.setOnCloseRequest(this::cerrarVentana);
         //Show window
         stage.show();
@@ -101,9 +106,13 @@ public class RoutineController implements Initializable {
     }
     
      @FXML
-    private void routineDataWindow(ActionEvent event) {
+    private void routineDataWindowCreate(ActionEvent event) {
         LOGGER.info("Method signUpWindow is starting");
-
+        
+         if (!exerciseTable.getSelectionModel().isEmpty()) {
+             
+         }
+        
         try {
             Stage mainStage = new Stage();
             URL viewLink = getClass().getResource(
