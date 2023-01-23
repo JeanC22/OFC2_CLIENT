@@ -7,8 +7,10 @@ package ofc2_cliente.controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -27,8 +29,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javax.ws.rs.core.GenericType;
 import ofc2_cliente.logic.BusinessLogicException;
 import ofc2_cliente.logic.SponsorManager;
+import ofc2_cliente.logic.SponsorManagerFactory;
+import ofc2_cliente.logic.SponsorRESTfulClient;
 import ofc2_cliente.model.Sponsor;
 
 /**
@@ -37,7 +42,6 @@ import ofc2_cliente.model.Sponsor;
  * @author 2dam
  */
 public class SponsorWindowController{
-    private SponsorManager sponsor;
     private ObservableList<Sponsor> sponsorList;
     private Stage stage;
     @FXML
@@ -80,6 +84,9 @@ public class SponsorWindowController{
     private MenuItem mItModify;
     @FXML
     private MenuItem mItDelete;
+    
+    SponsorManagerFactory sponsorFactory = new SponsorManagerFactory();
+    SponsorRESTfulClient rest = (SponsorRESTfulClient) sponsorFactory.createSponsorManager();
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -90,31 +97,35 @@ public class SponsorWindowController{
      *
      * @author Jp
      * @param root
-     * @throws ofc2_cliente.logic.BusinessLogicException
      */
     public void initStage(Parent root) {
-        //Create a scene associated to the node graph root.
-        Scene scene = new Scene(root);
+        try {
+            //Create a scene associated to the node graph root.
+            Scene scene = new Scene(root);
 
-        //Associate scene to primaryStage(Window)
-        stage.setScene(scene);
-        //title of the window: OFC SIGN IN.
-        stage.setTitle("OFC Sponsor");
-        stage.setResizable(false);
-        stage.setOnShowing(this::windowShowing);
-        createBtn.setOnAction(this::formSponsorWindow);
+            //Associate scene to primaryStage(Window)
+            stage.setScene(scene);
+            //title of the window: OFC SIGN IN.
+            stage.setTitle("OFC Sponsor");
+            stage.setResizable(false);
+            stage.setOnShowing(this::windowShowing);
+            createBtn.setOnAction(this::formSponsorWindow);
+            clName.setCellValueFactory(new PropertyValueFactory<>("name"));
+            clEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+            clState.setCellValueFactory(new PropertyValueFactory<>("status"));
+            clDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+            clPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
+            clAdType.setCellValueFactory(new PropertyValueFactory<>("ad"));
+            clEvents.setCellValueFactory(new PropertyValueFactory<>("events"));
+            sponsorList = FXCollections.observableArrayList(rest.findAllSponsors_XML(new GenericType<List<Sponsor>>() {}));
+            tbvSponsor.setItems(sponsorList);
+
+            //Show window
+            stage.show();
+        } catch (BusinessLogicException e) {
+            e.getMessage();
+        }
         
-        clName.setCellFactory(new PropertyValueFactory<>("name"));
-        clEmail.setCellFactory(new PropertyValueFactory<>("email"));
-        clState.setCellFactory(new PropertyValueFactory<>("status"));
-        clDate.setCellFactory(new PropertyValueFactory<>("date"));
-        clPhone.setCellFactory(new PropertyValueFactory<>("phone"));
-        clAdType.setCellFactory(new PropertyValueFactory<>("ad"));
-        clEvents.setCellFactory(new PropertyValueFactory<>("events"));
-        //sponsorList = FXCollections.observableArrayList(sponsor.findAllSponsors_XML(new GenericType<List<Sponsor>>() {}));
-        tbvSponsor.setItems(sponsorList);
-        //Show window
-        stage.show();
 
     }
     
@@ -122,6 +133,8 @@ public class SponsorWindowController{
         createBtn.setDisable(false);
         modifyBtn.setDisable(true);
         deleteBtn.setDisable(true);
+        
+        
     }
     
     @FXML

@@ -15,12 +15,15 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 
 /**
  * Entity for Sponsor
  * @author Elias
  */
+@XmlRootElement(name="sponsor")
 public class Sponsor implements Serializable {
 
     private final SimpleLongProperty id;
@@ -32,54 +35,83 @@ public class Sponsor implements Serializable {
     private final SimpleListProperty<Event> events;
     private final SimpleObjectProperty<Admin> admin;
     private final SimpleObjectProperty<AdType> ad;
+    
+     public Sponsor() {
+        this.id = new SimpleLongProperty();
+        this.name = new SimpleStringProperty();
+        this.phone = new SimpleIntegerProperty();
+        this.email = new SimpleStringProperty();
+        this.date = new SimpleStringProperty();
+        this.status = new SimpleBooleanProperty();
+        this.events = new SimpleListProperty<>();
+        this.admin = new SimpleObjectProperty();
+        this.ad = new  SimpleObjectProperty();
+    }
 
-    public Sponsor(Long id, String name, Integer phone, String email, String date, 
-            Boolean status, List<Event> events, Admin admin, AdType ad) {
-        this.id = new SimpleLongProperty(id);
-        this.name = new SimpleStringProperty(name);
-        this.phone = new SimpleIntegerProperty(phone);
-        this.email = new SimpleStringProperty(email);
-        this.date = new SimpleStringProperty(date);
-        this.status = new SimpleBooleanProperty(status);
-        this.events = new SimpleListProperty<>((ObservableList<Event>) events);
-        this.admin = new SimpleObjectProperty(admin);
-        this.ad = new  SimpleObjectProperty(ad);
+    
+    @XmlElement(name="name")
+    public String getName(){
+        return this.name.get();
+    }
+    
+    public void setName(String name){
+        this.name.set(name);
+    }
+    @XmlElement(name="phone")
+    public Integer getPhone(){
+        return this.phone.get();
+    }
+    
+    public void setPhone(Integer phone){
+        this.phone.set(phone);
+    }
+    @XmlElement(name="email")
+    public String getEmail(){
+        return this.name.get();
+    }
+    
+    public void setEmail(String email){
+        this.email.set(email);
+    }
+    @XmlElement(name="status")
+    public Boolean getStatus(){
+        return this.status.get();
+    }
+    
+    public void setStatus(Boolean status){
+        this.status.set(status);
+    }
+    @XmlElement(name="date")
+    public String getDate() {
+        return this.date.get();
+    }
+
+    public void setDate(String date) {
+        this.date.set(date);
+    }
+    
+     public List<Event> getEvents() {
+        return this.events.get();
+    }
+    
+    public Admin getAdmin() {
+        return this.admin.get();
+    }
+
+    public void setAdmin(Admin admin) {
+        this.admin.set(admin);
+    }
+    @XmlElement(name="ad")
+    public AdType getAd() {
+        return this.ad.get();
+    }
+
+    public void setAd(AdType ad) {
+        this.ad.set(ad);
     }
 
     public SimpleLongProperty getId() {
         return id;
-    }
-
-    public SimpleStringProperty getName() {
-        return name;
-    }
-
-    public SimpleIntegerProperty getPhone() {
-        return phone;
-    }
-
-    public SimpleStringProperty getEmail() {
-        return email;
-    }
-
-    public SimpleStringProperty getDate() {
-        return date;
-    }
-
-    public SimpleBooleanProperty getStatus() {
-        return status;
-    }
-
-    public SimpleListProperty<Event> getEvents() {
-        return events;
-    }
-
-    public SimpleObjectProperty<Admin> getAdmin() {
-        return admin;
-    }
-
-    public SimpleObjectProperty<AdType> getAd() {
-        return ad;
     }
 
     @Override
