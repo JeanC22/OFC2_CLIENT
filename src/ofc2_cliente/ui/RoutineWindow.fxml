@@ -18,12 +18,12 @@
          <children>
             <TableView id="routineTable" fx:id="routineTable" editable="true" layoutX="112.0" layoutY="200.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" style="-fx-border-radius: 10 10 10; -fx-border-color: black; -fx-border-width: 7px;">
               <columns>
-                <TableColumn editable="false" prefWidth="135.20004272460938" text="Name" />
-                <TableColumn id="exerciseColumn" prefWidth="118.39996337890625" text="Exercises" />
-                  <TableColumn prefWidth="137.59994506835938" text="kcal" />
-                  <TableColumn prefWidth="114.39996337890625" text="time" />
-                  <TableColumn prefWidth="149.60003662109375" text="Start date" />
-                  <TableColumn prefWidth="125.5999755859375" text="End date" />
+                <TableColumn fx:id="nameColumn" editable="false" prefWidth="135.20004272460938" text="Name" />
+                <TableColumn id="exerciseColumn" fx:id="exerciseColumn" prefWidth="118.39996337890625" text="Exercises" />
+                  <TableColumn fx:id="kcalColumn" prefWidth="137.59994506835938" text="kcal" />
+                  <TableColumn fx:id="timeColumn" prefWidth="114.39996337890625" text="time" />
+                  <TableColumn fx:id="start_dateColumn" prefWidth="149.60003662109375" text="Start date" />
+                  <TableColumn fx:id="end_dateColumn" prefWidth="125.5999755859375" text="End date" />
               </columns>
                <contextMenu>
                   <ContextMenu>

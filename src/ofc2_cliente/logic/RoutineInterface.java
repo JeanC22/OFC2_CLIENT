@@ -7,6 +7,7 @@ package ofc2_cliente.logic;
 
 
 import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.core.GenericType;
 
 /**
  *
@@ -31,7 +32,7 @@ public interface RoutineInterface {
 
     public void create_JSON(Object requestEntity) throws BusinessLogicException;
 
-    public <T> T consultAllRoutines_XML(Class<T> responseType) throws BusinessLogicException;
+    public <T> T consultAllRoutines_XML(GenericType<T> responseType) throws BusinessLogicException;
 
     public <T> T consultAllRoutines_JSON(Class<T> responseType) throws BusinessLogicException;
 

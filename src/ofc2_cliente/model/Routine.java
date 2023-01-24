@@ -10,25 +10,28 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author Aritz
  */
-
+@XmlRootElement(name="routine")
 public class Routine implements Serializable {
 
     private static final long serialVersionUID = 1L;
    
     private Long id;
 
+    
     private String name;
 
-    @Temporal(TemporalType.TIMESTAMP)
+   
     private Date start_date;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    
     private Date end_date;
     
     private Double kcal;
@@ -48,6 +51,7 @@ public class Routine implements Serializable {
         this.id = id;
     }
 
+     @XmlElement(name="clie")
     public Client getClie() {
         return clie;
     }
@@ -56,6 +60,7 @@ public class Routine implements Serializable {
         this.clie = clie;
     }
 
+     @XmlElement(name="name")
     public String getName() {
         return name;
     }
@@ -64,6 +69,7 @@ public class Routine implements Serializable {
         this.name = name;
     }
 
+     @XmlElement(name="start_date")
     public Date getStart_date() {
         return start_date;
     }
@@ -72,6 +78,7 @@ public class Routine implements Serializable {
         this.start_date = start_date;
     }
 
+    @XmlElement(name="end_date")
     public Date getEnd_date() {
         return end_date;
     }
@@ -80,6 +87,7 @@ public class Routine implements Serializable {
         this.end_date = end_date;
     }
 
+     @XmlElement(name="kcal")
     public Double getKcal() {
         return kcal;
     }
@@ -88,7 +96,7 @@ public class Routine implements Serializable {
         this.kcal = kcal;
     }
 
-    @XmlTransient
+    @XmlElement(name="exercises")
     public List<Exercise> getEjercicios() {
         return exercises;
     }
@@ -96,7 +104,7 @@ public class Routine implements Serializable {
     public void setEjercicios(List<Exercise> exercises) {
         this.exercises = exercises;
     }
-
+    @XmlElement(name="routineTime")
     public Float getTime() {
         return routineTime;
     }

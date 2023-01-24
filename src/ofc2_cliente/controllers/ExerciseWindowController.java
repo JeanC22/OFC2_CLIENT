@@ -8,6 +8,7 @@ package ofc2_cliente.controllers;
 //import ofc2_cliente.ui.*;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -29,6 +30,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import ofc2_cliente.model.Exercise;
 
 /**
  *
@@ -63,6 +65,8 @@ public class ExerciseWindowController implements Initializable {
             
     @FXML
     private TableView routineTable;
+    
+    private List<Exercise> ex;
             
             
             
@@ -173,6 +177,14 @@ public class ExerciseWindowController implements Initializable {
         //signUpLink.setTooltip(new Tooltip("Click para abrir la ventana de registro"));
         LOGGER.info("Method windowShowing is finished");
 
+    }
+
+    public List<Exercise> getEx() {
+        return ex;
+    }
+
+    public void setEx(List<Exercise> ex) {
+        this.ex = ex;
     }
     
     
