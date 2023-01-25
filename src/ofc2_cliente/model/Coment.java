@@ -6,6 +6,7 @@
 package ofc2_cliente.model;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.Objects;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -13,7 +14,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * Entity representing comments for users. It contains the following fields:
@@ -48,6 +48,8 @@ public class Coment implements Serializable {
 
     private Event event;
 
+    String pattern = "dd/MM/yyyy";
+
     public Coment() {
         this.publication_date = new SimpleObjectProperty();
         this.modification_date = new SimpleObjectProperty();
@@ -81,8 +83,9 @@ public class Coment implements Serializable {
     }
 
     @XmlElement(name = "publication_date")
-    public Date getPublication_date() {
-        return publication_date.get();
+    public Date getPublication_date() throws ParseException {
+        return this.publication_date.get();
+
     }
 
     public void setPublication_date(Date publication_date) {
@@ -111,8 +114,8 @@ public class Coment implements Serializable {
 
     @XmlElement(name = "valoration")
 
-    public SimpleIntegerProperty getValoration() {
-        return valoration;
+    public Integer getValoration() {
+        return this.valoration.get();
     }
 
     public void setValoration(Integer valoration) {

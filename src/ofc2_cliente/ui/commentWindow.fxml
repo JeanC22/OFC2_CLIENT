@@ -12,7 +12,7 @@
 
 <Pane prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofc2_cliente.controller.CommentWindowController">
    <children>
-      <TableView fx:id="commentTableView" layoutX="112.0" layoutY="200.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" style="-fx-border-radius: 10 10 10; -fx-border-color: black; -fx-border-width: 7px; -fx-border-insets: -3;">
+      <TableView fx:id="commentTableView" editable="true" layoutX="112.0" layoutY="200.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" style="-fx-border-radius: 10 10 10; -fx-border-color: black; -fx-border-width: 7px; -fx-border-insets: -3;">
         <columns>
           <TableColumn fx:id="subjectComment" prefWidth="109.60003662109375" text="Subject" />
           <TableColumn fx:id="eventComment" prefWidth="88.79998779296875" text="Event" />
