@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="278e79d5-545f-49f5-942f-c7caac77b1a1">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<textField>
+				<reportElement x="211" y="21" width="183" height="33" uuid="9b8fefbb-d32b-4b20-b2af-43903536cb5e"/>
+				<textElement>
+					<font size="24"/>
+				</textElement>
+				<textFieldExpression><![CDATA[Sponsor Report]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="45" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="50" splitType="Stretch">
+			<textField>
+				<reportElement x="14" y="12" width="68" height="19" uuid="3ad6a77a-d322-4f15-b1e1-75675856a6ee"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[Name]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="119" y="12" width="74" height="19" uuid="4d64146f-6e23-4708-a43c-186fea5f7ebd"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[Email]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="224" y="12" width="74" height="19" uuid="82371da9-aa54-494b-8db6-d26d300be00d"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[Date]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="333" y="12" width="74" height="19" uuid="f6e6c0c2-8f8f-46fc-91bc-53a101aaf292"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[Status]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="444" y="12" width="74" height="19" uuid="c9b5275a-4620-4d2b-b551-2a87d853f9c5"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[Ad Type]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="40" splitType="Stretch">
+			<textField>
+				<reportElement x="14" y="15" width="68" height="19" uuid="54cedd62-7c96-416a-a875-3e660f44e6c7"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="119" y="15" width="68" height="19" uuid="9e432d54-bf6a-49db-87c4-bfd4a6f2d6e1"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="224" y="15" width="68" height="19" uuid="56d76b67-5b22-4e49-a698-fa47dab31b2d"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="333" y="15" width="68" height="19" uuid="2eab1d29-9954-47a0-87b3-2244820be000"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="444" y="15" width="74" height="19" uuid="f3318e05-cdf6-4186-9d26-e3eb2e07f2b1"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ad.name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

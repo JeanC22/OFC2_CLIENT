@@ -7,9 +7,14 @@ package ofc2_cliente.controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,7 +22,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -30,8 +37,14 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javax.ws.rs.core.GenericType;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.view.JasperViewer;
 import ofc2_cliente.logic.BusinessLogicException;
-import ofc2_cliente.logic.SponsorManager;
 import ofc2_cliente.logic.SponsorManagerFactory;
 import ofc2_cliente.logic.SponsorRESTfulClient;
 import ofc2_cliente.model.Sponsor;
@@ -39,7 +52,7 @@ import ofc2_cliente.model.Sponsor;
 /**
  * FXML Controller class
  *
- * @author 2dam
+ * @author Elias
  */
 public class SponsorWindowController{
     private ObservableList<Sponsor> sponsorList;
@@ -99,7 +112,6 @@ public class SponsorWindowController{
      * @param root
      */
     public void initStage(Parent root) {
-        try {
             //Create a scene associated to the node graph root.
             Scene scene = new Scene(root);
 
@@ -110,31 +122,44 @@ public class SponsorWindowController{
             stage.setResizable(false);
             stage.setOnShowing(this::windowShowing);
             createBtn.setOnAction(this::formSponsorWindow);
-            clName.setCellValueFactory(new PropertyValueFactory<>("name"));
-            clEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
-            clState.setCellValueFactory(new PropertyValueFactory<>("status"));
-            clDate.setCellValueFactory(new PropertyValueFactory<>("date"));
-            clPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
-            clAdType.setCellValueFactory(new PropertyValueFactory<>("ad"));
-            clEvents.setCellValueFactory(new PropertyValueFactory<>("events"));
-            sponsorList = FXCollections.observableArrayList(rest.findAllSponsors_XML(new GenericType<List<Sponsor>>() {}));
-            tbvSponsor.setItems(sponsorList);
+            modifyBtn.setOnAction(this::formSponsorWindow);
+            deleteBtn.setOnAction(this::deleteSponsor);
+            reportBtn.setOnAction(this::sponsorReport);
+            tbvSponsor.getSelectionModel().selectedItemProperty()
+                    .addListener(this::enbledButtons);
 
             //Show window
             stage.show();
-        } catch (BusinessLogicException e) {
-            e.getMessage();
-        }
         
 
     }
     
     private void windowShowing(WindowEvent event) {
-        createBtn.setDisable(false);
-        modifyBtn.setDisable(true);
-        deleteBtn.setDisable(true);
+        try {
+            createBtn.setDisable(false);
+            modifyBtn.setDisable(true);
+            deleteBtn.setDisable(true);
+            clName.setCellValueFactory(new PropertyValueFactory<>("name"));
+            clState.setCellValueFactory(new PropertyValueFactory<>("status"));
+            clEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+            clDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+            clPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
+            clAdType.setCellValueFactory(new PropertyValueFactory<>("ad"));
+            clEvents.setCellValueFactory(new PropertyValueFactory<>("events"));
+            sponsorList = FXCollections.observableArrayList(rest
+                    .findAllSponsors_XML(new GenericType<List<Sponsor>>() {}));
+            tbvSponsor.setItems(sponsorList);
+        } catch (BusinessLogicException ex) {
+            Logger.getLogger(SponsorWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
-        
+    }
+    
+    private void enbledButtons(ObservableValue observable, Object oldValue, Object newValue) {
+        if(newValue!=null){
+            modifyBtn.setDisable(false);
+            deleteBtn.setDisable(false);
+        }
     }
     
     @FXML
@@ -160,6 +185,41 @@ public class SponsorWindowController{
         } catch (IOException ex) {
             Logger.getLogger(SponsorWindowController.class.getName())
                     .log(Level.SEVERE, ex.getMessage(), ex);
+        }
+    }
+    
+     @FXML
+    private void deleteSponsor(ActionEvent event) {
+        try {
+            Sponsor sponsor = ((Sponsor) this.tbvSponsor.getSelectionModel().getSelectedItem());
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                    "¿Borrar la fila seleccionada?",
+                    ButtonType.OK, ButtonType.CANCEL);
+            Optional<ButtonType> result = alert.showAndWait();
+
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                rest.remove(sponsor.getId().toString());
+                tbvSponsor.getItems().remove(sponsor);
+                tbvSponsor.refresh();
+            }
+        } catch (BusinessLogicException b) {
+            Logger.getLogger(SponsorWindowController.class.getName()).log(Level.SEVERE, null, b);
+        }
+
+    }
+
+    @FXML
+    private void sponsorReport(ActionEvent event) {
+        try {
+            JasperReport report = JasperCompileManager.compileReport("/ofc2_cliente/report/sponsorReport.jrxml");
+            JRBeanCollectionDataSource dataItems = new JRBeanCollectionDataSource((Collection<Sponsor>)this.tbvSponsor.getItems());
+            Map<String, Object> parameters = new HashMap<>();
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
+            JasperViewer jasperV = new JasperViewer(jasperPrint);
+            jasperV.setVisible(true);
+            
+        } catch (JRException ex) {
+            Logger.getLogger(SponsorWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

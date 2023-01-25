@@ -8,6 +8,7 @@ package ofc2_cliente.logic;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
+import ofc2_cliente.model.Sponsor;
 
 /**
  * Jersey REST client generated for REST resource:SponsorFacadeREST
@@ -81,7 +82,7 @@ public class SponsorRESTfulClient implements SponsorManager{
 
     @Override
     public void remove(String id) throws BusinessLogicException {
-        webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete();
+        webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete(Sponsor.class);
     }
 
     @Override

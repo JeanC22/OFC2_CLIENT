@@ -8,13 +8,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.SimpleLongProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.ObservableList;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -26,93 +19,102 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name="sponsor")
 public class Sponsor implements Serializable {
 
-    private final SimpleLongProperty id;
-    private final SimpleStringProperty name;
-    private final SimpleIntegerProperty phone;
-    private final SimpleStringProperty email;
-    private final SimpleStringProperty date;
-    private final SimpleBooleanProperty status;
-    private final SimpleListProperty<Event> events;
-    private final SimpleObjectProperty<Admin> admin;
-    private final SimpleObjectProperty<AdType> ad;
+    private Long id;
+
+    private String name;
+
+    private Integer phone;
+
+    private String email;
+    private Date date;
+
+    private Boolean status;
+    
+    private List<Event> events;
+    
+    private Admin admin;
+
+    private AdType ad;
     
      public Sponsor() {
-        this.id = new SimpleLongProperty();
-        this.name = new SimpleStringProperty();
-        this.phone = new SimpleIntegerProperty();
-        this.email = new SimpleStringProperty();
-        this.date = new SimpleStringProperty();
-        this.status = new SimpleBooleanProperty();
-        this.events = new SimpleListProperty<>();
-        this.admin = new SimpleObjectProperty();
-        this.ad = new  SimpleObjectProperty();
+        
     }
 
-    
-    @XmlElement(name="name")
-    public String getName(){
-        return this.name.get();
-    }
-    
-    public void setName(String name){
-        this.name.set(name);
-    }
-    @XmlElement(name="phone")
-    public Integer getPhone(){
-        return this.phone.get();
-    }
-    
-    public void setPhone(Integer phone){
-        this.phone.set(phone);
-    }
-    @XmlElement(name="email")
-    public String getEmail(){
-        return this.name.get();
-    }
-    
-    public void setEmail(String email){
-        this.email.set(email);
-    }
-    @XmlElement(name="status")
-    public Boolean getStatus(){
-        return this.status.get();
-    }
-    
-    public void setStatus(Boolean status){
-        this.status.set(status);
-    }
-    @XmlElement(name="date")
-    public String getDate() {
-        return this.date.get();
+    public Long getId() {
+        return id;
     }
 
-    public void setDate(String date) {
-        this.date.set(date);
+    public void setId(Long id) {
+        this.id = id;
     }
-    
-     public List<Event> getEvents() {
-        return this.events.get();
+    @XmlElement(name = "name")
+    public String getName() {
+        return name;
     }
-    
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    @XmlElement(name = "phone")
+    public Integer getPhone() {
+        return phone;
+    }
+
+    public void setPhone(Integer phone) {
+        this.phone = phone;
+    }
+    @XmlElement(name = "email")
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    @XmlElement(name = "date")
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+    @XmlElement(name = "status")
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
+    }
+
     public Admin getAdmin() {
-        return this.admin.get();
+        return admin;
     }
 
     public void setAdmin(Admin admin) {
-        this.admin.set(admin);
+        this.admin = admin;
     }
-    @XmlElement(name="ad")
+    @XmlElement(name = "ad")
     public AdType getAd() {
-        return this.ad.get();
+        return ad;
     }
 
     public void setAd(AdType ad) {
-        this.ad.set(ad);
+        this.ad = ad;
     }
+     
+     
+    
 
-    public SimpleLongProperty getId() {
-        return id;
-    }
 
     @Override
     public int hashCode() {

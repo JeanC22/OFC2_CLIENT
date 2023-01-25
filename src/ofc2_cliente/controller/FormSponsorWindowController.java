@@ -7,6 +7,8 @@ package ofc2_cliente.controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.ObservableList;
@@ -27,6 +29,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import ofc2_cliente.model.AdType;
 import ofc2_cliente.model.Sponsor;
 
 /**
@@ -39,6 +42,7 @@ public class FormSponsorWindowController{
             + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     private Stage stage;
     private Sponsor sponsor;
+    
     private ObservableList<Sponsor> sponsorList;
     @FXML
     private Pane sponsorForm;
@@ -110,9 +114,6 @@ public class FormSponsorWindowController{
         txtFPhone.setOnKeyReleased(this::enableConfirmBtn);
         txtFEmail.setOnKeyReleased(this::enableConfirmBtn);
         dpDate.setOnKeyReleased(this::enableConfirmBtn);
-        
-        
-    
     }
     
     @FXML
@@ -142,10 +143,12 @@ public class FormSponsorWindowController{
     }
     
     private void enableConfirmBtn(KeyEvent event) {
+        
         try {
             if(!this.txtFName.getText().isEmpty() 
                     && !this.txtFPhone.getText().isEmpty()
-                    && !this.txtFEmail.getText().isEmpty()){
+                    && !this.txtFEmail.getText().isEmpty()
+                    && !dpDate.toString().isEmpty()){
                 confirmBtn.setDisable(false);
             }else{
                 confirmBtn.setDisable(true);
@@ -217,4 +220,5 @@ public class FormSponsorWindowController{
         }
         return true;
     }
+    
 }
