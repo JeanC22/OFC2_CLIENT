@@ -62,7 +62,7 @@ public class RoutineController implements Initializable {
     private TextField nameTxTF;
             
     @FXML
-    private ComboBox filterCB;
+    private ComboBox filterCH;
             
             
             
@@ -264,6 +264,8 @@ public class RoutineController implements Initializable {
      
        private void windowShowing(WindowEvent event) {
         LOGGER.info("Method windowShowing is starting ");
+       
+       // filterCH.getItems().add("Routine name", "Exercise name");
 
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         exerciseColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -277,7 +279,7 @@ public class RoutineController implements Initializable {
         //The field (userNameTxTF) has the focus
         nameTxTF.requestFocus();
         //The field (userNameTxTF) will be shown with a ToolTip the message “max 15 characters”. 
-        filterCB.setTooltip(new Tooltip("Filter by name or exercise"));
+        //filterCH.setTooltip(new Tooltip("Filter by name or exercise"));
         //The field (usernameTT) will be shown with a ToolTip the message “max 15 characters”. 
         //Tooltip.install(usernameTT, new Tooltip("max 15 characters"));
         //The field (passwdTxPF) will be shown with a ToolTip the message “min 6 max 12 characters”
