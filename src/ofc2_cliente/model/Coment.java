@@ -7,6 +7,7 @@ package ofc2_cliente.model;
 
 import java.io.Serializable;
 import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -38,9 +39,9 @@ public class Coment implements Serializable {
 
     private SimpleStringProperty message;
 
-    private SimpleIntegerProperty valoration;
+    private SimpleStringProperty valoration;
 
-    private SimpleIntegerProperty privacity;
+    private SimpleStringProperty privacity;
 
     private SimpleStringProperty subject;
 
@@ -54,8 +55,8 @@ public class Coment implements Serializable {
         this.publication_date = new SimpleObjectProperty();
         this.modification_date = new SimpleObjectProperty();
         this.message = new SimpleStringProperty();
-        this.valoration = new SimpleIntegerProperty();
-        this.privacity = new SimpleIntegerProperty();
+        this.valoration = new SimpleStringProperty();
+        this.privacity = new SimpleStringProperty();
         this.subject = new SimpleStringProperty();
         this.comClie = new Client();
         this.event = new Event();
@@ -63,14 +64,24 @@ public class Coment implements Serializable {
 
     public Coment(Client userId, Event eventID, Date publication_date,
             Date modification_date, String message,
-            Integer valoration, Integer privacity, String subject) {
+            String valoration, String privacity, String subject) {
         this.publication_date = new SimpleObjectProperty(publication_date);
         this.modification_date = new SimpleObjectProperty(modification_date);
         this.message = new SimpleStringProperty(message);
-        this.valoration = new SimpleIntegerProperty(valoration);
-        this.privacity = new SimpleIntegerProperty(privacity);
+        this.valoration = new SimpleStringProperty(valoration);
+        this.privacity = new SimpleStringProperty(privacity);
         this.subject = new SimpleStringProperty(subject);
 
+    }
+
+    public Coment(Date date,
+            String message,
+            String valoration, String privacity, String subject) {
+        this.publication_date = new SimpleObjectProperty(date);
+        this.message = new SimpleStringProperty(message);
+        this.valoration = new SimpleStringProperty(valoration);
+        this.privacity = new SimpleStringProperty(privacity);
+        this.subject = new SimpleStringProperty(subject);
     }
 
     @XmlElement(name = "comentid")
@@ -114,21 +125,21 @@ public class Coment implements Serializable {
 
     @XmlElement(name = "valoration")
 
-    public Integer getValoration() {
+    public String getValoration() {
         return this.valoration.get();
     }
 
-    public void setValoration(Integer valoration) {
+    public void setValoration(String valoration) {
         this.valoration.set(valoration);
     }
 
     @XmlElement(name = "privacity")
 
-    public int getPrivacity() {
+    public String getPrivacity() {
         return privacity.get();
     }
 
-    public void setPrivacity(Integer privacity) {
+    public void setPrivacity(String privacity) {
         this.privacity.set(privacity);
     }
 
