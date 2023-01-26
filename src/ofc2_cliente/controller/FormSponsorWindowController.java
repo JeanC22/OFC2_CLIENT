@@ -7,7 +7,11 @@ package ofc2_cliente.controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import static java.time.temporal.TemporalQueries.localDate;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,6 +34,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import ofc2_cliente.model.AdType;
+import ofc2_cliente.model.Admin;
 import ofc2_cliente.model.Sponsor;
 
 /**
@@ -42,8 +47,9 @@ public class FormSponsorWindowController{
             + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     private Stage stage;
     private Sponsor sponsor;
-    
+    private AdType ad;
     private ObservableList<Sponsor> sponsorList;
+    private Admin admin;
     @FXML
     private Pane sponsorForm;
     @FXML
@@ -114,6 +120,8 @@ public class FormSponsorWindowController{
         txtFPhone.setOnKeyReleased(this::enableConfirmBtn);
         txtFEmail.setOnKeyReleased(this::enableConfirmBtn);
         dpDate.setOnKeyReleased(this::enableConfirmBtn);
+        cmbAdType.getItems().addAll(ad.VIDEO.toString(), 
+                ad.PANCARTA.toString(), ad.POSTER.toString());
     }
     
     @FXML
@@ -160,56 +168,60 @@ public class FormSponsorWindowController{
     @FXML
     private void btnCreateSponsor(ActionEvent event) {
         try {
-            
-            if(this.txtFName.getText().length() > 30){
+
+            if (this.txtFName.getText().length() > 30) {
                 throw new Exception("La longitud maxima "
                         + "del campo Name es de 30 caracteres");
             }
-            if(!isNumeric(this.txtFPhone.getText().trim())){
+            if (!isNumeric(this.txtFPhone.getText().trim())) {
                 throw new Exception("El campo Phone no es numerico");
             }
-            
-            if(this.txtFPhone.getText().length() > 9
-                    || this.txtFPhone.getText().length()< 9){
+
+            if (this.txtFPhone.getText().length() > 9
+                    || this.txtFPhone.getText().length() < 9) {
                 throw new Exception("La longitud maxima "
                         + "del campo Phone es de 9 caracteres o minimo de 9 caracteres");
             }
-            
-            if(!this.txtFEmail.getText().matches(regexEmail)){
+
+            if (!this.txtFEmail.getText().matches(regexEmail)) {
                 throw new Exception("El campo Email no tiene el formato adecuado");
             }
+            Sponsor sponsorD = new Sponsor(txtFName.getText(), Integer.parseInt(txtFPhone.getText()), txtFEmail.getText(), chbxState.isSelected(), (AdType) cmbAdType.getSelectionModel().getSelectedItem());
             
-            
-            try {
-                Stage mainStage = new Stage();
-                URL viewLink = getClass().getResource(
-                        "/ofc2_cliente/ui/SponsorWindow.fxml");
-                // initialition loader
-                FXMLLoader loader = new FXMLLoader(viewLink);
-                //make the root with the loader
-                Parent root = (Parent) loader.load();
-                //Get the controller
-                SponsorWindowController mainStageController
-                        = ((SponsorWindowController) loader.getController());
-                //set the stage
-                mainStageController.setStage(mainStage);
-                //start the stage
-                mainStageController.initStage(root);
-                this.stage.close();
-                event.consume();
+            if (!sponsorList.contains(sponsorD)) {
+                this.sponsor = sponsorD;
+                
+                try {
+                    Stage mainStage = new Stage();
+                    URL viewLink = getClass().getResource(
+                            "/ofc2_cliente/ui/SponsorWindow.fxml");
+                    // initialition loader
+                    FXMLLoader loader = new FXMLLoader(viewLink);
+                    //make the root with the loader
+                    Parent root = (Parent) loader.load();
+                    //Get the controller
+                    SponsorWindowController mainStageController
+                            = ((SponsorWindowController) loader.getController());
+                    //set the stage
+                    mainStageController.setStage(mainStage);
+                    //start the stage
+                    mainStageController.initStage(root);
+                    this.stage.close();
+                    
 
-            } catch (IOException ex) {
-                Logger.getLogger(FormSponsorWindowController.class.getName())
-                        .log(Level.SEVERE, ex.getMessage(), ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(FormSponsorWindowController.class.getName())
+                            .log(Level.SEVERE, ex.getMessage(), ex);
+                }
             }
-            
+
         } catch (Exception e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK)
                     .showAndWait();
-            
+
         }
     }
-    
+
     public Boolean isNumeric(String valor){
         try {
             if(valor !=null){
@@ -220,5 +232,25 @@ public class FormSponsorWindowController{
         }
         return true;
     }
+
+    public Sponsor getSponsor() {
+        return sponsor;
+    }
+    
+    public void sponsorList(ObservableList<Sponsor> sponsorList){
+        this.sponsorList = sponsorList;
+    }
+    
+    public void sponsors(ObservableList<Sponsor> sponsorList, Sponsor sp){
+        this.sponsorList = sponsorList;
+        this.sponsor = sp;
+        txtFName.setText(sp.getName());
+        txtFEmail.setText(sp.getEmail());
+        txtFPhone.setText(String.valueOf(sp.getPhone()));
+        dpDate.setValue(sp.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        cmbAdType.getSelectionModel().select(sp.getAd());
+        chbxState.setSelected(sp.getStatus());
+    }
+    
     
 }

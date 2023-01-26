@@ -60,7 +60,7 @@ public class SponsorRESTfulClient implements SponsorManager{
 
     @Override
     public void create_XML(Object requestEntity) throws BusinessLogicException {
-        webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
+        webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML), Sponsor.class);
     }
 
     @Override

@@ -122,7 +122,7 @@ public class SponsorWindowController{
             stage.setResizable(false);
             stage.setOnShowing(this::windowShowing);
             createBtn.setOnAction(this::formSponsorWindow);
-            modifyBtn.setOnAction(this::formSponsorWindow);
+            modifyBtn.setOnAction(this::modifySponsor);
             deleteBtn.setOnAction(this::deleteSponsor);
             reportBtn.setOnAction(this::sponsorReport);
             tbvSponsor.getSelectionModel().selectedItemProperty()
@@ -175,6 +175,44 @@ public class SponsorWindowController{
             //Get the controller
             FormSponsorWindowController mainStageController
                     = ((FormSponsorWindowController) loader.getController());
+            mainStageController.sponsorList(sponsorList);
+            //set the stage
+            mainStageController.setStage(mainStage);
+            //start the stage
+            mainStageController.initStage(root);
+
+            this.stage.close();
+            
+            Sponsor s = mainStageController.getSponsor();
+            if(s!=null){
+                rest.create_XML(s);
+                tbvSponsor.getItems().addAll(s);
+                tbvSponsor.refresh();
+            }
+            
+        } catch (IOException ex) {
+            Logger.getLogger(SponsorWindowController.class.getName())
+                    .log(Level.SEVERE, ex.getMessage(), ex);
+        } catch (BusinessLogicException ex) {
+            Logger.getLogger(SponsorWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    @FXML
+    private void modifySponsor(ActionEvent event) {
+        Sponsor sponsor = ((Sponsor) this.tbvSponsor.getSelectionModel().getSelectedItem());
+        try {
+             Stage mainStage = new Stage();
+            URL viewLink = getClass().getResource(
+                    "/ofc2_cliente/ui/FormSponsorWindow.fxml");
+            // initialition loader
+            FXMLLoader loader = new FXMLLoader(viewLink);
+            //make the root with the loader
+            Parent root = (Parent) loader.load();
+            //Get the controller
+            FormSponsorWindowController mainStageController
+                    = ((FormSponsorWindowController) loader.getController());
+            mainStageController.sponsors(sponsorList, sponsor);
             //set the stage
             mainStageController.setStage(mainStage);
             //start the stage
@@ -185,7 +223,7 @@ public class SponsorWindowController{
         } catch (IOException ex) {
             Logger.getLogger(SponsorWindowController.class.getName())
                     .log(Level.SEVERE, ex.getMessage(), ex);
-        }
+        } 
     }
     
      @FXML
