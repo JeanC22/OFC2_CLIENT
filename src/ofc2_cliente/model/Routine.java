@@ -104,7 +104,7 @@ public class Routine implements Serializable {
     public void setEjercicios(List<Exercise> exercises) {
         this.exercises = exercises;
     }
-    @XmlElement(name="routineTime")
+    @XmlElement(name="time")
     public Float getTime() {
         return routineTime;
     }

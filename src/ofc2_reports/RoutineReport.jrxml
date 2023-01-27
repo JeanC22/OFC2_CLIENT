@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="867c459e-2019-49cb-aa55-e716e048db59">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="229" y="28" width="100" height="20" uuid="4a4483e1-4b90-4a2e-b405-bdb3006ff525"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Routine Report]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="26" width="100" height="20" uuid="b72bc4e4-a016-4aa6-b40f-7fe27c9bf386"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="115" y="26" width="100" height="20" uuid="9628d107-ee57-4f9b-a6dc-89639cb9a12c"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Kcal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="229" y="26" width="100" height="20" uuid="434d51db-58e6-46b9-a741-1db14a3a572d"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Time]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="339" y="26" width="100" height="20" uuid="30e74f1f-67dc-4b1d-85f6-71491c76226c"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Start_date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="455" y="26" width="100" height="20" uuid="9a398b81-32db-4efa-b820-59eed92935a7"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[End_date]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="57" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="22" width="100" height="20" uuid="6e63ab11-77b9-4973-8957-6adf5bf909b1"/>
+				<text><![CDATA[$F{name}]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="115" y="22" width="100" height="20" uuid="392ecbd7-8501-4e82-bac3-347adcf92bf5"/>
+				<text><![CDATA[$F{kcal}]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="229" y="22" width="100" height="20" uuid="057b5068-40ae-4c97-b2d3-81aa0b4bddfe"/>
+				<text><![CDATA[$F{time}]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="339" y="22" width="100" height="20" uuid="c28df84c-8d5b-4d88-80ec-c80848edeaab"/>
+				<text><![CDATA[$F{start_date}]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="455" y="22" width="100" height="20" uuid="11e90a8d-738c-4a3c-b29e-76055fda2325"/>
+				<text><![CDATA[$F{end_date}]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

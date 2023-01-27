@@ -6,9 +6,13 @@
 package ofc2_cliente.controllers;
 
 //import ofc2_cliente.ui.*;
+
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -33,10 +37,18 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javax.ws.rs.core.GenericType;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.view.JasperViewer;
 import ofc2_cliente.model.Routine;
 import ofc2_cliente.logic.RoutineInterfaceFactory;
 import ofc2_cliente.logic.RoutineRESTfulClient;
@@ -52,9 +64,9 @@ public class RoutineController implements Initializable {
     
     private ObservableList<Routine> routineList;
     
-   // private RoutineInterfaceFactory routineFactory= new RoutineInterfaceFactory();
+    private RoutineInterfaceFactory routineFactory= new RoutineInterfaceFactory();
     
-    //private RoutineRESTfulClient routineREST= (RoutineRESTfulClient) routineFactory.createRoutineManager();
+    private RoutineRESTfulClient routineREST=  (RoutineRESTfulClient) routineFactory.createRoutineManager();
     
     
     
@@ -63,9 +75,7 @@ public class RoutineController implements Initializable {
             
     @FXML
     private ComboBox filterCH;
-            
-            
-            
+                   
     @FXML
     private Button createBtn;
             
@@ -74,28 +84,35 @@ public class RoutineController implements Initializable {
     
     @FXML
     private Button updateBtn;
-            
-            
+                     
     @FXML
     private TableView routineTable;
             
     @FXML
     private TableColumn nameColumn;
+    
     @FXML
     private TableColumn exerciseColumn;
+    
     @FXML
     private TableColumn kcalColumn;
+    
     @FXML
     private TableColumn timeColumn;
+    
     @FXML
     private TableColumn start_dateColumn;
+    
     @FXML
     private TableColumn end_dateColumn;
-    @FXML
     
+    @FXML
     private Button findBtn;
+    
     @FXML
     private Button reportBtn;
+    
+    private Routine routine;
     
     private Exercise ex;
     
@@ -111,7 +128,10 @@ public class RoutineController implements Initializable {
      public void setStage(Stage stage) {
         this.stage = stage;
     }
-     
+    
+    /*
+     This method starts the RoutineWindow window with all its components
+     */
     public void initStage(Parent root) {
         LOGGER.info("starting initStage(SignIN)");
         //Create a scene associated to the node graph root.
@@ -124,15 +144,79 @@ public class RoutineController implements Initializable {
         stage.setResizable(false);
         deleteBtn.setDisable(true);
         updateBtn.setDisable(true);
+        findBtn.setDisable(true);
+        ObservableList<String> list= FXCollections.observableArrayList("Routine name", "Exercise name");
+        filterCH.setItems(list);
+        nameTxTF.setOnKeyReleased(this::enabledFindBtn);
+        deleteBtn.setOnAction(this::deleteRoutine);
         createBtn.setOnAction(this::routineDataWindowCreate);
-        stage.setOnShowing(this::windowShowing);
+        updateBtn.setOnAction(this::routineDataWindowUpdate);
+        reportBtn.setOnAction(this::showReport);
         routineTable.getSelectionModel().selectedItemProperty().addListener(this::tableControl);
+        stage.setOnShowing(this::windowShowing);
+       
         //findBtn.setOnAction(this::signIn);
         //updateBtn.setOnAction(this::routineDataWindowUpdate);
         stage.setOnCloseRequest(this::cerrarVentana);
         //Show window
         stage.show();
-        LOGGER.info("finished initStage(SignIN)");
+        LOGGER.info("finished initStage(RoutineWindow)");
+
+    }
+    
+    private void refreshTable(){
+        routineTable.refresh();
+    }
+    /**
+     * This method enables or disables the findBtn
+     * @param event 
+     */
+    private void enabledFindBtn(KeyEvent event){
+        if (!nameTxTF.getText().isEmpty() && !filterCH.getItems().isEmpty()) {
+            findBtn.setDisable(false);
+        }else{
+             findBtn.setDisable(true);
+        }
+    }
+    
+    /**
+     * 
+     * @param event 
+     */
+    private void routineDataWindowUpdate(ActionEvent event) {
+        LOGGER.info("Method signUpWindow is starting");
+        
+        
+        try {
+            
+            this.routine=(Routine) routineTable.getSelectionModel().getSelectedItem();
+            
+
+            Stage mainStage = new Stage();
+            URL viewLink = getClass().getResource(
+                    "/ofc2_cliente/ui/RoutineDataWindow.fxml");
+            // initialition loader
+            FXMLLoader loader = new FXMLLoader(viewLink);
+            //make the root with the loader
+            Parent root = (Parent) loader.load();
+            //Get the controller
+            RoutineDataWindowController mainStageController
+                    = ((RoutineDataWindowController) loader.getController());
+            
+            mainStageController.getRoutine(routine);
+            //set the stage
+            mainStageController.setStage(mainStage);
+           
+            //start the stage
+            mainStageController.initStage(root);
+            
+         
+            LOGGER.info("Method routineDataWindow is finished");
+
+        } catch (IOException ex) {
+            Logger.getLogger(SignInWindowController.class.getName())
+                    .log(Level.SEVERE, ex.getMessage(), ex);
+        }
 
     }
     
@@ -155,8 +239,9 @@ public class RoutineController implements Initializable {
             mainStageController.setStage(mainStage);
             //start the stage
             mainStageController.initStage(root);
+            routineTable.refresh();
 
-            this.stage.close();
+           
             LOGGER.info("Method routineDataWindow is finished");
 
         } catch (IOException ex) {
@@ -164,6 +249,25 @@ public class RoutineController implements Initializable {
                     .log(Level.SEVERE, ex.getMessage(), ex);
         }
 
+    }
+    
+    private void showReport(ActionEvent event){
+        
+        try {
+            JasperReport jr= JasperCompileManager.compileReport("C:\\Users\\2dam\\Desktop\\Reto2\\Cliente\\OFC2_CLIENT\\src\\ofc2_reports\\RoutineReport.jrxml");
+            JRBeanCollectionDataSource dataItems=
+                    new JRBeanCollectionDataSource((Collection<Routine>)this.routineTable.getItems());
+            //Map of parameter to be passed to the report
+            Map<String,Object> parameters=new HashMap<>();
+            //Fill report with data
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jr,parameters,dataItems);
+            //Create and show the report window. The second parameter false value makes 
+            //report window not to close app.
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint,false);
+            jasperViewer.setVisible(true);
+        } catch (JRException ex) {
+            Logger.getLogger(RoutineController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     private void tableControl(ObservableValue observableValue, Object oldValue, Object newValue){
@@ -175,43 +279,16 @@ public class RoutineController implements Initializable {
         }
     }
     
-     private void routineDataWindowUpdate(ActionEvent event) {
-        LOGGER.info("Method signUpWindow is starting");
+    private void deleteRoutine(ActionEvent event){
+        Routine routine;
+        routine= (Routine) routineTable.getSelectionModel().getSelectedItem();
         
-         if (!routineTable.getSelectionModel().isEmpty()) {
-             
-         }
-        
-        try {
-           
-            
-            
-            
-            Stage mainStage = new Stage();
-            URL viewLink = getClass().getResource(
-                    "/ofc2_cliente/ui/RoutineDataWindow.fxml");
-            // initialition loader
-            FXMLLoader loader = new FXMLLoader(viewLink);
-            //make the root with the loader
-            Parent root = (Parent) loader.load();
-            //Get the controller
-            RoutineDataWindowController mainStageController
-                    = ((RoutineDataWindowController) loader.getController());
-            //set the stage
-            mainStageController.setStage(mainStage);
-           
-            //start the stage
-            mainStageController.initStage(root);
-
-            this.stage.close();
-            LOGGER.info("Method routineDataWindow is finished");
-
-        } catch (IOException ex) {
-            Logger.getLogger(SignInWindowController.class.getName())
-                    .log(Level.SEVERE, ex.getMessage(), ex);
-        }
-
+        routineREST.remove(routine.getId().toString());
+        routineTable.getItems().remove(routine);
+        routineTable.refresh();
     }
+    
+     
 
     private void exerciseWindoow() {
         Routine r = (Routine) routineTable.getSelectionModel().getSelectedItem();
@@ -265,16 +342,19 @@ public class RoutineController implements Initializable {
        private void windowShowing(WindowEvent event) {
         LOGGER.info("Method windowShowing is starting ");
        
-       // filterCH.getItems().add("Routine name", "Exercise name");
-
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        exerciseColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        kcalColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        timeColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        start_dateColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        end_dateColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         
-       // routineList= FXCollections.observableArrayList(routineREST.consultAllRoutines_XML(new GenericType<List<Routine>>() {}));
+
+       
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        //exerciseColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        kcalColumn.setCellValueFactory(new PropertyValueFactory<>("kcal"));
+        timeColumn.setCellValueFactory(new PropertyValueFactory<>("time"));
+        start_dateColumn.setCellValueFactory(new PropertyValueFactory<>("start_date"));
+        end_dateColumn.setCellValueFactory(new PropertyValueFactory<>("end_date"));
+        
+        
+       
+        routineList= FXCollections.observableArrayList(routineREST.consultAllRoutines_XML(new GenericType<List<Routine>>() {}));
         routineTable.setItems(routineList);
         //The field (userNameTxTF) has the focus
         nameTxTF.requestFocus();
@@ -291,6 +371,5 @@ public class RoutineController implements Initializable {
         LOGGER.info("Method windowShowing is finished");
 
     }
-    
     
 }

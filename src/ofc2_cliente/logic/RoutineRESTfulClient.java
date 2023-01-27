@@ -29,7 +29,7 @@ public class RoutineRESTfulClient implements RoutineInterface{
     private WebTarget webTarget;
     private Client client;
      private static final String BASE_URI = 
-            ResourceBundle.getBundle("properties.PropertiesFile")
+            ResourceBundle.getBundle("ofc2_cliente.PropertiesFile")
                           .getString("URL");
     
 
