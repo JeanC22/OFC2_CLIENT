@@ -101,7 +101,7 @@ public class EventWindowController {
     ObservableList<Event> events;
     private SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
     private SimpleDateFormat format2 = new SimpleDateFormat("yyyy.MM.dd");
-    
+    ObservableList<String> combo = FXCollections.observableArrayList("FindByActivity", "FindByName", "FindByDate");
     private static final Logger LOGGER = Logger.getLogger("ofc2_cliente.Controllers");
     @FXML
     private ContextMenu menuCont;
@@ -129,6 +129,12 @@ public class EventWindowController {
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.setTitle("OFC Event");
+        modifyBtn.setDisable(true);
+        delBtn.setDisable(true);
+        registerBtn.setDisable(true);
+        comboFind.setItems(combo);
+        comboFind.getItems();
+        comboFind.getSelectionModel().selectFirst();
         eventTable.getSelectionModel().selectedItemProperty().addListener(this::setVisibleButtonss);
         stage.setOnShowing(this::windowShow);
         stage.setOnCloseRequest(this::cerrarVentana);
@@ -136,6 +142,7 @@ public class EventWindowController {
         reportBtn.setOnAction(this::generateReport);
         delBtn.setOnAction(this::deleteData);
         modifyBtn.setOnAction(this::createModifyWindowMod);
+        findBtn.setOnAction(this::find);
 
         stage.show();
         LOGGER.info("Stage Started");
@@ -144,9 +151,6 @@ public class EventWindowController {
 
     public void windowShow(WindowEvent event) {
         try {
-            modifyBtn.setDisable(true);
-            delBtn.setDisable(true);
-            registerBtn.setDisable(true);
             colName.setCellValueFactory(new PropertyValueFactory<>("name"));
             colActivity.setCellValueFactory(new PropertyValueFactory<>("activity"));
             colDate.setCellValueFactory(new PropertyValueFactory<>("date"));
@@ -156,7 +160,7 @@ public class EventWindowController {
 
             events = FXCollections.observableArrayList(eventFact.getFactory().findAllEvents_XML(new GenericType<List<Event>>() {
             }));
-            
+
             eventTable.setItems(events);
         } catch (BusinessLogicException ex) {
             Logger.getLogger(EventWindowController.class.getName()).log(Level.SEVERE, null, ex);
@@ -173,7 +177,7 @@ public class EventWindowController {
             modifyBtn.setDisable(false);
             delBtn.setDisable(false);
             registerBtn.setDisable(false);
-        }else{
+        } else {
             modifyBtn.setDisable(true);
             delBtn.setDisable(true);
             registerBtn.setDisable(true);
@@ -259,7 +263,7 @@ public class EventWindowController {
             CreateModifyController mainStageController
                     = ((CreateModifyController) loader.getController());
             //set the stage
-            
+
             mainStageController.setStage(mainStage);
             //start the stage
             mainStageController.initStage(root);
@@ -272,13 +276,44 @@ public class EventWindowController {
 
     }
 
-    /**
-     * This Method confirm if the user want to close the window
-     *
-     * @author Iker
-     * @param event
-     */
-    public void cerrarVentana(WindowEvent event) {
+    public void find(ActionEvent event) {
+        String value;
+        ObservableList<Event> events;
+        value = comboFind.getSelectionModel().getSelectedItem().toString();
+        try {
+            colName.setCellValueFactory(new PropertyValueFactory<>("name"));
+            colActivity.setCellValueFactory(new PropertyValueFactory<>("activity"));
+            colDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+            colPlace.setCellValueFactory(new PropertyValueFactory<>("place"));
+            colCap.setCellValueFactory(new PropertyValueFactory<>("capacity"));
+            colPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
+
+            switch (value) {
+                case "FindByActivity":
+                   events = FXCollections.observableArrayList(eventFact.getFactory().findEventByActivity_XML(new GenericType<List<Event>>() {}, dataFld.getText()));
+                    break;
+                case "FindByName":
+                   events = FXCollections.observableArrayList(eventFact.getFactory().findEventByName_XML(new GenericType<List<Event>>() {}, dataFld.getText()));
+                    break;
+                case "FindByDate":
+                    eventFact.getFactory().findEventByDate_XML(new GenericType<List<Event>>() {}, dataFld.getText());
+                    break;
+            }
+            eventTable.setItems(events);
+            eventTable.refresh();
+        } catch (BusinessLogicException ex) {
+            Logger.getLogger(EventWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+/**
+ * This Method confirm if the user want to close the window
+ *
+ * @author Iker
+ * @param event
+ */
+public void cerrarVentana(WindowEvent event) {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setContentText("Quiere salir de la aplicacion?");

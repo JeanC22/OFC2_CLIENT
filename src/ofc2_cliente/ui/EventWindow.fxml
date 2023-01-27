@@ -32,7 +32,7 @@
       </TableView>
       <ComboBox fx:id="comboFind" layoutX="790.0" layoutY="154.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="130.0" />
       <TextField fx:id="dataFld" layoutX="575.0" layoutY="153.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="34.0" prefWidth="150.0" />
-      <Button fx:id="findBtn" layoutX="732.0" layoutY="153.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="42.0" />
+      <Button fx:id="findBtn" onAction = "#find" layoutX="732.0" layoutY="153.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="42.0" />
       <Button fx:id="modifyBtn" onAction = "#createModifyWindowMod" layoutX="597.0" layoutY="667.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="107.0" text="Modify" />
       <Button fx:id="delBtn" onAction = "#deleteData" layoutX="737.0" layoutY="667.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="107.0" text="Delete" />
       <Button fx:id="registerBtn" layoutX="199.0" layoutY="667.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="76.0" text="Register" />
