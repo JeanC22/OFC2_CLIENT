@@ -133,7 +133,10 @@ public class SponsorWindowController{
         
 
     }
-    
+    /**
+     * 
+     * @param event 
+     */
     private void windowShowing(WindowEvent event) {
         try {
             createBtn.setDisable(false);
@@ -154,18 +157,26 @@ public class SponsorWindowController{
         }
         
     }
-    
+    /**
+     * 
+     * @param observable
+     * @param oldValue
+     * @param newValue 
+     */
     private void enbledButtons(ObservableValue observable, Object oldValue, Object newValue) {
         if(newValue!=null){
             modifyBtn.setDisable(false);
             deleteBtn.setDisable(false);
         }
     }
-    
+    /**
+     * 
+     * @param event 
+     */
     @FXML
     private void formSponsorWindow(ActionEvent event) {
         try {
-             Stage mainStage = new Stage();
+            Stage mainStage = new Stage();
             URL viewLink = getClass().getResource(
                     "/ofc2_cliente/ui/FormSponsorWindow.fxml");
             // initialition loader
@@ -175,7 +186,6 @@ public class SponsorWindowController{
             //Get the controller
             FormSponsorWindowController mainStageController
                     = ((FormSponsorWindowController) loader.getController());
-            mainStageController.sponsorList(sponsorList);
             //set the stage
             mainStageController.setStage(mainStage);
             //start the stage
@@ -184,25 +194,26 @@ public class SponsorWindowController{
             this.stage.close();
             
             Sponsor s = mainStageController.getSponsor();
-            if(s!=null){
-                rest.create_XML(s);
-                tbvSponsor.getItems().addAll(s);
-                tbvSponsor.refresh();
+            if(s == null){
+                tbvSponsor.getItems().add(s);
             }
+            
             
         } catch (IOException ex) {
             Logger.getLogger(SponsorWindowController.class.getName())
                     .log(Level.SEVERE, ex.getMessage(), ex);
-        } catch (BusinessLogicException ex) {
-            Logger.getLogger(SponsorWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
+    /**
+     * 
+     * @param event 
+     */
     @FXML
     private void modifySponsor(ActionEvent event) {
         Sponsor sponsor = ((Sponsor) this.tbvSponsor.getSelectionModel().getSelectedItem());
         try {
-             Stage mainStage = new Stage();
+            Stage mainStage = new Stage();
             URL viewLink = getClass().getResource(
                     "/ofc2_cliente/ui/FormSponsorWindow.fxml");
             // initialition loader
@@ -212,7 +223,7 @@ public class SponsorWindowController{
             //Get the controller
             FormSponsorWindowController mainStageController
                     = ((FormSponsorWindowController) loader.getController());
-            mainStageController.sponsors(sponsorList, sponsor);
+            mainStageController.loadData(sponsor);
             //set the stage
             mainStageController.setStage(mainStage);
             //start the stage
@@ -220,13 +231,20 @@ public class SponsorWindowController{
 
             this.stage.close();
             
+            tbvSponsor.refresh();
+            
+            
         } catch (IOException ex) {
             Logger.getLogger(SponsorWindowController.class.getName())
                     .log(Level.SEVERE, ex.getMessage(), ex);
-        } 
+        }
     }
     
-     @FXML
+    /**
+     * 
+     * @param event 
+     */
+    @FXML
     private void deleteSponsor(ActionEvent event) {
         try {
             Sponsor sponsor = ((Sponsor) this.tbvSponsor.getSelectionModel().getSelectedItem());
@@ -245,7 +263,10 @@ public class SponsorWindowController{
         }
 
     }
-
+    /**
+     * 
+     * @param event 
+     */
     @FXML
     private void sponsorReport(ActionEvent event) {
         try {

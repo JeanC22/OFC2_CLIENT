@@ -31,8 +31,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import ofc2_cliente.logic.SponsorManagerFactory;
+import ofc2_cliente.logic.SponsorRESTfulClient;
 import ofc2_cliente.model.AdType;
 import ofc2_cliente.model.Admin;
 import ofc2_cliente.model.Sponsor;
@@ -84,6 +87,8 @@ public class FormSponsorWindowController{
     private CheckBox chbxState;
     @FXML
     private DatePicker dpDate;
+    SponsorManagerFactory sponsorFactory = new SponsorManagerFactory();
+    SponsorRESTfulClient rest = (SponsorRESTfulClient) sponsorFactory.createSponsorManager();
     
      public void setStage(Stage stage) {
         this.stage = stage;
@@ -103,6 +108,7 @@ public class FormSponsorWindowController{
         stage.setScene(scene);
         //title of the window: OFC SIGN IN.
         stage.setTitle("OFC Sponsor Form");
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.setResizable(false);
         stage.setOnShowing(this::windowShowing);
         returnBtn.setOnAction(this::returnSponsorWindow);
@@ -112,7 +118,10 @@ public class FormSponsorWindowController{
         stage.show();
 
     }
-    
+    /**
+     * 
+     * @param event 
+     */
     private void windowShowing(WindowEvent event) {
         txtFName.requestFocus();
         confirmBtn.setDisable(true);
@@ -120,10 +129,15 @@ public class FormSponsorWindowController{
         txtFPhone.setOnKeyReleased(this::enableConfirmBtn);
         txtFEmail.setOnKeyReleased(this::enableConfirmBtn);
         dpDate.setOnKeyReleased(this::enableConfirmBtn);
-        cmbAdType.getItems().addAll(ad.VIDEO.toString(), 
+        cmbAdType.getItems().addAll(" ",ad.VIDEO.toString(), 
                 ad.PANCARTA.toString(), ad.POSTER.toString());
+        cmbAdType.setOnKeyReleased(this::enableConfirmBtn);
+        
     }
-    
+    /**
+     * 
+     * @param event 
+     */
     @FXML
     private void returnSponsorWindow(ActionEvent event) {
         try {
@@ -149,14 +163,38 @@ public class FormSponsorWindowController{
                     .log(Level.SEVERE, ex.getMessage(), ex);
         }
     }
-    
+    /**
+     * 
+     * @param sponsorList 
+     */
+    public void sponsorList(ObservableList<Sponsor> sponsorList){
+        this.sponsorList = sponsorList;
+    }
+    /**
+     * 
+     * @param sp 
+     */
+    public void loadData(Sponsor sp){
+        this.sponsor = sp;
+        txtFName.setText(sp.getName());
+        txtFEmail.setText(sp.getEmail());
+        txtFPhone.setText(String.valueOf(sp.getPhone()));
+        dpDate.setValue(sp.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        cmbAdType.getSelectionModel().select(sp.getAd());
+        chbxState.setSelected(sp.getStatus());
+    }
+    /**
+     * 
+     * @param event 
+     */
     private void enableConfirmBtn(KeyEvent event) {
         
         try {
             if(!this.txtFName.getText().isEmpty() 
                     && !this.txtFPhone.getText().isEmpty()
                     && !this.txtFEmail.getText().isEmpty()
-                    && !dpDate.toString().isEmpty()){
+                    && !dpDate.toString().isEmpty()
+                    && !cmbAdType.getItems().isEmpty()){
                 confirmBtn.setDisable(false);
             }else{
                 confirmBtn.setDisable(true);
@@ -165,15 +203,21 @@ public class FormSponsorWindowController{
             e.getMessage();
         }
     }
+    /**
+     * 
+     * @param event 
+     */
     @FXML
     private void btnCreateSponsor(ActionEvent event) {
+        LocalDate date = dpDate.getValue();
+        
         try {
 
             if (this.txtFName.getText().length() > 30) {
                 throw new Exception("La longitud maxima "
                         + "del campo Name es de 30 caracteres");
             }
-            if (!isNumeric(this.txtFPhone.getText().trim())) {
+            if (!isNumeric(this.txtFPhone.getText())) {
                 throw new Exception("El campo Phone no es numerico");
             }
 
@@ -186,33 +230,48 @@ public class FormSponsorWindowController{
             if (!this.txtFEmail.getText().matches(regexEmail)) {
                 throw new Exception("El campo Email no tiene el formato adecuado");
             }
-            Sponsor sponsorD = new Sponsor(txtFName.getText(), Integer.parseInt(txtFPhone.getText()), txtFEmail.getText(), chbxState.isSelected(), (AdType) cmbAdType.getSelectionModel().getSelectedItem());
+            Sponsor sponsorD = new Sponsor();
+            sponsorD.setName(txtFName.getText());
+            sponsorD.setPhone(Integer.parseInt(txtFPhone.getText()));
+            sponsorD.setEmail(txtFEmail.getText());
+            sponsorD.setStatus(chbxState.isSelected());
+            sponsorD.setDate(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            sponsorD.setAd(AdType.valueOf(cmbAdType.getSelectionModel().getSelectedItem().toString()));
             
-            if (!sponsorList.contains(sponsorD)) {
-                this.sponsor = sponsorD;
-                
-                try {
-                    Stage mainStage = new Stage();
-                    URL viewLink = getClass().getResource(
-                            "/ofc2_cliente/ui/SponsorWindow.fxml");
-                    // initialition loader
-                    FXMLLoader loader = new FXMLLoader(viewLink);
-                    //make the root with the loader
-                    Parent root = (Parent) loader.load();
-                    //Get the controller
-                    SponsorWindowController mainStageController
-                            = ((SponsorWindowController) loader.getController());
-                    //set the stage
-                    mainStageController.setStage(mainStage);
-                    //start the stage
-                    mainStageController.initStage(root);
-                    this.stage.close();
-                    
 
-                } catch (IOException ex) {
-                    Logger.getLogger(FormSponsorWindowController.class.getName())
-                            .log(Level.SEVERE, ex.getMessage(), ex);
+            try {
+                
+                if (this.sponsor != null) {
+                    this.sponsor.setName(txtFName.getText());
+                    this.sponsor.setPhone(Integer.parseInt(txtFPhone.getText()));
+                    this.sponsor.setEmail(txtFEmail.getText());
+                    this.sponsor.setStatus(chbxState.isSelected());
+                    this.sponsor.setDate(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+                    this.sponsor.setAd(AdType.valueOf(cmbAdType.getSelectionModel().getSelectedItem().toString()));
+                    rest.edit_XML(this.sponsor);
+                }else{
+                    rest.create_XML(sponsorD);
                 }
+                Stage mainStage = new Stage();
+                URL viewLink = getClass().getResource(
+                        "/ofc2_cliente/ui/SponsorWindow.fxml");
+                // initialition loader
+                FXMLLoader loader = new FXMLLoader(viewLink);
+                //make the root with the loader
+                Parent root = (Parent) loader.load();
+                //Get the controller
+                SponsorWindowController mainStageController
+                        = ((SponsorWindowController) loader.getController());
+                
+                //set the stage
+                mainStageController.setStage(mainStage);
+                //start the stage
+                mainStageController.initStage(root);
+                this.stage.close();
+
+            } catch (IOException ex) {
+                Logger.getLogger(FormSponsorWindowController.class.getName())
+                        .log(Level.SEVERE, ex.getMessage(), ex);
             }
 
         } catch (Exception e) {
@@ -221,7 +280,11 @@ public class FormSponsorWindowController{
 
         }
     }
-
+    /**
+     * 
+     * @param valor
+     * @return 
+     */
     public Boolean isNumeric(String valor){
         try {
             if(valor !=null){
@@ -232,25 +295,17 @@ public class FormSponsorWindowController{
         }
         return true;
     }
-
+    /**
+     * 
+     * @return 
+     */
     public Sponsor getSponsor() {
         return sponsor;
     }
     
-    public void sponsorList(ObservableList<Sponsor> sponsorList){
-        this.sponsorList = sponsorList;
-    }
     
-    public void sponsors(ObservableList<Sponsor> sponsorList, Sponsor sp){
-        this.sponsorList = sponsorList;
-        this.sponsor = sp;
-        txtFName.setText(sp.getName());
-        txtFEmail.setText(sp.getEmail());
-        txtFPhone.setText(String.valueOf(sp.getPhone()));
-        dpDate.setValue(sp.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-        cmbAdType.getSelectionModel().select(sp.getAd());
-        chbxState.setSelected(sp.getStatus());
-    }
+    
+    
     
     
 }
