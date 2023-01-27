@@ -27,6 +27,7 @@ public class Client extends User implements Serializable {
 
     private List<Event> events;
 
+
     public List<Event> getEvents() {
         return events;
     }

@@ -7,21 +7,31 @@ package ofc2_cliente.model;
 
 import java.io.Serializable;
 import java.util.Objects;
-import javax.persistence.Embeddable;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Jeanpierr Caraballo
  */
-@Embeddable
+@XmlRootElement
 public class ComentId implements Serializable {
 
     private Long event_id;
     private Long client_id;
 
     public ComentId() {
+        this.event_id = event_id;
+        this.client_id = client_id;
+    }
 
+    public ComentId(Long event_id, Long client_id) {
+        this.event_id = event_id;
+        this.client_id = client_id;
+    }
+
+    ComentId(ComentId commetID) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @XmlElement(name = "event_id")
