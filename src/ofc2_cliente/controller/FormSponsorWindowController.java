@@ -9,10 +9,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import static java.time.temporal.TemporalQueries.localDate;
 import java.util.Date;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.ObservableList;
@@ -35,7 +32,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import ofc2_cliente.logic.SponsorManagerFactory;
-import ofc2_cliente.logic.SponsorRESTfulClient;
 import ofc2_cliente.model.AdType;
 import ofc2_cliente.model.Admin;
 import ofc2_cliente.model.Sponsor;
@@ -88,7 +84,6 @@ public class FormSponsorWindowController{
     @FXML
     private DatePicker dpDate;
     SponsorManagerFactory sponsorFactory = new SponsorManagerFactory();
-    SponsorRESTfulClient rest = (SponsorRESTfulClient) sponsorFactory.createSponsorManager();
     
      public void setStage(Stage stage) {
         this.stage = stage;
@@ -112,7 +107,7 @@ public class FormSponsorWindowController{
         stage.setResizable(false);
         stage.setOnShowing(this::windowShowing);
         returnBtn.setOnAction(this::returnSponsorWindow);
-        confirmBtn.setOnAction(this::btnCreateSponsor);
+        confirmBtn.setOnAction(this::createAndUpdateSponsor);
         
         //Show window
         stage.show();
@@ -193,8 +188,7 @@ public class FormSponsorWindowController{
             if(!this.txtFName.getText().isEmpty() 
                     && !this.txtFPhone.getText().isEmpty()
                     && !this.txtFEmail.getText().isEmpty()
-                    && !dpDate.toString().isEmpty()
-                    && !cmbAdType.getItems().isEmpty()){
+                    && !dpDate.toString().isEmpty()){
                 confirmBtn.setDisable(false);
             }else{
                 confirmBtn.setDisable(true);
@@ -208,7 +202,7 @@ public class FormSponsorWindowController{
      * @param event 
      */
     @FXML
-    private void btnCreateSponsor(ActionEvent event) {
+    private void createAndUpdateSponsor(ActionEvent event) {
         LocalDate date = dpDate.getValue();
         
         try {
@@ -238,7 +232,6 @@ public class FormSponsorWindowController{
             sponsorD.setDate(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
             sponsorD.setAd(AdType.valueOf(cmbAdType.getSelectionModel().getSelectedItem().toString()));
             
-
             try {
                 
                 if (this.sponsor != null) {
@@ -248,9 +241,9 @@ public class FormSponsorWindowController{
                     this.sponsor.setStatus(chbxState.isSelected());
                     this.sponsor.setDate(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
                     this.sponsor.setAd(AdType.valueOf(cmbAdType.getSelectionModel().getSelectedItem().toString()));
-                    rest.edit_XML(this.sponsor);
+                    sponsorFactory.createSponsorManager().edit_XML(this.sponsor);
                 }else{
-                    rest.create_XML(sponsorD);
+                    sponsorFactory.createSponsorManager().create_XML(sponsorD);
                 }
                 Stage mainStage = new Stage();
                 URL viewLink = getClass().getResource(

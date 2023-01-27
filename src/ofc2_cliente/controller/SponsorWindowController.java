@@ -46,11 +46,10 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
 import ofc2_cliente.logic.BusinessLogicException;
 import ofc2_cliente.logic.SponsorManagerFactory;
-import ofc2_cliente.logic.SponsorRESTfulClient;
 import ofc2_cliente.model.Sponsor;
 
 /**
- * FXML Controller class
+ * This class will be controller all in the SponsorWindow FXML Controller class
  *
  * @author Elias
  */
@@ -99,7 +98,7 @@ public class SponsorWindowController{
     private MenuItem mItDelete;
     
     SponsorManagerFactory sponsorFactory = new SponsorManagerFactory();
-    SponsorRESTfulClient rest = (SponsorRESTfulClient) sponsorFactory.createSponsorManager();
+    
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -108,7 +107,7 @@ public class SponsorWindowController{
     /**
      * This method will start the window
      *
-     * @author Jp
+     * @author Elias
      * @param root
      */
     public void initStage(Parent root) {
@@ -127,6 +126,8 @@ public class SponsorWindowController{
             reportBtn.setOnAction(this::sponsorReport);
             tbvSponsor.getSelectionModel().selectedItemProperty()
                     .addListener(this::enbledButtons);
+            ObservableList<String> opciones = FXCollections.observableArrayList("Name", "Date");
+            cbxFilter.setItems(opciones);
 
             //Show window
             stage.show();
@@ -134,11 +135,13 @@ public class SponsorWindowController{
 
     }
     /**
-     * 
+     * This method disables the modify and delete buttons. 
+     * Searches for sponsors data and adds in to the table.   
      * @param event 
      */
     private void windowShowing(WindowEvent event) {
         try {
+            
             createBtn.setDisable(false);
             modifyBtn.setDisable(true);
             deleteBtn.setDisable(true);
@@ -149,8 +152,8 @@ public class SponsorWindowController{
             clPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
             clAdType.setCellValueFactory(new PropertyValueFactory<>("ad"));
             clEvents.setCellValueFactory(new PropertyValueFactory<>("events"));
-            sponsorList = FXCollections.observableArrayList(rest
-                    .findAllSponsors_XML(new GenericType<List<Sponsor>>() {}));
+            sponsorList = FXCollections.observableArrayList(sponsorFactory.createSponsorManager().
+                    findAllSponsors_XML(new GenericType<List<Sponsor>>() {}));
             tbvSponsor.setItems(sponsorList);
         } catch (BusinessLogicException ex) {
             Logger.getLogger(SponsorWindowController.class.getName()).log(Level.SEVERE, null, ex);
@@ -158,7 +161,7 @@ public class SponsorWindowController{
         
     }
     /**
-     * 
+     * This method enables the modify and delete buttons when a table row is selected.
      * @param observable
      * @param oldValue
      * @param newValue 
@@ -170,7 +173,7 @@ public class SponsorWindowController{
         }
     }
     /**
-     * 
+     * This method opens the form window 
      * @param event 
      */
     @FXML
@@ -192,13 +195,12 @@ public class SponsorWindowController{
             mainStageController.initStage(root);
 
             this.stage.close();
-            
+            //Gets the Sponsor that has been created in the form
             Sponsor s = mainStageController.getSponsor();
             if(s == null){
+                // And adds it to the table
                 tbvSponsor.getItems().add(s);
             }
-            
-            
         } catch (IOException ex) {
             Logger.getLogger(SponsorWindowController.class.getName())
                     .log(Level.SEVERE, ex.getMessage(), ex);
@@ -206,11 +208,12 @@ public class SponsorWindowController{
     }
     
     /**
-     * 
+     * This method opens the form window sending the Sponsor data of the selected row.
      * @param event 
      */
     @FXML
     private void modifySponsor(ActionEvent event) {
+        //This is the Sponsor selected row
         Sponsor sponsor = ((Sponsor) this.tbvSponsor.getSelectionModel().getSelectedItem());
         try {
             Stage mainStage = new Stage();
@@ -223,6 +226,7 @@ public class SponsorWindowController{
             //Get the controller
             FormSponsorWindowController mainStageController
                     = ((FormSponsorWindowController) loader.getController());
+            //Here send the data to the window 
             mainStageController.loadData(sponsor);
             //set the stage
             mainStageController.setStage(mainStage);
@@ -230,7 +234,7 @@ public class SponsorWindowController{
             mainStageController.initStage(root);
 
             this.stage.close();
-            
+            //Update table
             tbvSponsor.refresh();
             
             
@@ -254,7 +258,7 @@ public class SponsorWindowController{
             Optional<ButtonType> result = alert.showAndWait();
 
             if (result.isPresent() && result.get() == ButtonType.OK) {
-                rest.remove(sponsor.getId().toString());
+                sponsorFactory.createSponsorManager().remove(sponsor.getId().toString());
                 tbvSponsor.getItems().remove(sponsor);
                 tbvSponsor.refresh();
             }
@@ -270,7 +274,7 @@ public class SponsorWindowController{
     @FXML
     private void sponsorReport(ActionEvent event) {
         try {
-            JasperReport report = JasperCompileManager.compileReport("/ofc2_cliente/report/sponsorReport.jrxml");
+            JasperReport report = JasperCompileManager.compileReport("C:\\Users\\2dam\\Documents\\NetBeansProjects\\OFC2_Client\\OFC2_CLIENT\\src\\ofc2_cliente\\report\\sponsorReport.jrxml");
             JRBeanCollectionDataSource dataItems = new JRBeanCollectionDataSource((Collection<Sponsor>)this.tbvSponsor.getItems());
             Map<String, Object> parameters = new HashMap<>();
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);

@@ -30,35 +30,35 @@
 				<text><![CDATA[Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="82" y="14" width="53" height="17" uuid="c16fc421-50ca-426f-8d5a-6291ce305c8b"/>
+				<reportElement x="100" y="14" width="53" height="17" uuid="c16fc421-50ca-426f-8d5a-6291ce305c8b"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
 				<text><![CDATA[Email]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="153" y="14" width="53" height="17" uuid="ed4ba694-9863-46f1-9ede-15c2da22a5ca"/>
+				<reportElement x="187" y="14" width="53" height="17" uuid="ed4ba694-9863-46f1-9ede-15c2da22a5ca"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
 				<text><![CDATA[State]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="224" y="14" width="53" height="17" uuid="9ddcc749-7b7c-4cbe-9c61-7ef8d322a2ed"/>
+				<reportElement x="270" y="14" width="53" height="17" uuid="9ddcc749-7b7c-4cbe-9c61-7ef8d322a2ed"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
 				<text><![CDATA[Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="292" y="14" width="53" height="17" uuid="0d9c3636-4936-4eef-bfdc-288886ff83c4"/>
+				<reportElement x="351" y="14" width="53" height="17" uuid="0d9c3636-4936-4eef-bfdc-288886ff83c4"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
 				<text><![CDATA[phone]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="399" y="14" width="53" height="17" uuid="7de84502-5944-4963-ab05-dcaef73897ac"/>
+				<reportElement x="431" y="14" width="53" height="17" uuid="7de84502-5944-4963-ab05-dcaef73897ac"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
@@ -68,41 +68,30 @@
 	</columnHeader>
 	<detail>
 		<band height="40" splitType="Stretch">
-			<textField>
-				<reportElement x="14" y="15" width="68" height="19" uuid="54cedd62-7c96-416a-a875-3e660f44e6c7"/>
-				<textElement>
-					<font size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="85" y="15" width="68" height="19" uuid="9e432d54-bf6a-49db-87c4-bfd4a6f2d6e1"/>
-				<textElement>
-					<font size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="166" y="15" width="68" height="19" uuid="56d76b67-5b22-4e49-a698-fa47dab31b2d"/>
-				<textElement>
-					<font size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="245" y="15" width="68" height="19" uuid="2eab1d29-9954-47a0-87b3-2244820be000"/>
-				<textElement>
-					<font size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{date}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="367" y="15" width="74" height="19" uuid="f3318e05-cdf6-4186-9d26-e3eb2e07f2b1"/>
-				<textElement>
-					<font size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{ad.name}]]></textFieldExpression>
-			</textField>
+			<staticText>
+				<reportElement x="14" y="10" width="53" height="20" uuid="4a6b6091-3a2b-427b-9f67-4c2155e53a4b"/>
+				<text><![CDATA[$F{name}]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="10" width="53" height="20" uuid="dc57e66a-ff5b-41cf-b4d9-ed83aee63a88"/>
+				<text><![CDATA[$F{email}]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="187" y="10" width="53" height="20" uuid="3f3a3824-993f-4ab6-b250-9d5c264f0497"/>
+				<text><![CDATA[$F{status}]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="270" y="10" width="53" height="20" uuid="142d6180-a40a-4fa1-95f2-953de0f6dec2"/>
+				<text><![CDATA[$F{date}]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="351" y="10" width="53" height="20" uuid="515905ac-b487-4989-ad85-4a31d1353f3e"/>
+				<text><![CDATA[$F{phone}]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="431" y="10" width="53" height="20" uuid="f393b94a-b8fb-4030-be39-f99e3ad45b7a"/>
+				<text><![CDATA[$F{ad}]]></text>
+			</staticText>
 		</band>
 	</detail>
 	<columnFooter>

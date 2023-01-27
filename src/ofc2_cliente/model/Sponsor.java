@@ -36,9 +36,21 @@ public class Sponsor implements Serializable {
 
     private AdType ad;
     
-     public Sponsor() {
+    public Sponsor() {
         
     }
+
+    public Sponsor( String name, Integer phone, String email,
+            Date date,
+            Boolean status,  AdType ad) {
+        this.name = name;
+        this.phone = phone;
+        this.email = email;
+        this.date = date;
+        this.status = status;
+        this.ad = ad;
+    }
+    
 
     public Long getId() {
         return id;
