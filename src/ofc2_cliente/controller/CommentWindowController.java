@@ -252,7 +252,7 @@ public class CommentWindowController {
                 Logger.getLogger(CommentWindowController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-a
+
         contextMenu.getItems().add(deleteCommentMenuIt);
 
         stage.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
