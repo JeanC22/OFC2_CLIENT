@@ -25,20 +25,21 @@
             <ContextMenu fx:id="menuCont">
               <items>
                 <MenuItem fx:id="modifyMenu" mnemonicParsing="false" text="Modify" />
-                  <MenuItem fx:id="DeleteMenu" mnemonicParsing="false" text="Delete" />
+                  <MenuItem fx:id="deleteMenu" mnemonicParsing="false" text="Delete" />
+                  <MenuItem fx:id="showComents" mnemonicParsing="false" text="showComents" />
               </items>
             </ContextMenu>
          </contextMenu>
       </TableView>
       <ComboBox fx:id="comboFind" layoutX="790.0" layoutY="154.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="130.0" />
       <TextField fx:id="dataFld" layoutX="575.0" layoutY="153.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="34.0" prefWidth="150.0" />
-      <Button fx:id="findBtn" onAction = "#find" layoutX="732.0" layoutY="153.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="42.0" />
-      <Button fx:id="modifyBtn" onAction = "#createModifyWindowMod" layoutX="597.0" layoutY="667.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="107.0" text="Modify" />
-      <Button fx:id="delBtn" onAction = "#deleteData" layoutX="737.0" layoutY="667.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="107.0" text="Delete" />
+      <Button fx:id="findBtn" layoutX="732.0" layoutY="153.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#find" prefHeight="30.0" prefWidth="42.0" />
+      <Button fx:id="modifyBtn" layoutX="597.0" layoutY="667.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#createModifyWindowMod" prefHeight="30.0" prefWidth="107.0" text="Modify" />
+      <Button fx:id="delBtn" layoutX="737.0" layoutY="667.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#deleteData" prefHeight="30.0" prefWidth="107.0" text="Delete" />
       <Button fx:id="registerBtn" layoutX="199.0" layoutY="667.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="76.0" text="Register" />
-      <Button fx:id="createBtn" onAction = "#createModifyWindowCre" layoutX="459.0" layoutY="667.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="107.0" text="Create" />
-      <Button fx:id="reportBtn" onAction="#generateReport" layoutX="122.0" layoutY="667.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="76.0" text="Report" />
-      <ImageView fx:id="Event"  fitHeight="95.0" fitWidth="127.0" layoutX="40.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true" />
+      <Button fx:id="createBtn" layoutX="459.0" layoutY="667.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#createModifyWindowCre" prefHeight="30.0" prefWidth="107.0" text="Create" />
+      <Button fx:id="reportBtn" layoutX="122.0" layoutY="667.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#generateReport" prefHeight="30.0" prefWidth="76.0" text="Report" />
+      <ImageView fx:id="Event" fitHeight="95.0" fitWidth="127.0" layoutX="40.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true" />
       <ImageView fitHeight="95.0" fitWidth="127.0" layoutX="449.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true" />
    </children>
 </Pane>

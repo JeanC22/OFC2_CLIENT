@@ -4,20 +4,23 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<field name="name" class="java.lang.String"/>
-        <field name="activity" class="java.lang.String"/>
-        <field name="place" class="java.lang.String"/>
+	<field name="activity" class="java.lang.String"/>
+	<field name="place" class="java.lang.String"/>
+	<field name="date" class="java.util.Date"/>
+	<field name="capacity" class="java.lang.Integer"/>
+	<field name="price" class="java.lang.Float"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
 		<band height="79" splitType="Stretch">
-			<textField>
-				<reportElement x="212" y="18" width="146" height="31" uuid="d6910c61-fc22-41f5-a5b2-809618cd1782"/>
+			<staticText>
+				<reportElement x="250" y="25" width="69" height="33" uuid="490365f8-1a25-48d9-b98b-ca5e9001801f"/>
 				<textElement>
-					<font size="22" isUnderline="false"/>
+					<font size="18"/>
 				</textElement>
-				<textFieldExpression><![CDATA[Event Report]]></textFieldExpression>
-			</textField>
+				<text><![CDATA[Event]]></text>
+			</staticText>
 		</band>
 	</title>
 	<pageHeader>
@@ -79,18 +82,39 @@
 				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="100" y="15" width="100" height="20" uuid="4fcea581-94ec-4260-95a8-4f45b70157bd"/>
+				<reportElement x="100" y="15" width="100" height="20" uuid="1cee741d-b3ed-41a5-9457-3a00b316edcf"/>
 				<textElement>
 					<font size="15"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{activity}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="300" y="15" width="100" height="20" uuid="d6180182-2ed0-40f9-a91b-1887443427e4"/>
+				<reportElement x="200" y="15" width="100" height="20" uuid="b40da811-6f00-49cf-a8bd-ec648491aa00"/>
+				<textElement>
+					<font size="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="15" width="100" height="20" uuid="d38480f0-554e-4d4f-8db1-a8633b6197d5"/>
 				<textElement>
 					<font size="15"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{place}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="400" y="15" width="100" height="20" uuid="f68de85e-6e7f-4982-9c0a-d1915a4df968"/>
+				<textElement>
+					<font size="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{capacity}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="500" y="15" width="100" height="20" uuid="6e627aa0-a55e-4d1d-be37-008c95b4dde8"/>
+				<textElement>
+					<font size="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{price}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

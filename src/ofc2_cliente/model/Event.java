@@ -58,7 +58,12 @@ public class Event implements Serializable {
     }
 
     public Event() {
+        this.admin = admin;
         
+    }
+    
+    public Event(Long id){
+        this.id = id;
     }
 
     public Long getId() {
@@ -116,8 +121,6 @@ public class Event implements Serializable {
     public void setPlace(String place) {
         this.place = place;
     }
-
-    
 
     public Admin getAdmin() {
         return admin;

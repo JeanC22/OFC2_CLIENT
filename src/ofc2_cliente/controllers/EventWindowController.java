@@ -8,7 +8,12 @@ package ofc2_cliente.controllers;
 import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +36,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -55,7 +61,7 @@ import ofc2_cliente.model.Event;
 /**
  * FXML Controller class
  *
- * @author Jp
+ * @author iker
  */
 public class EventWindowController {
 
@@ -91,20 +97,22 @@ public class EventWindowController {
     @FXML
     private TableColumn colPrice;
     @FXML
-    private MenuItem modifyMenu;
-    @FXML
-    private MenuItem DeleteMenu;
-    @FXML
     private ImageView Event;
+    @FXML
+    private ContextMenu menuCont;
+    @FXML
+    private MenuItem modifyMenu = new MenuItem();
+    @FXML
+    private MenuItem deleteMenu = new MenuItem();
+    @FXML
+    private MenuItem showComents = new MenuItem();
 
     private EventFactory eventFact = new EventFactory();
     ObservableList<Event> events;
-    private SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-    private SimpleDateFormat format2 = new SimpleDateFormat("yyyy.MM.dd");
-    ObservableList<String> combo = FXCollections.observableArrayList("FindByActivity", "FindByName", "FindByDate");
+    ObservableList<String> combo = FXCollections.observableArrayList("FindByActivity", "FindByName", "FindByDate", "FindAll");
     private static final Logger LOGGER = Logger.getLogger("ofc2_cliente.Controllers");
-    @FXML
-    private ContextMenu menuCont;
+
+    
 
     /**
      * setStage
@@ -117,60 +125,116 @@ public class EventWindowController {
     }
 
     /**
-     * this Method will start the stage
+     * this Method will start the scenario and in case of an error it will 
+     * display an error message per window
      *
      * @author Jp
      * @param root
      *
      */
     public void initStage(Parent root) {
-        LOGGER.info("Starting Stage");
-        //init the scene with the root you got from singInController
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.setTitle("OFC Event");
-        modifyBtn.setDisable(true);
-        delBtn.setDisable(true);
-        registerBtn.setDisable(true);
-        comboFind.setItems(combo);
-        comboFind.getItems();
-        comboFind.getSelectionModel().selectFirst();
-        eventTable.getSelectionModel().selectedItemProperty().addListener(this::setVisibleButtonss);
-        stage.setOnShowing(this::windowShow);
-        stage.setOnCloseRequest(this::cerrarVentana);
-        createBtn.setOnAction(this::createModifyWindowCre);
-        reportBtn.setOnAction(this::generateReport);
-        delBtn.setOnAction(this::deleteData);
-        modifyBtn.setOnAction(this::createModifyWindowMod);
-        findBtn.setOnAction(this::find);
-
-        stage.show();
-        LOGGER.info("Stage Started");
-
-    }
-
-    public void windowShow(WindowEvent event) {
         try {
-            colName.setCellValueFactory(new PropertyValueFactory<>("name"));
-            colActivity.setCellValueFactory(new PropertyValueFactory<>("activity"));
-            colDate.setCellValueFactory(new PropertyValueFactory<>("date"));
-            colPlace.setCellValueFactory(new PropertyValueFactory<>("place"));
-            colCap.setCellValueFactory(new PropertyValueFactory<>("capacity"));
-            colPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
 
-            events = FXCollections.observableArrayList(eventFact.getFactory().findAllEvents_XML(new GenericType<List<Event>>() {
-            }));
+            LOGGER.info("Starting Stage");
+            //init the scene with the root you got from singInController
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("OFC Event");
+            modifyBtn.setDisable(true);
+            delBtn.setDisable(true);
+            registerBtn.setDisable(true);
+            comboFind.setItems(combo);
+            comboFind.getItems();
+            comboFind.getSelectionModel().selectFirst();
+            eventTable.setContextMenu(menuCont);
+            
+            
+            eventTable.getSelectionModel().selectedItemProperty().addListener(this::setVisibleButtonss);
+            stage.setOnShowing(this::windowShow);
+            stage.setOnCloseRequest(this::cerrarVentana);
+            createBtn.setOnAction(this::createModifyWindowCre);
+            reportBtn.setOnAction(this::generateReport);
+            delBtn.setOnAction(this::deleteData);
+            modifyBtn.setOnAction(this::createModifyWindowMod);
+            comboFind.valueProperty().addListener(this::showMessage);
+            findBtn.setOnAction(this::find);
+            modifyMenu.setOnAction(this::createModifyWindowMod);
+            deleteMenu.setOnAction(this::deleteData);
+            showComents.setOnAction(this::showComent);
+            
 
-            eventTable.setItems(events);
-        } catch (BusinessLogicException ex) {
-            Logger.getLogger(EventWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            stage.show();
+            LOGGER.info("Stage Started");
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "El servidor glashfish no se encuentra disponible", ButtonType.OK);
+            alert.showAndWait();
         }
     }
 
     /**
-     * this Method will be close LogedWindow and start the SingInWindow
-     *
-     * @author Jp
+     * The method will show us all the event data from the database in a table 
+     * and in case of error it will show us an error message per window.
+     * @param event 
+     */
+    private void windowShow(WindowEvent event) {
+        try {
+            colName.setCellValueFactory(new PropertyValueFactory<>("name"));
+            colActivity.setCellValueFactory(new PropertyValueFactory<>("activity"));
+            colDate.setCellValueFactory(new PropertyValueFactory<>("date"));    
+            colDate.setCellFactory(column -> {
+            TableCell<Event, Date> cell = new TableCell<Event, Date>() {
+                private SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+                
+                @Override
+                protected void updateItem(Date item, boolean empty) {
+                    super.updateItem(item, empty);
+                     
+                    if (empty) {
+                        setText(null);
+                    } else {
+                        if (item != null) {
+                            setText(getDate(item).format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)));
+                        }
+                    }
+                }
+            };
+
+            return cell;
+        });
+            colPlace.setCellValueFactory(new PropertyValueFactory<>("place"));
+            colCap.setCellValueFactory(new PropertyValueFactory<>("capacity"));
+            colPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
+            colPrice.setCellFactory(column -> {
+            TableCell<Event, Float> cell = new TableCell<Event, Float>() {
+                
+                
+                protected void updateItem(Float item, boolean empty) {
+                    super.updateItem(item, empty);
+                     
+                   
+                        if (item != null) {
+                            setText(item.toString() + " €");
+                        
+                    }
+                }
+            };
+
+            return cell;
+        });
+
+            events = FXCollections.observableArrayList(eventFact.getFactory().findAllEvents_XML(new GenericType<List<Event>>() {
+            }));
+            eventTable.setItems(events);
+        } catch (BusinessLogicException ex) {
+            Logger.getLogger(EventWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
+            alert.showAndWait();
+        }
+    }
+
+    /**
+     * the method is to enable and disable buttons depending on whether we have 
+     * selected a row in the table.
      */
     public void setVisibleButtonss(ObservableValue a, Object oldValue, Object newValue) {
         if (newValue != null) {
@@ -184,6 +248,13 @@ public class EventWindowController {
         }
     }
 
+    /**
+     * The method will ask for confirmation to delete data from the database, 
+     * on confirming the deletion, the selected event will be deleted from the 
+     * database and in case of error, an error message will be displayed on the 
+     * screen.
+     * @param event 
+     */
     public void deleteData(ActionEvent event) {
 
         Event even = ((Event) eventTable.getSelectionModel().getSelectedItem());
@@ -202,11 +273,18 @@ public class EventWindowController {
             }
 
         } catch (BusinessLogicException ex) {
-            Logger.getLogger(EventWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(EventWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
+            alert.showAndWait();
         }
 
     }
 
+    /**
+     * The method generates a report sheet with the data shown in the window 
+     * table.
+     * @param event 
+     */
     public void generateReport(ActionEvent event) {
         try {
             JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/ofc2_cliente/report/eventReport.jrxml"));
@@ -215,13 +293,19 @@ public class EventWindowController {
             Map<String, Object> parameters = new HashMap<>();
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
 
-            JasperViewer jasperViewer = new JasperViewer(jasperPrint);
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint , false);
             jasperViewer.setVisible(true);
         } catch (JRException ex) {
             Logger.getLogger(EventWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
+            alert.showAndWait();
         }
     }
 
+    /**
+     * This method initiates the window for modifying and creating events.
+     * @param event 
+     */
     public void createModifyWindowCre(ActionEvent event) {
 
         try {
@@ -248,6 +332,11 @@ public class EventWindowController {
 
     }
 
+    /**
+     * This method starts the modify and create events window, in which we pass
+     * the event in question that we want to modify.
+     * @param event 
+     */
     public void createModifyWindowMod(ActionEvent event) {
         Event even = ((Event) eventTable.getSelectionModel().getSelectedItem());
 
@@ -263,7 +352,6 @@ public class EventWindowController {
             CreateModifyController mainStageController
                     = ((CreateModifyController) loader.getController());
             //set the stage
-
             mainStageController.setStage(mainStage);
             //start the stage
             mainStageController.initStage(root);
@@ -276,9 +364,15 @@ public class EventWindowController {
 
     }
 
+    /**
+     * This method will load the data from the database into the table, 
+     * depending on the desired filtering.In case of any error it will display 
+     * a message on the screen.
+     * @param event 
+     */
     public void find(ActionEvent event) {
         String value;
-        ObservableList<Event> events;
+        ObservableList<Event> events = null;
         value = comboFind.getSelectionModel().getSelectedItem().toString();
         try {
             colName.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -288,32 +382,91 @@ public class EventWindowController {
             colCap.setCellValueFactory(new PropertyValueFactory<>("capacity"));
             colPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
 
-            switch (value) {
-                case "FindByActivity":
-                   events = FXCollections.observableArrayList(eventFact.getFactory().findEventByActivity_XML(new GenericType<List<Event>>() {}, dataFld.getText()));
-                    break;
-                case "FindByName":
-                   events = FXCollections.observableArrayList(eventFact.getFactory().findEventByName_XML(new GenericType<List<Event>>() {}, dataFld.getText()));
-                    break;
-                case "FindByDate":
-                    eventFact.getFactory().findEventByDate_XML(new GenericType<List<Event>>() {}, dataFld.getText());
-                    break;
+            //check that the field is informed as long as it is not selected search all in the combo box
+            if (dataFld.getText().isEmpty() && comboFind.getSelectionModel().getSelectedItem() != "FindAll") {
+                throw new Exception("El campo de busqueda tiene que estar informado");
+            } else {
+                //depending on the value that is selected in the combo box we 
+                //will use different search engines.
+                switch (value) {
+                    case "FindByActivity":
+                        events = FXCollections.observableArrayList(eventFact.getFactory().findEventByActivity_XML(new GenericType<List<Event>>() {
+                        }, dataFld.getText()));
+
+                        break;
+                    case "FindByName":
+                        events = FXCollections.observableArrayList(eventFact.getFactory().findEventByName_XML(new GenericType<Event>() {
+                        }, dataFld.getText()));
+                        break;
+                    case "FindByDate":
+                        events = FXCollections.observableArrayList(eventFact.getFactory().findEventByDate_XML(new GenericType<List<Event>>() {
+                        }, dataFld.getText()));
+                        break;
+                    case "FindAll":
+                        events = FXCollections.observableArrayList(eventFact.getFactory().findAllEvents_XML(new GenericType<List<Event>>() {
+                        }));
+                        break;
+                }
+                eventTable.setItems(events);
+                eventTable.refresh();
+                dataFld.clear();
             }
-            eventTable.setItems(events);
-            eventTable.refresh();
-        } catch (BusinessLogicException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(EventWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
+            alert.showAndWait();
+
         }
 
     }
+    
+    /**
+     * This method initialises the comments window that will contain the 
+     * comments associated to the events, for this we send the event in question.
+     * @param event 
+     */
+    public void showComent(ActionEvent event){
+        Event even = ((Event) eventTable.getSelectionModel().getSelectedItem());
 
-/**
- * This Method confirm if the user want to close the window
- *
- * @author Iker
- * @param event
- */
-public void cerrarVentana(WindowEvent event) {
+        try {
+            Stage mainStage = new Stage();
+            URL viewLink = getClass().getResource(
+                    "/ofc2_cliente/ui/commentWindow.fxml");
+            // initialition loader
+            FXMLLoader loader = new FXMLLoader(viewLink);
+            //make the root with the loader
+            Parent root = (Parent) loader.load();
+            //Get the controller
+            CreateModifyController mainStageController
+                    = ((CreateModifyController) loader.getController());
+            //set the stage
+            mainStageController.setStage(mainStage);
+            //start the stage
+            mainStageController.initStage(root);
+            mainStageController.loadDate(even);
+            this.stage.close();
+        } catch (IOException ex) {
+            Logger.getLogger(CreateModifyController.class.getName())
+                    .log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void showMessage(ObservableValue observable,Object oldValue, Object newValue){
+        
+        if(comboFind.getValue().toString().equalsIgnoreCase("FindByDate")){
+            dataFld.setPromptText("yyyy-MM-dd");
+        }else{
+            dataFld.setPromptText("");
+        }
+        
+    }
+    
+    /**
+     * This Method confirm if the user want to close the window
+     *
+     * @param event
+     */
+    public void cerrarVentana(WindowEvent event) {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setContentText("Quiere salir de la aplicacion?");
@@ -326,4 +479,7 @@ public void cerrarVentana(WindowEvent event) {
         }
     }
 
+  private LocalDate getDate(Date date) {
+        return date == null ? LocalDate.now() : date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    }
 }

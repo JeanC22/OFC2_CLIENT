@@ -9,7 +9,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +29,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
@@ -41,13 +43,15 @@ import javafx.stage.WindowEvent;
 import javax.ws.rs.core.GenericType;
 import ofc2_cliente.logic.BusinessLogicException;
 import ofc2_cliente.logic.EventFactory;
+import ofc2_cliente.model.Admin;
 import ofc2_cliente.model.Event;
+import ofc2_cliente.model.User;
 import org.hibernate.mapping.Collection;
 
 /**
  * FXML Controller class
  *
- * @author Jp
+ * @author iker
  */
 public class CreateModifyController {
 
@@ -58,7 +62,7 @@ public class CreateModifyController {
     @FXML
     private TextField actFld;
     @FXML
-    private TextField dateFld;
+    private DatePicker datePick;
     @FXML
     private TextField plcFld;
     @FXML
@@ -71,26 +75,32 @@ public class CreateModifyController {
     private Button crtBtns;
     @FXML
     private Button bckBtn;
-    
+
     private EventFactory eventFact = new EventFactory();
     ObservableList<Event> events;
+    
     private Long id;
 
+    private static String regex = "^[a-zA-Z]*$";
+    private static String regexNum = "^[1-9]*$";
     private static final Logger LOGGER = Logger.getLogger("ofc2_cliente.Controllers");
     @FXML
     private ContextMenu menuCont;
+
     /**
      * setStage
-     * @param stage 
+     *
+     * @param stage
      */
     public void setStage(Stage stage) {
 
         this.stage = stage;
     }
+
     /**
      * this Method will start the stage
-     * @author Jp
-     * @param root 
+     *
+     * @param root
      */
     public void initStage(Parent root) {
         LOGGER.info("Starting Stage");
@@ -102,33 +112,32 @@ public class CreateModifyController {
         crtBtns.setDisable(false);
         mdfBtn.setVisible(false);
         mdfBtn.setDisable(true);
-        
+        nameFld.setPromptText("Max 30 caracteres");
+        actFld.setPromptText("Max 50 caracteres");
+        plcFld.setPromptText("Max 30 caracteres");
+        capFld.setPromptText("Solo numeros");
+        priceFld.setPromptText("solo numeros, admite decimales");
+        datePick.setPromptText("dd/MM/yyyy");
+
         bckBtn.setOnAction(this::backBtn);
         stage.setOnCloseRequest(this::cerrarVentana);
         crtBtns.setOnAction(this::createEvent);
         mdfBtn.setOnAction(this::modifyEvent);
-        
+
         this.stage.show();
         LOGGER.info("Stage Started");
-        
-        
+
     }
 
     /**
-     * this Method will be close LogedWindow and start the SingInWindow
-     * @author Jp 
+     * This method modifies the selected event of the table in the database.
      */
-    
-    public void modifyEvent(ActionEvent event){
+    public void modifyEvent(ActionEvent event) {
         Event eve = new Event();
         Date newDate = null;
-        SimpleDateFormat formateo = new SimpleDateFormat("dd/MM/yyyy");
-        try {
-            newDate = formateo.parse(dateFld.getText());
-        } catch (ParseException ex) {
-            Logger.getLogger(CreateModifyController.class.getName()).log(Level.SEVERE, null, ex);
-        }
         
+
+        newDate = Date.from(datePick.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
         eve.setId(id);
         eve.setName(nameFld.getText());
         eve.setActivity(actFld.getText());
@@ -136,62 +145,98 @@ public class CreateModifyController {
         eve.setPlace(plcFld.getText());
         eve.setCapacity(Integer.parseInt(capFld.getText()));
         eve.setPrice(Float.valueOf(priceFld.getText()));
-        
+
         try {
             eventFact.getFactory().edit_XML(eve);
+            backBtn(event);
         } catch (BusinessLogicException ex) {
             Logger.getLogger(CreateModifyController.class.getName()).log(Level.SEVERE, null, ex);
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
+            alert.showAndWait();
         }
+
         
-        backBtn(event);
     }
-    
-    
-    public void createEvent(ActionEvent event){
-        Event eve = new Event();
-        Date newDate = null;
-        
-        SimpleDateFormat formateo = new SimpleDateFormat("dd/MM/yyyy");
-        try {
-            newDate = formateo.parse(dateFld.getText());
-        } catch (ParseException ex) {
-            Logger.getLogger(CreateModifyController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        eve.setName(nameFld.getText());
-        eve.setActivity(actFld.getText());
-        eve.setDate(newDate);
-        eve.setPlace(plcFld.getText());
-        eve.setCapacity(Integer.parseInt(capFld.getText()));
-        eve.setPrice(Float.valueOf(priceFld.getText()));
-        
-        try {
-            eventFact.getFactory().create_XML(eve);
-        } catch (BusinessLogicException ex) {
-            Logger.getLogger(CreateModifyController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        backBtn(event);
-    }
-    
+
     /**
-     * This Method confirm if the user want to close the window
-     * @author Iker
+     * This method validates the fields and if they are correct it creates an
+     * event in the database.
      * @param event 
      */
-    public void cerrarVentana(WindowEvent event){
-        
+    public void createEvent(ActionEvent event) {
+        Event eve = new Event();
+        Date newDate = null;
+        User u = new Admin();
+        Date otherDate = null;
+        try {
+            otherDate =Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()); 
+            newDate = Date.from(datePick.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+            if (nameFld.getText().isEmpty() || actFld.getText().isEmpty()
+                    || datePick.getValue() == null || capFld.getText().isEmpty()
+                    || priceFld.getText().isEmpty() || plcFld.getText().isEmpty()) {
+                throw new Exception("Alguno de los campos no esta informado");
+            }
+            if(this.nameFld.getText().length() > 30){
+                throw new Exception("El campo de name tiene mas de 30 caracteres");
+            }
+            if(this.actFld.getText().length() > 50 || !this.actFld.getText().matches(regex)){
+                throw new Exception("El campo de activity tiene mas de 50 caracteres o tiene caracteres especiales");
+            }
+            if(newDate.before(otherDate)){
+                throw new Exception("La fecha es anterior a la de el dia de hoy");
+            }
+            if(this.plcFld.getText().length() > 30 || !this.plcFld.getText().matches(regex) ){
+                throw new Exception("El campo de place tiene mas de 30 caracteres o tiene caracteres especiales");
+            }
+            if(!this.priceFld.getText().matches(regexNum)){
+                throw new Exception("El campo price solo permite numeros");
+            }
+            
+
+            
+            eve.setName(nameFld.getText());
+            eve.setActivity(actFld.getText());
+            eve.setDate(newDate);
+            eve.setPlace(plcFld.getText());
+            eve.setCapacity(Integer.parseInt(capFld.getText()));
+            eve.setPrice(Float.valueOf(priceFld.getText()));
+            u.setId(1L);
+            eve.setAdmin((Admin) u);
+            
+            
+            eventFact.getFactory().create_XML(eve);
+            backBtn(event);
+        } catch (Exception ex) {
+            Logger.getLogger(CreateModifyController.class.getName()).log(Level.SEVERE, null, ex);
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
+            alert.showAndWait();
+        }
+
+    }
+
+    /**
+     * This Method confirm if the user want to close the window
+     *
+     * @param event
+     */
+    public void cerrarVentana(WindowEvent event) {
+
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setContentText("Quiere salir de la aplicacion?");
-        
+
         Optional<ButtonType> result = alert.showAndWait();
-        if(result.get() == ButtonType.OK){
+        if (result.get() == ButtonType.OK) {
             Platform.exit();
-        }else {
+        } else {
             event.consume();
         }
     }
-    
+
+    /**
+     * This method is to send us to the previous window when we click on 
+     * the back button.
+     * @param event 
+     */
     public void backBtn(ActionEvent event) {
 
         try {
@@ -211,20 +256,25 @@ public class CreateModifyController {
         }
 
     }
-    public void loadDate(Event event){
+
+    /**
+     * The method loads the event data into the textfields of the window and 
+     * makes the modify button visible and the create button invisible.
+     * @param event 
+     */
+    public void loadDate(Event event) {
         nameFld.setText(event.getName());
         actFld.setText(event.getActivity());
-        dateFld.setText(event.getDate().toString());
+        datePick.setValue(event.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         plcFld.setText(event.getPlace());
         capFld.setText(event.getCapacity().toString());
         priceFld.setText(event.getPrice().toString());
-        this.id= event.getId();
+        this.id = event.getId();
         mdfBtn.setVisible(true);
         mdfBtn.setDisable(false);
         crtBtns.setVisible(false);
         crtBtns.setDisable(true);
-        
+
     }
-    
-    
+
 }
