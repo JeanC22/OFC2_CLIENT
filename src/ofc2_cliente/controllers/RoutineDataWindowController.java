@@ -17,6 +17,8 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -32,6 +34,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -43,9 +46,9 @@ import ofc2_cliente.model.Routine;
 
 /**
  *
- * @author 2dam
+ * @author Aritz
  */
-public class RoutineDataWindowController implements Initializable {
+public class RoutineDataWindowController {
     
     private Stage stage;
     @FXML
@@ -55,13 +58,16 @@ public class RoutineDataWindowController implements Initializable {
     private TextField nameTxTF;
     
     @FXML
+    private TextField timeTxTF;
+    
+    @FXML
     private TextField kcalTxTF;
             
     @FXML
     private ComboBox exerciseCB;
             
     @FXML
-    private Button exerciseBtn;
+    private Button newExerciseBtn;
             
     @FXML
     private DatePicker endDateDT;
@@ -72,33 +78,26 @@ public class RoutineDataWindowController implements Initializable {
     @FXML
     private Button returnBtn;
     
-    private Client client;
+    private RoutineController routineController;
     
-    private List<Exercise> exercises;
+    private Client client;
     
     private Routine routine;
     
+    private ObservableList<Exercise> exerciseList;
     
-    
-     private RoutineInterfaceFactory routineFactory= new RoutineInterfaceFactory();
+    private RoutineInterfaceFactory routineFactory= new RoutineInterfaceFactory();
     
     private RoutineRESTfulClient routineREST=  (RoutineRESTfulClient) routineFactory.createRoutineManager();
                             
+    private static String numbers= "[0-9]+";
             
             
             
     private static final Logger LOGGER = Logger.getLogger("of2_cliente.controllers.RoutineDataWindowController");
     
-    @FXML
-    private void handleButtonAction(ActionEvent event) {
-        System.out.println("You clicked me!");
-        label.setText("Hello World!");
-    }
+   
     
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
     
      public void setStage(Stage stage) {
         this.stage = stage;
@@ -116,12 +115,19 @@ public class RoutineDataWindowController implements Initializable {
         stage.setResizable(false);
         stage.initModality(Modality.APPLICATION_MODAL);
         changeButtonAction();
+        timeTxTF.setOnKeyReleased(this::validateTimeTxTX);
+        nameTxTF.setOnKeyReleased(this::validateName);
+        kcalTxTF.setOnKeyReleased(this::validateKcalTxTX);
+       
+        exerciseCB.setOnKeyReleased(this::enableDisableCreateUpdateBtn1);
+        
         if (createOrupdateBtn.getText().equalsIgnoreCase("Create")) {
             createOrupdateBtn.setOnAction(this::createRoutine);
         }else{
             createOrupdateBtn.setOnAction(this::updateRoutine);
         }
         returnBtn.setOnAction(this::closeWindow);
+        newExerciseBtn.setOnAction(this::newExercise);
         
        // stage.setOnShowing(this::windowShowing);
         //
@@ -134,6 +140,76 @@ public class RoutineDataWindowController implements Initializable {
 
     }
     
+    private void enableDisableCreateUpdateBtn(){
+        if (!nameTxTF.getText().isEmpty() && !timeTxTF.getText().isEmpty() && !kcalTxTF.getText().isEmpty() && !exerciseCB.getSelectionModel().isEmpty()) {
+            createOrupdateBtn.setDisable(false);
+        }else{
+            createOrupdateBtn.setDisable(true);
+            
+            
+        }
+    }
+     private void enableDisableCreateUpdateBtn1(KeyEvent event){
+        enableDisableCreateUpdateBtn();
+        
+    }
+    
+    private void validateTimeTxTX(KeyEvent key){
+        try {
+            float time=Float.valueOf(timeTxTF.getText());
+            
+            if (time<0) {
+                 Alert a= new Alert(Alert.AlertType.WARNING);
+            a.setContentText("El campo time debe contener numeros positivos");
+            a.showAndWait();
+            timeTxTF.setText("");
+            }
+            enableDisableCreateUpdateBtn();
+        } catch (Exception e) {
+            Alert a= new Alert(Alert.AlertType.WARNING);
+            a.setContentText("El campo time debe contener solo números");
+            a.showAndWait();
+            timeTxTF.setText("");
+        }
+        
+       
+    }
+     private void validateKcalTxTX(KeyEvent key){
+        try {
+            float time=Float.valueOf(kcalTxTF.getText());
+            
+            if (time<0) {
+                 Alert a= new Alert(Alert.AlertType.WARNING);
+            a.setContentText("El campo kcal debe contener numeros positivos");
+            a.showAndWait();
+            timeTxTF.setText("");
+            }
+            enableDisableCreateUpdateBtn();
+        } catch (Exception e) {
+            Alert a= new Alert(Alert.AlertType.WARNING);
+            a.setContentText("El campo kcal debe contener solo números");
+            a.showAndWait();
+            timeTxTF.setText("");
+        }
+        
+       
+    }
+    
+    private void validateName(KeyEvent event){
+        if (nameTxTF.getText().length()>30) {
+            Alert a= new Alert(Alert.AlertType.WARNING);
+            a.setContentText("El campo name debe contener menos de 30 caracteres");
+            a.showAndWait();
+            nameTxTF.setText("");
+            
+        }
+        enableDisableCreateUpdateBtn();
+        
+        
+    }
+    
+   
+    
     private void createRoutine(ActionEvent event){
         LocalDate ld= endDateDT.getValue();
         Routine newRoutine= new Routine();
@@ -141,7 +217,8 @@ public class RoutineDataWindowController implements Initializable {
         newRoutine.setKcal(Double.valueOf(kcalTxTF.getText()));
         newRoutine.setStart_date(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
         newRoutine.setEnd_date(Date.from(ld.atStartOfDay(ZoneId.systemDefault()).toInstant()));
-        //newRoutine.setClie(this.client);
+        newRoutine.setTime(Float.valueOf(timeTxTF.getText()));
+        newRoutine.setClie(this.client);
         
         try {
             routineREST.create_XML(newRoutine);
@@ -150,6 +227,37 @@ public class RoutineDataWindowController implements Initializable {
         }
         
         this.stage.close();
+    }
+    
+    private void newExercise(ActionEvent event){
+         
+        //List<Exercise> exer = this.routine.getEjercicios();
+
+        try {
+            Stage mainStage = new Stage();
+            URL viewLink = getClass().getResource(
+                    "/ofc2_cliente/ui/ExerciseWindow.fxml");
+            // initialition loader
+            FXMLLoader loader = new FXMLLoader(viewLink);
+            //make the root with the loader
+            Parent root = (Parent) loader.load();
+            //Get the controller
+            ExerciseWindowController mainStageController
+                    = ((ExerciseWindowController) loader.getController());
+            
+            //set the stage
+            mainStageController.setStage(mainStage);
+
+            //start the stage
+            mainStageController.initStage(root);
+
+            
+            LOGGER.info("Method routineDataWindow is finished");
+
+        } catch (IOException ex) {
+            Logger.getLogger(SignInWindowController.class.getName())
+                    .log(Level.SEVERE, ex.getMessage(), ex);
+        }
     }
     
     private void updateRoutine(ActionEvent event){
@@ -163,6 +271,9 @@ public class RoutineDataWindowController implements Initializable {
         } catch (Exception e) {
             LOGGER.severe(e.getMessage());
         }
+         
+         this.routineController.refreshTable();
+         this.routineController.updateTable();
 
             
          this.stage.close();
@@ -172,6 +283,7 @@ public class RoutineDataWindowController implements Initializable {
     private void changeButtonAction(){
         if (routine==null) {
             createOrupdateBtn.setText("Create");
+           
         }else{
             createOrupdateBtn.setText("Update");
         }
@@ -250,22 +362,30 @@ public class RoutineDataWindowController implements Initializable {
         LOGGER.info("Method windowShowing is finished");
 
     }
+       
+       private void setTooltips() {
 
-    public List<Exercise> getExercises() {
-        return exercises;
+        nameTxTF.setTooltip(new Tooltip("Max 30 characters"));
+        newExerciseBtn.setTooltip(new Tooltip("Create a new exerise"));
+       
+
     }
 
-    public void setExercises(List<Exercise> exercises) {
-        this.exercises = exercises;
-    }
     
     public void getRoutine(Routine routine){
         this.routine=routine;
-        
+        this.exerciseList= FXCollections.observableArrayList(routine.getEjercicios());
         nameTxTF.setText(routine.getName());
         endDateDT.setValue(routine.getEnd_date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         kcalTxTF.setText(routine.getKcal().toString());
+        timeTxTF.setText(routine.getTime().toString());
+        exerciseCB.setItems(exerciseList);
         
+        
+    }
+
+    void setRoutineController(RoutineController RoutineController) {
+        this.routineController= RoutineController;
     }
     
     

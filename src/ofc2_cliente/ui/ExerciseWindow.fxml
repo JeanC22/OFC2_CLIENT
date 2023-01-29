@@ -14,14 +14,14 @@
    <children>
       <TableView id="exerciseTable" fx:id="exerciseTable" layoutX="80.0" layoutY="130.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="380.0" prefWidth="640.0">
         <columns>
-          <TableColumn prefWidth="315.1999816894531" text="Name" />
-          <TableColumn prefWidth="323.199951171875" text="time" />
+          <TableColumn fx:id="nameColumn" prefWidth="315.1999816894531" text="Name" />
+          <TableColumn fx:id="timeColumn" prefWidth="323.199951171875" text="time" />
         </columns>
       </TableView>
       <TextField id="nameTxTF" fx:id="nameTxTF" layoutX="124.0" layoutY="89.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" />
-      <TextField id="timeTxTF" fx:id="timeTxTF" layoutX="332.0" layoutY="89.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" />
-      <Button id="returnBtn" fx:id="returnBtn" layoutX="81.0" layoutY="521.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="36.0" prefWidth="57.0" text="Return" />
-      <Button id="createBtn" fx:id="createBtn" layoutX="548.0" layoutY="89.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" text="Create" />
+      <TextField id="timeTxTF" fx:id="timeTxTF" layoutX="394.0" layoutY="89.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" />
+      <Button id="returnBtn" fx:id="returnBtn" layoutX="81.0" layoutY="521.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="36.0" prefWidth="82.0" text="Return" />
+      <Button id="createBtn" fx:id="createBtn" layoutX="584.0" layoutY="89.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" text="Create" />
       <MenuBar id="helpMB" layoutX="5.0" layoutY="1.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
         <menus>
           <Menu id="helpMenu" mnemonicParsing="false" text="Help">
@@ -32,6 +32,6 @@
         </menus>
       </MenuBar>
       <Label layoutX="81.0" layoutY="93.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" text="Name" />
-      <Label layoutX="289.0" layoutY="93.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" text="Time" />
+      <Label layoutX="350.0" layoutY="93.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" text="Time" />
    </children>
 </AnchorPane>

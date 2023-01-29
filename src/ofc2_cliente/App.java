@@ -39,6 +39,7 @@ public class App extends Application {
             //initialization the singInController
             RoutineController mainStageController
                     = ((RoutineController) loader.getController());
+            mainStageController.setController(mainStageController);
             //set the Stage to the controll
             mainStageController.setStage(primaryStage);
             //Start the Stage

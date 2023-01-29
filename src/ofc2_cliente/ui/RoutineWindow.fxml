@@ -26,23 +26,27 @@
                   <TableColumn fx:id="end_dateColumn" prefWidth="125.5999755859375" text="End date" />
               </columns>
                <contextMenu>
-                  <ContextMenu>
+                  <ContextMenu fx:id="contextMenu">
                     <items>
-                      <MenuItem mnemonicParsing="false" text="Unspecified Action" />
+                      <MenuItem fx:id="updateMn" mnemonicParsing="false" text="Unspecified Action" />
+                        <MenuItem fx:id="createMn" mnemonicParsing="false" text="Unspecified Action" />
+                        <MenuItem fx:id="findMn" mnemonicParsing="false" text="Unspecified Action" />
+                        <MenuItem fx:id="deleteMn" mnemonicParsing="false" text="Unspecified Action" />
                     </items>
                   </ContextMenu>
                </contextMenu>
             </TableView>
             <TextField id="nameTxTF" fx:id="nameTxTF" layoutX="575.0" layoutY="153.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="34.0" prefWidth="150.0" />
             <Button id="findBtn" fx:id="findBtn" layoutX="732.0" layoutY="153.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="42.0" text="Find" />
-            <Label layoutX="581.0" layoutY="116.0" prefHeight="18.0" prefWidth="138.0" text="Filter" />
+            <Label layoutX="732.0" layoutY="116.0" prefHeight="18.0" prefWidth="42.0" text="Filter" />
             <Button id="deleteBtn" fx:id="deleteBtn" layoutX="481.0" layoutY="667.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="73.0" text="Delete" />
             <Button id="updateBtn" fx:id="updateBtn" layoutX="650.0" layoutY="667.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="73.0" text="Update" />
             <Button id="createBtn" fx:id="createBtn" layoutX="320.0" layoutY="667.0" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="73.0" text="Create" />
             <Button id="reportBtn" fx:id="reportBtn" layoutX="122.0" layoutY="667.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="73.0" text="Report" />
             <ImageView id="symbolIM" fitHeight="95.0" fitWidth="127.0" layoutX="40.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView fitHeight="95.0" fitWidth="127.0" layoutX="449.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true" />
-            <ComboBox fx:id="filterCB" layoutX="780.0" layoutY="153.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="34.0" prefWidth="150.0" />
+            <ComboBox fx:id="filterCH" layoutX="780.0" layoutY="153.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="34.0" prefWidth="150.0" />
+            <Label layoutX="525.0" layoutY="161.0" prefHeight="18.0" prefWidth="42.0" text="Name" />
          </children>
       </AnchorPane>
    </children>

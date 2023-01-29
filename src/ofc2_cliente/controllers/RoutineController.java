@@ -9,7 +9,16 @@ package ofc2_cliente.controllers;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import static java.time.temporal.TemporalQueries.localDate;
+import java.util.Date;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +40,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -49,16 +61,19 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
+import ofc2_cliente.logic.BusinessLogicException;
 import ofc2_cliente.model.Routine;
 import ofc2_cliente.logic.RoutineInterfaceFactory;
 import ofc2_cliente.logic.RoutineRESTfulClient;
+import ofc2_cliente.model.Client;
 import ofc2_cliente.model.Exercise;
+import ofc2_cliente.model.Exercises;
 
 /**
- *
- * @author 2dam
+ * Controller class for RoutineWindow in routines management application.
+ * @author Aritz
  */
-public class RoutineController implements Initializable {
+public class RoutineController {
     
     private Stage stage;
     
@@ -72,7 +87,7 @@ public class RoutineController implements Initializable {
     
     @FXML
     private TextField nameTxTF;
-            
+         
     @FXML
     private ComboBox filterCH;
                    
@@ -117,13 +132,24 @@ public class RoutineController implements Initializable {
     private Exercise ex;
     
     private static final Logger LOGGER = Logger.getLogger("of2_cliente.controllers.ExerciseCpontroller");
+    @FXML
+    private Pane OFC_SIGN_IN;
+    @FXML
+    private ContextMenu contextMenu;
+    @FXML
+    private MenuItem updateMn;
+    @FXML
+    private MenuItem createMn;
+    @FXML
+    private MenuItem findMn;
+    @FXML
+    private MenuItem deleteMn;
     
-   
+    private Client cli;
     
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
+    private RoutineController mainStageController;
+
+    
     
      public void setStage(Stage stage) {
         this.stage = stage;
@@ -136,7 +162,7 @@ public class RoutineController implements Initializable {
         LOGGER.info("starting initStage(SignIN)");
         //Create a scene associated to the node graph root.
         Scene scene = new Scene(root);
-
+   
         //Associate scene to primaryStage(Window)
         stage.setScene(scene);
         //title of the window: OFC SIGN IN.
@@ -144,15 +170,27 @@ public class RoutineController implements Initializable {
         stage.setResizable(false);
         deleteBtn.setDisable(true);
         updateBtn.setDisable(true);
+        deleteMn.setDisable(true);
+        updateMn.setDisable(true);
         findBtn.setDisable(true);
-        ObservableList<String> list= FXCollections.observableArrayList("Routine name", "Exercise name");
+        findMn.setDisable(true);
+        ObservableList<String> list= FXCollections.observableArrayList("Routine", "Routine exerise");
         filterCH.setItems(list);
+        setTooltips();
+        deleteMn.setOnAction(this::deleteRoutine);
+        updateMn.setOnAction(this::routineDataWindowUpdate);
+        createMn.setOnAction(this::routineDataWindowCreate);
+        
+        findBtn.setOnAction(this::filterMethod);
+        findMn.setOnAction(this::filterMethod);
         nameTxTF.setOnKeyReleased(this::enabledFindBtn);
+        //filterCH.setOnAction(this::enableFindBtnC);
         deleteBtn.setOnAction(this::deleteRoutine);
         createBtn.setOnAction(this::routineDataWindowCreate);
         updateBtn.setOnAction(this::routineDataWindowUpdate);
         reportBtn.setOnAction(this::showReport);
         routineTable.getSelectionModel().selectedItemProperty().addListener(this::tableControl);
+        
         stage.setOnShowing(this::windowShowing);
        
         //findBtn.setOnAction(this::signIn);
@@ -164,7 +202,81 @@ public class RoutineController implements Initializable {
 
     }
     
-    private void refreshTable(){
+    /**
+     * This method enables or disables findBtn depending on whether the 
+     * combo box filterCH and text field nameTxTX are filled or empty
+     * @param event 
+     */
+    public void enableFindBtnC(ActionEvent event){
+        if (!nameTxTF.getText().isEmpty() && !filterCH.getItems().isEmpty()) {
+            findBtn.setDisable(false);
+            findMn.setDisable(false);
+        }else{
+            findBtn.setDisable(true);
+            findMn.setDisable(true);
+        }
+    }
+    
+    private void filterMethod(ActionEvent event) {
+        ObservableList<Routine> list = null;
+        
+        
+            
+        
+        try {
+            switch (filterCH.getSelectionModel().getSelectedItem().toString()) {
+
+                case "Routine":
+
+                    list = FXCollections.observableArrayList(routineREST.consultRoutinesByName_XML(new GenericType<List<Routine>>() {
+                    }, nameTxTF.getText()));
+
+                    break;
+
+                case "Routine exercise":
+                    list = FXCollections.observableArrayList(routineREST.consultRoutinesByName_XML(new GenericType<List<Routine>>() {
+                    }, nameTxTF.getText()));
+                    break;
+            }
+            if (list.isEmpty()) {
+            Alert a= new Alert(Alert.AlertType.INFORMATION,"", ButtonType.OK);
+            a.setContentText("No se han encontrado ninguna rutina con ese nombre");
+            a.showAndWait();
+        }else{
+            routineTable.getItems().remove(routineList);
+            routineTable.setItems(list);
+            }
+        } catch (BusinessLogicException ex) {
+            Alert a =new Alert(Alert.AlertType.ERROR,"", ButtonType.OK);
+            a.setContentText("Ha habido un error a la hora de hacer la petición: "+ex.getLocalizedMessage());
+            Logger.getLogger(RoutineController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    /**
+     * This method enables or disables deleteBtn and updateBtn depending on
+     * whether the routineTable has a selected row or not
+     */
+    private void filterRoutine(ActionEvent event) {
+        ObservableList<Routine> routines;
+        try {
+            //routines= FXCollections.observableArrayList(routineREST.consultRoutinesByName_XML(new GenericType<List<Routine>>() {},nameTxTF.getText()));
+            
+            routineTable.getItems().remove(routineList);
+            //routineList=routines;
+            routineTable.setItems(routineList);
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setContentText("No se han encontrado Rutinas con el nombre introducido");
+        }
+        
+        
+    }
+    
+    public void refreshTable(){
+        routineTable.getItems().remove(this.routineList);
+        chargeTable(routineList);
         routineTable.refresh();
     }
     /**
@@ -174,6 +286,8 @@ public class RoutineController implements Initializable {
     private void enabledFindBtn(KeyEvent event){
         if (!nameTxTF.getText().isEmpty() && !filterCH.getItems().isEmpty()) {
             findBtn.setDisable(false);
+            findMn.setDisable(false);
+            findBtn.setTooltip(new Tooltip("Write the name of the "+filterCH.getSelectionModel().getSelectedItem()));
         }else{
              findBtn.setDisable(true);
         }
@@ -203,6 +317,7 @@ public class RoutineController implements Initializable {
             RoutineDataWindowController mainStageController
                     = ((RoutineDataWindowController) loader.getController());
             
+            mainStageController.setRoutineController(this.mainStageController);
             mainStageController.getRoutine(routine);
             //set the stage
             mainStageController.setStage(mainStage);
@@ -235,6 +350,7 @@ public class RoutineController implements Initializable {
             //Get the controller
             RoutineDataWindowController mainStageController
                     = ((RoutineDataWindowController) loader.getController());
+            mainStageController.setRoutineController(this.mainStageController);
             //set the stage
             mainStageController.setStage(mainStage);
             //start the stage
@@ -263,7 +379,7 @@ public class RoutineController implements Initializable {
             JasperPrint jasperPrint = JasperFillManager.fillReport(jr,parameters,dataItems);
             //Create and show the report window. The second parameter false value makes 
             //report window not to close app.
-            JasperViewer jasperViewer = new JasperViewer(jasperPrint,false);
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint);
             jasperViewer.setVisible(true);
         } catch (JRException ex) {
             Logger.getLogger(RoutineController.class.getName()).log(Level.SEVERE, null, ex);
@@ -271,21 +387,34 @@ public class RoutineController implements Initializable {
     }
     
     private void tableControl(ObservableValue observableValue, Object oldValue, Object newValue){
-        
-        
+       
         if (newValue!=null) {
-            deleteBtn.setDisable(false);
+             deleteBtn.setDisable(false);
+            deleteMn.setDisable(false);
             updateBtn.setDisable(false);
+            updateMn.setDisable(false);
+        }else{
+            deleteBtn.setDisable(true);
+            deleteMn.setDisable(true);
+            updateBtn.setDisable(true);
+            updateMn.setDisable(true);
         }
     }
     
     private void deleteRoutine(ActionEvent event){
-        Routine routine;
+        try {
+             Routine routine;
         routine= (Routine) routineTable.getSelectionModel().getSelectedItem();
         
         routineREST.remove(routine.getId().toString());
         routineTable.getItems().remove(routine);
         routineTable.refresh();
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setContentText("La rutina se ha borrado correctamente");
+        alert.showAndWait();
+        } catch (Exception e) {
+        }
+       
     }
     
      
@@ -305,7 +434,7 @@ public class RoutineController implements Initializable {
             //Get the controller
             ExerciseWindowController mainStageController
                     = ((ExerciseWindowController) loader.getController());
-            mainStageController.setEx(exer);
+            
             //set the stage
             mainStageController.setStage(mainStage);
 
@@ -326,8 +455,8 @@ public class RoutineController implements Initializable {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setContentText("Quiere salir de la aplicacion?");
-        alert.getDialogPane().getStylesheets().add(
-                getClass().getResource("/ofc2_cliente/ui/dialog.css").toExternalForm());
+       
+      
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
@@ -338,13 +467,14 @@ public class RoutineController implements Initializable {
             event.consume();
         }
     }
-     
-       private void windowShowing(WindowEvent event) {
-        LOGGER.info("Method windowShowing is starting ");
-       
-        
 
-       
+    private void chargeTable(ObservableList<Routine> routineList) {
+        for (int i = 0; i < routineList.size(); i++) {
+      
+            routineList.get(i).setStart_date(Date.from(routineList.get(i).getStart_date().toInstant()));//atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            routineList.get(i).setEnd_date(Date.from(routineList.get(i).getStart_date().toInstant()));//atStartOfDay(ZoneId.systemDefault()).toInstant()));
+                            
+        }
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         //exerciseColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         kcalColumn.setCellValueFactory(new PropertyValueFactory<>("kcal"));
@@ -352,24 +482,101 @@ public class RoutineController implements Initializable {
         start_dateColumn.setCellValueFactory(new PropertyValueFactory<>("start_date"));
         end_dateColumn.setCellValueFactory(new PropertyValueFactory<>("end_date"));
         
+     
+
         
-       
-        routineList= FXCollections.observableArrayList(routineREST.consultAllRoutines_XML(new GenericType<List<Routine>>() {}));
         routineTable.setItems(routineList);
-        //The field (userNameTxTF) has the focus
-        nameTxTF.requestFocus();
-        //The field (userNameTxTF) will be shown with a ToolTip the message “max 15 characters”. 
-        //filterCH.setTooltip(new Tooltip("Filter by name or exercise"));
-        //The field (usernameTT) will be shown with a ToolTip the message “max 15 characters”. 
-        //Tooltip.install(usernameTT, new Tooltip("max 15 characters"));
-        //The field (passwdTxPF) will be shown with a ToolTip the message “min 6 max 12 characters”
-        //passwdTxPF.setTooltip(new Tooltip("min 6 max 12 characters"));
-        //The field (passwrdTT) will be shown with a ToolTip the message “min 6 max 12 characters”
-        //Tooltip.install(passwrdTT, new Tooltip("min 6 max 12 characters"));
-        //The HyperLink (signUpLink) will be shown with a ToolTip the message “Click para abrir la ventana de registro”. 
-        //signUpLink.setTooltip(new Tooltip("Click para abrir la ventana de registro"));
-        LOGGER.info("Method windowShowing is finished");
+    }
+
+    private void windowShowing(WindowEvent event) {
+       // try {
+            LOGGER.info("Method windowShowing is starting ");
+            rutinaDePrueba();
+            //routineList= FXCollections.observableArrayList(routineREST.consultAllClientRoutines_XML(new GenericType<List<Routine>>() {}, cli.getId().toString()));
+            chargeTable(routineList);
+            
+            deleteMn.setText("Delete");
+            updateMn.setText("Update");
+            findMn.setText("Find");
+            createMn.setText("Create");
+            
+            nameTxTF.requestFocus();
+            //The field (userNameTxTF) will be shown with a ToolTip the message “max 15 characters”.
+            //filterCH.setTooltip(new Tooltip("Filter by name or exercise"));
+            //The field (usernameTT) will be shown with a ToolTip the message “max 15 characters”.
+            //Tooltip.install(usernameTT, new Tooltip("max 15 characters"));
+            //The field (passwdTxPF) will be shown with a ToolTip the message “min 6 max 12 characters”
+            //passwdTxPF.setTooltip(new Tooltip("min 6 max 12 characters"));
+            //The field (passwrdTT) will be shown with a ToolTip the message “min 6 max 12 characters”
+            //Tooltip.install(passwrdTT, new Tooltip("min 6 max 12 characters"));
+            //The HyperLink (signUpLink) will be shown with a ToolTip the message “Click para abrir la ventana de registro”.
+            //signUpLink.setTooltip(new Tooltip("Click para abrir la ventana de registro"));
+            LOGGER.info("Method windowShowing is finished");
+       // } catch (BusinessLogicException ex) {
+            Logger.getLogger(RoutineController.class.getName()).log(Level.SEVERE, null, ex);
+        //}
+
+    }
+
+    private void setTooltips() {
+
+        deleteBtn.setTooltip(new Tooltip("First select the row you want to delete"));
+        updateBtn.setTooltip(new Tooltip("First select the row you want to update"));
+        nameTxTF.setTooltip(new Tooltip("Max 30 characters"));
+        createBtn.setTooltip(new Tooltip("Open the form"));
+        findBtn.setTooltip(new Tooltip("First complite filter components"));
+        Tooltip.install(filterCH, new Tooltip("Choose the search mode"));
 
     }
     
+    public void updateTable(){
+       
+        routineList.add(rutinaDePrueba2().get(0));
+        
+    }
+    
+    private void rutinaDePrueba(){
+        Routine r= new Routine();
+        Exercise e= new Exercise();
+        e.setExercise(Exercises.CORRER);
+        
+        ObservableList<Exercise> list= FXCollections.observableArrayList(e);
+                
+        float c= 12;
+        r.setName("Prueba1");
+        r.setKcal(12.11);
+        r.setTime(c);
+        r.setStart_date(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        r.setEnd_date(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        r.setEjercicios(list);
+        routineList= FXCollections.observableArrayList(r);
+    }
+    
+    private ObservableList<Routine> rutinaDePrueba2(){
+        Routine r= new Routine();
+        Exercise e= new Exercise();
+        e.setExercise(Exercises.CORRER);
+        
+        ObservableList<Exercise> list= FXCollections.observableArrayList(e);
+                
+        float c= 12;
+        r.setName("Prueba2");
+        r.setKcal(12.11);
+        r.setTime(c);
+        r.setStart_date(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        r.setEnd_date(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        r.setEjercicios(list);
+        routineList= FXCollections.observableArrayList(r);
+        
+        return routineList;
+    }
+
+    public void setController(RoutineController mainStageController) {
+        this.mainStageController= mainStageController;
+    }
+    
+    public void setClient(Client cli){
+        this.cli=cli;
+    }
+
 }
