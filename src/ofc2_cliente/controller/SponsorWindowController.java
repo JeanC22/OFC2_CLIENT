@@ -7,6 +7,8 @@ package ofc2_cliente.controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -58,6 +60,7 @@ import ofc2_cliente.model.Sponsor;
  */
 public class SponsorWindowController{
     private ObservableList<Sponsor> sponsorList;
+    private Sponsor sponsor;
     private Stage stage;
     @FXML
     private Pane sponsorPane;
@@ -99,7 +102,7 @@ public class SponsorWindowController{
     private MenuItem mItModify;
     @FXML
     private MenuItem mItDelete;
-
+    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
     SponsorManagerFactory sponsorFactory = new SponsorManagerFactory();
     private static final Logger LOGGER=Logger.getLogger("ofc2_cliente.controller.SponsorWindowController");
 
@@ -129,8 +132,8 @@ public class SponsorWindowController{
             //reportBtn.setOnAction(this::sponsorReport);
             tbvSponsor.getSelectionModel().selectedItemProperty()
                     .addListener(this::enbledButtons);
-            ObservableList<String> opciones = FXCollections.observableArrayList("Name", "Date");
-            cbxFilter.setItems(opciones);
+            findBtn.setOnAction(this::findData);
+            
 
             //Show window
             stage.show();
@@ -145,6 +148,7 @@ public class SponsorWindowController{
      * @param event 
      */
     private void windowShowing(WindowEvent event) {
+
         try {
             LOGGER.info("Window Showing in start");
             createBtn.setDisable(false);
@@ -161,10 +165,16 @@ public class SponsorWindowController{
             sponsorList = FXCollections.observableArrayList(sponsorFactory.createSponsorManager().
                     findAllSponsors_XML(new GenericType<List<Sponsor>>() {}));
             tbvSponsor.setItems(sponsorList);
+            //ComboBox Options
+            cbxFilter.getItems().addAll("Name", "Date");
+            //Default selected
+            cbxFilter.getSelectionModel().selectFirst();
         } catch (BusinessLogicException ex) {
-            LOGGER.log(Level.SEVERE, "Error al encontrar datos de loa anuncios", 
+            LOGGER.log(Level.SEVERE, "Error al buscar los datos de los anuncios", 
                     ex.getMessage());
         }
+            
+            
 
     }
     /**
@@ -229,7 +239,7 @@ public class SponsorWindowController{
     @FXML
     private void modifySponsor(ActionEvent event) {
         //This is the Sponsor selected row
-        Sponsor sponsor = ((Sponsor) this.tbvSponsor.getSelectionModel().getSelectedItem());
+        sponsor = ((Sponsor) this.tbvSponsor.getSelectionModel().getSelectedItem());
         try {
             LOGGER.info("Open the form Sponsor Window and sending the data");
             Stage mainStage = new Stage();
@@ -256,8 +266,8 @@ public class SponsorWindowController{
 
 
         } catch (IOException ex) {
-            Logger.getLogger(SponsorWindowController.class.getName())
-                    .log(Level.SEVERE, ex.getMessage(), ex);
+            LOGGER.log(Level.SEVERE, "Error al abrir la ventana del formulario", 
+                    ex.getMessage());
         }
     }
     
@@ -270,7 +280,7 @@ public class SponsorWindowController{
     private void deleteSponsor(ActionEvent event) {
         try {
             //This saves the selected row into the object Sponsor
-            Sponsor sponsor = ((Sponsor) this.tbvSponsor.getSelectionModel().getSelectedItem());
+            sponsor = ((Sponsor) this.tbvSponsor.getSelectionModel().getSelectedItem());
             //This is the alert to confirmation
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
                     "¿Borrar la fila seleccionada?",
@@ -287,6 +297,61 @@ public class SponsorWindowController{
             //This Exception control the errors
         } catch (BusinessLogicException b) {
             LOGGER.log(Level.SEVERE, "Error al borrar la fila selecionada", b.getMessage());
+        }
+    }
+    /**
+     * This method searches the Sponsor data by date and name.
+     * @param event 
+     */
+    @FXML
+    private void findData(ActionEvent event) {
+        try {
+            //if field is empty error message displayed
+            if(txtfFind.getText().isEmpty()){
+                throw new Exception("El campo de Busqueda tiene que estar informado"); 
+            }
+            //If select the Date option in combobox
+            //and enter a data that is not a date will display an error message
+            if(cbxFilter.getSelectionModel().isSelected(1) && 
+                    !validateDate(txtfFind.getText())){
+                throw new Exception("El valor introducido no es una fecha, "
+                        + "el formato para buscar por fecha es (dd/MM/yyyy)"); 
+            }
+            //If select the Date option in combobox
+            //and cannot find the date entered will display an error message
+            if(cbxFilter.getSelectionModel().isSelected(1) && 
+                    !sponsor.getDate().equals(format.parse(txtfFind.getText()))){
+                throw new Exception("No se ha podido encontrar el anuncio con"
+                        + " la fecha introducida"); 
+            }
+            //If select the Name option in combobox
+            //and enter data is a date will display an error message
+            if(cbxFilter.getSelectionModel().isSelected(0) && 
+                    validateDate(txtfFind.getText())){
+                throw new Exception("No se puede introducir una fecha si estas "
+                        + "buscando por nombre"); 
+            }
+            //If select the Name option in combobox
+            //and cannot find the Name entered will display an error message
+            if(cbxFilter.getSelectionModel().isSelected(0) && 
+                    !sponsor.getName().equalsIgnoreCase(txtfFind.getText())){
+                throw new Exception("No se ha podido encontrar el anuncio con"
+                        + "el nombre introducido"); 
+            }
+             if(cbxFilter.getSelectionModel().isSelected(0)){
+                 sponsorList = FXCollections.observableArrayList(sponsorFactory.
+                    createSponsorManager().findSponsorByName_XML(new GenericType<List<Sponsor>>() {}, txtfFind.getText()));
+                 tbvSponsor.setItems(sponsorList);
+             }else if(cbxFilter.getSelectionModel().isSelected(1)){
+                 sponsorList = FXCollections.observableArrayList(sponsorFactory.
+                    createSponsorManager().findSponsorByDate_XML(new GenericType<List<Sponsor>>() {}, txtfFind.getText()));
+                 tbvSponsor.setItems(sponsorList);
+             }
+            
+            
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK)
+                    .showAndWait();
         }
     }
     /**
@@ -309,4 +374,18 @@ public class SponsorWindowController{
             Logger.getLogger(SponsorWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }*/
+    /**
+     * This method validate the date entered
+     * @param fecha Date
+     * @return true or false
+     */
+    public Boolean validateDate(String fecha){
+        try {
+            format = new SimpleDateFormat("dd/MM/yyyy");
+            format.parse(fecha);
+        } catch (ParseException e) {
+            return false;
+        }
+        return true;
+    }
 }
