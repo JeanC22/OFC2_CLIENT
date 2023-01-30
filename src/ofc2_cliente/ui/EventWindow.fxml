@@ -11,7 +11,8 @@
 <?import javafx.scene.layout.Pane?>
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofc2_cliente.controllers.EventWindowController">
-   <children>
+    <children>
+        <fx:include fx:id="menuBar" source="menu.fxml" /> 
       <TableView fx:id="eventTable" layoutX="112.0" layoutY="200.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" style="-fx-border-radius: 10; -fx-border-color: black; -fx-border-width: 7px; -fx-border-insets: -3;">
         <columns>
           <TableColumn fx:id="colName" prefWidth="127.20004272460938" text="Name" />
@@ -39,7 +40,9 @@
       <Button fx:id="registerBtn" layoutX="199.0" layoutY="667.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="76.0" text="Register" />
       <Button fx:id="createBtn" layoutX="459.0" layoutY="667.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#createModifyWindowCre" prefHeight="30.0" prefWidth="107.0" text="Create" />
       <Button fx:id="reportBtn" layoutX="122.0" layoutY="667.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#generateReport" prefHeight="30.0" prefWidth="76.0" text="Report" />
+      <Button fx:id="helpBtn" layoutX="275.0" layoutY="667.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"  onAction="#showWindowHelper" prefHeight="30.0" prefWidth="76.0" text="Help" />
       <ImageView fx:id="Event" fitHeight="95.0" fitWidth="127.0" layoutX="40.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true" />
       <ImageView fitHeight="95.0" fitWidth="127.0" layoutX="449.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true" />
+      
    </children>
 </Pane>

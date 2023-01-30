@@ -4,24 +4,19 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 
-<MenuBar fx:id="menuBar" prefHeight="30.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<MenuBar fx:id="menuBar" prefHeight="30.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller = "ofc2_cliente.controllers.MenuController">
    <menus>
       <Menu fx:id="homeMenu" mnemonicParsing="false" text="Home">
          <items>
-            <MenuItem fx:id="eventMenu" mnemonicParsing="false" text="Event" />
+            <MenuItem fx:id="eventMenu" mnemonicParsing="false" onAction="#showEventWindow" text="Event" />
             <MenuItem fx:id="routineMenu" mnemonicParsing="false" text="Routine" />
             <MenuItem fx:id="CommentMenu" mnemonicParsing="false" text="Comment" />
             <MenuItem fx:id="sponsorMenu" mnemonicParsing="false" text="Sponsor" />
          </items>
       </Menu>
-      <Menu fx:id="helpMenu" mnemonicParsing="false" text="Help">
-         <items>
-            <MenuItem mnemonicParsing="false" text="Action 1" />
-         </items>
-      </Menu>
       <Menu fx:id="profileMenu" mnemonicParsing="false" text="Profile">
          <items>
-            <MenuItem fx:id="showMenu" mnemonicParsing="false" text="Show" />
+            <MenuItem fx:id="showProfile" mnemonicParsing="false" text="Show" />
             <MenuItem fx:id="logoutMenu" mnemonicParsing="false" text="Logout" />
          </items>
       </Menu>

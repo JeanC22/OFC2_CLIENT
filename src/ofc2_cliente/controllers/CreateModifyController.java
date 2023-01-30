@@ -188,7 +188,7 @@ public class CreateModifyController {
             if(this.plcFld.getText().length() > 30 || !this.plcFld.getText().matches(regex) ){
                 throw new Exception("El campo de place tiene mas de 30 caracteres o tiene caracteres especiales");
             }
-            if(!this.priceFld.getText().matches(regexNum)){
+            if(!this.capFld.getText().matches(regexNum)){
                 throw new Exception("El campo price solo permite numeros");
             }
             

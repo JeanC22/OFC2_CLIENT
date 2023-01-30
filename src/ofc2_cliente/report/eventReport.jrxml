@@ -15,9 +15,9 @@
 	<title>
 		<band height="79" splitType="Stretch">
 			<staticText>
-				<reportElement x="250" y="25" width="69" height="33" uuid="490365f8-1a25-48d9-b98b-ca5e9001801f"/>
-				<textElement>
-					<font size="18"/>
+				<reportElement x="0" y="0" width="555" height="79" uuid="490365f8-1a25-48d9-b98b-ca5e9001801f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="36"/>
 				</textElement>
 				<text><![CDATA[Event]]></text>
 			</staticText>
