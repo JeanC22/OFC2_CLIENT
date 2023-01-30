@@ -34,18 +34,22 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="79" splitType="Stretch">
+		<band height="114" splitType="Stretch">
 			<staticText>
-				<reportElement x="139" y="18" width="298" height="44" uuid="963b962d-d5fd-4c05-8b17-06426560e8db"/>
+				<reportElement x="131" y="70" width="298" height="44" uuid="963b962d-d5fd-4c05-8b17-06426560e8db"/>
 				<textElement>
 					<font size="30"/>
 				</textElement>
 				<text><![CDATA[COMMENT REPORT]]></text>
 			</staticText>
+			<image>
+				<reportElement x="220" y="9" width="136" height="61" uuid="320b4774-807f-4bad-beaf-0ecb38721b04"/>
+				<imageExpression><![CDATA["C:\\Users\\DarkD\\OneDrive\\Documentos\\program\\OFC2_CLIENT\\src\\ofc2_cliente\\ui\\resources\\OFCLogo.png"]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<pageHeader>
-		<band height="35" splitType="Stretch"/>
+		<band height="1" splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
 		<band height="61" splitType="Stretch">
