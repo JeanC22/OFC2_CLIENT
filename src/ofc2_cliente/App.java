@@ -13,14 +13,15 @@ import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import ofc2_cliente.controller.CommentWindowController;
-
 /**
  *
  * @author 2dam
  */
-public class App extends Application {
+public class App extends Application{
 
     private static final Logger LOGGER = Logger.getLogger(App.class.getName());
 
@@ -34,7 +35,6 @@ public class App extends Application {
             FXMLLoader loader = new FXMLLoader(viewLink);
             //initialization the root (Parent) with the FXML Loader.load
             Parent root = (Parent) loader.load();
-            
             //initialization the singInController
             CommentWindowController commentWindowController
                     = ((CommentWindowController) loader.getController());
@@ -43,7 +43,6 @@ public class App extends Application {
             //Start the Stage
             commentWindowController.initStage(root);
             LOGGER.info("Started SingInWindow");
-
         } catch (IOException ex) {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
         }

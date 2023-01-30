@@ -15,10 +15,10 @@ public class CommentFactoryManager {
 
     }
 
-    public CommentManager createOfcManager() {
+    public CommetRESTClient getFactory() {
 
-        CommentManager ofcManager = new CommetRESTClient();
-        return ofcManager;
+        CommetRESTClient comentREST = new CommetRESTClient();
+        return comentREST;
 
     }
 

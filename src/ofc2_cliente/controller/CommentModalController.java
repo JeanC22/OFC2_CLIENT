@@ -5,8 +5,6 @@
  */
 package ofc2_cliente.controller;
 
-import java.io.IOException;
-import java.net.URL;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -17,14 +15,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-import ofc2_cliente.App;
 import ofc2_cliente.model.Coment;
 
 /**
@@ -61,14 +58,16 @@ public class CommentModalController {
             stage.setScene(scene);
             //Title from the window OFC LOGED
             stage.setTitle("OFC Modal Comment");
-
+            scene.getStylesheets().addAll(this.getClass().getResource("/ofc2_cliente/ui/resources/style.css").toExternalForm());
+            stage.resizableProperty().set(false);
             userTxTF.setText(this.comment.getComClie().getUsername());
 
             subjectTxTF.setText(this.comment.getSubject());
 
             eventTxTF.setText(this.comment.getEvent().getName());
 
-            dateTxTF.setText(getDate(this.comment.getPublication_date()).format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
+            dateTxTF.setText(getDate(this.comment.getPublication_date())
+                    .format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
 
             messageTxTF.setText(this.comment.getMessage());
 
@@ -76,6 +75,8 @@ public class CommentModalController {
             stage.show();
             LOGGER.info("Stage Started");
         } catch (ParseException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
+            alert.showAndWait();
             Logger.getLogger(CommentModalController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -85,28 +86,7 @@ public class CommentModalController {
         event.consume();
     }
 
-    public void start(Stage primaryStage) throws Exception {
-        LOGGER.info("Starting SingInWindow");
-        try {
-            //link to get the FXML file
-            URL viewLink = getClass().getResource("/ofc2_cliente/ui/commentModal.fxml");
-            //initialization the loader witk the FXML file
-            FXMLLoader loader = new FXMLLoader(viewLink);
-            //initialization the root (Parent) with the FXML Loader.load
-            Parent root = (Parent) loader.load();
-            //initialization the singInController
-            CommentWindowController commentWindowController
-                    = ((CommentWindowController) loader.getController());
-            //set the Stage to the controll
-            commentWindowController.setStage(primaryStage);
-            //Start the Stage
-            commentWindowController.initStage(root);
-            LOGGER.info("Started SingInWindow");
-
-        } catch (IOException ex) {
-            Logger.getLogger(App.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-    }
+  
 
     public void setStage(Stage stage) {
 

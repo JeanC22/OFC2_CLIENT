@@ -6,29 +6,47 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofc2_cliente.controller.CommentWindowController">
-   <children>
-      <TableView fx:id="commentTableView" editable="true" layoutX="112.0" layoutY="200.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" style="-fx-border-radius: 10 10 10; -fx-border-color: black; -fx-border-width: 7px; -fx-border-insets: -3;">
-        <columns>
-          <TableColumn fx:id="subjectComment" prefWidth="109.60003662109375" text="Subject" />
-          <TableColumn fx:id="eventComment" prefWidth="88.79998779296875" text="Event" />
-            <TableColumn fx:id="clientComment" prefWidth="69.5999755859375" text="User" />
-            <TableColumn fx:id="PrivacityComment" prefWidth="76.0" text="Privacity" />
-            <TableColumn fx:id="dateComment" prefWidth="75.0" text="Date" />
-            <TableColumn fx:id="messageComment" prefWidth="248.79998779296875" text="Comment" />
-            <TableColumn fx:id="ratingComment" minWidth="0.0" prefWidth="124.7999267578125" text="Rating" />
-        </columns>
-      </TableView>
-      <ImageView fitHeight="95.0" fitWidth="127.0" layoutX="40.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true" />
-      <TextField fx:id="findCommentTxTF" layoutX="706.0" layoutY="149.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="34.0" prefWidth="150.0" />
-      <Button fx:id="searchButton" layoutX="870.0" layoutY="151.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="42.0" text="0" />
-      <Label layoutX="131.0" layoutY="94.0" />
-      <Button fx:id="showCommentBTN" layoutX="781.0" layoutY="667.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="114.0" text="Show Comment" />
-      <Button fx:id="informeBtn" layoutX="122.0" layoutY="667.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="76.0" text="Report" />
-      <ImageView fitHeight="95.0" fitWidth="127.0" layoutX="449.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true" />
-      <ComboBox fx:id="filterMenu" layoutX="546.0" layoutY="154.0" prefWidth="150.0" />
-   </children>
+<Pane prefHeight="768.0" prefWidth="1024.0" stylesheets="@resources/style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofc2_cliente.controller.CommentWindowController">
+    <children>
+        <fx:include fx:id="menuBar" source="menu.fxml" /> 
+        <TableView fx:id="commentTableView" editable="true" layoutX="112.0" layoutY="200.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" style="-fx-border-radius: 10; -fx-border-color: #FFE98F; -fx-border-width: 2px; -fx-border-insets: -3;">
+            <columns>
+                <TableColumn fx:id="subjectComment" prefWidth="109.60003662109375" text="Subject" />
+                <TableColumn fx:id="eventComment" prefWidth="88.79998779296875" text="Event" />
+                <TableColumn fx:id="clientComment" prefWidth="69.5999755859375" text="User" />
+                <TableColumn fx:id="PrivacityComment" prefWidth="76.0" text="Privacity" />
+                <TableColumn fx:id="dateComment" prefWidth="75.0" text="Date" />
+                <TableColumn fx:id="messageComment" prefWidth="248.79998779296875" text="Comment" />
+                <TableColumn fx:id="ratingComment" minWidth="0.0" prefWidth="124.7999267578125" text="Rating" />
+            </columns>
+        </TableView>
+        <ImageView fitHeight="95.0" fitWidth="127.0" layoutX="40.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true" style="-fx-rotate: 0;">
+            <image>
+                <Image url="@resources/comment-solid.png" />
+            </image>
+        </ImageView>
+        <TextField fx:id="findCommentTxTF" layoutX="706.0" layoutY="149.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="34.0" prefWidth="150.0" style="-fx-text-fill: black;" />
+        <Button fx:id="searchButton" layoutX="870.0" layoutY="151.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="42.0" style="-fx-border-color: none; -fx-background-color: none;" text="0">
+            <graphic>
+                <ImageView fitHeight="30.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@resources/magnifying-glass-solid.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+        </Button>
+        <Label layoutX="131.0" layoutY="94.0" />
+        <Button fx:id="showCommentBTN" defaultButton="true" layoutX="781.0" layoutY="667.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="127.0" text="Show Comment" />
+        <Button fx:id="informeBtn" defaultButton="true" layoutX="122.0" layoutY="667.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="76.0" text="Report" />
+        <ImageView fitHeight="85.0" fitWidth="212.0" layoutX="406.0" layoutY="45.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@resources/OFCLogo.png" />
+            </image>
+        </ImageView>
+        <ComboBox fx:id="filterMenu" layoutX="546.0" layoutY="154.0" prefWidth="150.0" style="-fx-text-fill: #fff; -fx-border-color: #000;" />
+    </children>
 </Pane>
