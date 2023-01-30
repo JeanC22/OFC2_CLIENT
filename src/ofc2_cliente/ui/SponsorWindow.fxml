@@ -17,12 +17,11 @@
       <TableView fx:id="tbvSponsor" layoutX="112.0" layoutY="200.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" style="-fx-border-radius: 10 10 10; -fx-border-color: black; -fx-border-width: 7px; -fx-border-insets: -3; -fx-padding: 0 2 0 2;">
         <columns>
           <TableColumn fx:id="clName" prefWidth="116.80001068115234" text="Name" />
-          <TableColumn fx:id="clEmail" prefWidth="106.39996337890625" text="Email" />
-            <TableColumn fx:id="clState" prefWidth="91.20001220703125" text="State" />
-            <TableColumn fx:id="clDate" prefWidth="106.39993286132812" text="Date" />
-            <TableColumn fx:id="clPhone" minWidth="0.0" prefWidth="99.19998168945312" text="Phone" />
-            <TableColumn fx:id="clAdType" prefWidth="122.39996337890625" text="Ad Type" />
-            <TableColumn fx:id="clEvents" prefWidth="147.20001220703125" text="Events" />
+          <TableColumn fx:id="clEmail" prefWidth="118.39996337890625" text="Email" />
+            <TableColumn fx:id="clState" prefWidth="99.20001220703125" text="State" />
+            <TableColumn fx:id="clDate" prefWidth="147.20004272460938" text="Date" />
+            <TableColumn fx:id="clPhone" minWidth="0.0" prefWidth="141.60003662109375" text="Phone" />
+            <TableColumn fx:id="clAdType" prefWidth="165.59991455078125" text="Ad Type" />
         </columns>
          <contextMenu>
             <ContextMenu fx:id="contextMenu">

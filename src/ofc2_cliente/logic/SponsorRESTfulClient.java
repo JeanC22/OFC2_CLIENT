@@ -34,6 +34,12 @@ public class SponsorRESTfulClient implements SponsorManager{
         webTarget = client.target(BASE_URI).path("sponsor");
     }
 
+     /**
+     * Update Sponsor entity XML and send it as a request to update 
+     * it to the SponsorRESTful web service
+     * @param requestEntity Sponsor Object
+     * @throws BusinessLogicException If there is an error while processing
+     */
     @Override
     public void edit_XML(Object requestEntity) throws BusinessLogicException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
@@ -43,7 +49,14 @@ public class SponsorRESTfulClient implements SponsorManager{
     public void edit_JSON(Object requestEntity) throws BusinessLogicException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
     }
-
+    /**
+     * Get Sponsor entity XML from SponsorRESTful web service
+     * 
+     * @param responseType The class object
+     * @param id The id of the instance in the server side
+     * @return The object containing data.
+     * @throws BusinessLogicException If there is an error while processing
+     */
     @Override
     public <T> T find_XML(Class<T> responseType, String id) throws BusinessLogicException {
         WebTarget resource = webTarget;
@@ -57,17 +70,27 @@ public class SponsorRESTfulClient implements SponsorManager{
         resource = resource.path(java.text.MessageFormat.format("findSponsor/{0}", new Object[]{id}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
-
+    /**
+     * Create Sponsor entity XML and send it as a request to create it
+     * to the SponsorRESTful.
+     * @param requestEntity The class Object
+     * @throws BusinessLogicException If there is an error while processing
+     */
     @Override
     public void create_XML(Object requestEntity) throws BusinessLogicException {
-        webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML), Sponsor.class);
+        webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
 
     @Override
     public void create_JSON(Object requestEntity) throws BusinessLogicException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
     }
-
+    /**
+     * Get All Sponsor entity XML from SponsorRESTful web service
+     * @param responseType The class object
+     * @return List containing data
+     * @throws BusinessLogicException If there is an error while processing
+     */
     @Override
     public <T> T findAllSponsors_XML(GenericType<T> responseType) throws BusinessLogicException {
         WebTarget resource = webTarget;
@@ -79,39 +102,57 @@ public class SponsorRESTfulClient implements SponsorManager{
         WebTarget resource = webTarget;
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
-
+    /**
+     * Delete Sponsor identified by its id and send a request to 
+     * the SponsorRESTful web service
+     * @param id The id of the Sponsor
+     * @throws BusinessLogicException If there is an error while processing
+     */
     @Override
     public void remove(String id) throws BusinessLogicException {
-        webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete(Sponsor.class);
+        webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete();
     }
-
+    /**
+     * Get Sponsor by name from the SponsorRESTful web service.
+     * @param responseType The class object
+     * @param name The name of the Sponsor
+     * @return The object containing data.
+     * @throws BusinessLogicException If there is an error while processing
+     */
     @Override
-    public <T> T findSponsorByName_XML(Class<T> responseType, String name) throws BusinessLogicException {
+    public <T> T findSponsorByName_XML(GenericType<T> responseType, String name) throws BusinessLogicException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findSponsorByName/{0}", new Object[]{name}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
     @Override
-    public <T> T findSponsorByName_JSON(Class<T> responseType, String name) throws BusinessLogicException {
+    public <T> T findSponsorByName_JSON(GenericType<T> responseType, String name) throws BusinessLogicException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findSponsorByName/{0}", new Object[]{name}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
-
+    /**
+     * Get Sponsor by Date from the SponsorRESTful web service.
+     * @param responseType The class object
+     * @param date The date of teh Sponsor
+     * @return The object containing data.
+     * @throws BusinessLogicException If there is an error while processing
+     */
     @Override
-    public <T> T findSponsorByDate_XML(Class<T> responseType, String date) throws BusinessLogicException {
+    public <T> T findSponsorByDate_XML(GenericType<T> responseType, String date) throws BusinessLogicException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findSponsorByDate/{0}", new Object[]{date}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
     @Override
-    public <T> T findSponsorByDate_JSON(Class<T> responseType, String date) throws BusinessLogicException {
+    public <T> T findSponsorByDate_JSON(GenericType<T> responseType, String date) throws BusinessLogicException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findSponsorByDate/{0}", new Object[]{date}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
+
 
     public void close() {
         client.close();

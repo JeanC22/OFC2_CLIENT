@@ -3,6 +3,12 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<field name="name" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="status" class="java.lang.Boolean"/>
+	<field name="date" class="java.util.Date"/>
+	<field name="phone" class="java.lang.Integer"/>
+	<field name="ad" class="ofc2_cliente.model.AdType"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -18,81 +24,55 @@
 		</band>
 	</title>
 	<pageHeader>
-		<band height="45" splitType="Stretch"/>
-	</pageHeader>
-	<columnHeader>
-		<band height="50" splitType="Stretch">
+		<band height="45" splitType="Stretch">
 			<staticText>
-				<reportElement x="14" y="14" width="53" height="17" uuid="071f4ef7-1c40-402f-8bf6-5d02e5dc55db"/>
-				<textElement>
-					<font size="12"/>
-				</textElement>
+				<reportElement x="23" y="11" width="61" height="20" uuid="f06a0168-2dfa-4941-8017-9e61e3f5ffe1"/>
 				<text><![CDATA[Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="100" y="14" width="53" height="17" uuid="c16fc421-50ca-426f-8d5a-6291ce305c8b"/>
-				<textElement>
-					<font size="12"/>
-				</textElement>
+				<reportElement x="107" y="11" width="61" height="20" uuid="aaf183e7-5e3b-45dd-b605-756127a57169"/>
 				<text><![CDATA[Email]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="187" y="14" width="53" height="17" uuid="ed4ba694-9863-46f1-9ede-15c2da22a5ca"/>
-				<textElement>
-					<font size="12"/>
-				</textElement>
-				<text><![CDATA[State]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="270" y="14" width="53" height="17" uuid="9ddcc749-7b7c-4cbe-9c61-7ef8d322a2ed"/>
-				<textElement>
-					<font size="12"/>
-				</textElement>
+				<reportElement x="258" y="11" width="61" height="20" uuid="b68720aa-a6ad-40ba-a4a2-4265fa17a197"/>
 				<text><![CDATA[Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="351" y="14" width="53" height="17" uuid="0d9c3636-4936-4eef-bfdc-288886ff83c4"/>
-				<textElement>
-					<font size="12"/>
-				</textElement>
-				<text><![CDATA[phone]]></text>
+				<reportElement x="380" y="11" width="61" height="20" uuid="aa00b0a4-4be4-41c7-9ebd-9770b55e234c"/>
+				<text><![CDATA[Phone]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="431" y="14" width="53" height="17" uuid="7de84502-5944-4963-ab05-dcaef73897ac"/>
-				<textElement>
-					<font size="12"/>
-				</textElement>
+				<reportElement x="466" y="11" width="61" height="20" uuid="cc4bee33-0ff3-4e50-afdc-ccf5f30ab5c5"/>
 				<text><![CDATA[Ad Type]]></text>
 			</staticText>
 		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="50" splitType="Stretch">
+			<textField>
+				<reportElement x="23" y="16" width="61" height="20" uuid="9b13f5b1-3fec-4763-a180-9a69acc414cc"/>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="107" y="16" width="119" height="20" uuid="ded4335a-21c1-419d-9b2e-9a6d01efb099"/>
+				<textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="258" y="16" width="41" height="20" uuid="607b7d12-c2ad-4cdf-846f-93bd8538d76a"/>
+				<textFieldExpression><![CDATA[$F{date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="16" width="62" height="20" uuid="63d275fe-8b3a-4bc5-9a11-657cb1325c89"/>
+				<textFieldExpression><![CDATA[$F{phone}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="466" y="16" width="62" height="20" uuid="4b9d92cf-ae8f-4438-b6e3-3d70ca31d568"/>
+				<textFieldExpression><![CDATA[$F{ad}]]></textFieldExpression>
+			</textField>
+		</band>
 	</columnHeader>
 	<detail>
-		<band height="40" splitType="Stretch">
-			<staticText>
-				<reportElement x="14" y="10" width="53" height="20" uuid="4a6b6091-3a2b-427b-9f67-4c2155e53a4b"/>
-				<text><![CDATA[$F{name}]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="100" y="10" width="53" height="20" uuid="dc57e66a-ff5b-41cf-b4d9-ed83aee63a88"/>
-				<text><![CDATA[$F{email}]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="187" y="10" width="53" height="20" uuid="3f3a3824-993f-4ab6-b250-9d5c264f0497"/>
-				<text><![CDATA[$F{status}]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="270" y="10" width="53" height="20" uuid="142d6180-a40a-4fa1-95f2-953de0f6dec2"/>
-				<text><![CDATA[$F{date}]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="351" y="10" width="53" height="20" uuid="515905ac-b487-4989-ad85-4a31d1353f3e"/>
-				<text><![CDATA[$F{phone}]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="431" y="10" width="53" height="20" uuid="f393b94a-b8fb-4030-be39-f99e3ad45b7a"/>
-				<text><![CDATA[$F{ad}]]></text>
-			</staticText>
-		</band>
+		<band height="40" splitType="Stretch"/>
 	</detail>
 	<columnFooter>
 		<band height="45" splitType="Stretch"/>
