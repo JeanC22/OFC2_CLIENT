@@ -18,6 +18,7 @@ import javafx.scene.Scene;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  * FXML Controller class
@@ -49,8 +50,8 @@ public class EventWindowHelpController{
 
     }
 
-     @FXML
-    private void shoWindow() {
+    @FXML
+    private void shoWindow(WindowEvent event) {
        WebEngine webEngine = webHelp.getEngine();
                 webEngine.load(getClass().getResource("/ofc2_cliente/ui/helpEvent.html").toExternalForm());
     }
