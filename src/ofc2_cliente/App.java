@@ -34,6 +34,7 @@ public class App extends Application {
             FXMLLoader loader = new FXMLLoader(viewLink);
             //initialization the root (Parent) with the FXML Loader.load
             Parent root = (Parent) loader.load();
+            
             //initialization the singInController
             CommentWindowController commentWindowController
                     = ((CommentWindowController) loader.getController());

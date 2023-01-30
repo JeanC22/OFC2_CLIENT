@@ -12,37 +12,41 @@ import java.util.Set;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
- * This class is where the Entities and their relationships are declared, 
- * as well as the queries to be performed in the DB.
+ * This class is where the Entities and their relationships are declared, as
+ * well as the queries to be performed in the DB.
+ *
  * @author Iker
  */
-
 public class Event implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private Long id;
-    
+
     private String name;
-    
+
     private String activity;
 
     private Date date;
-    
+
     private Integer capacity;
-    
+
     private Float price;
-    
+
     private String place;
 
     private Admin admin;
-    
+
     private Set<Sponsor> ads;
 
     private List<Coment> coments;
-    
 
     private List<Client> clients;
+
+    Event(Long eventID) {
+        this.id = eventID;
+
+    }
 
     public List<Client> getClients() {
         return clients;
@@ -52,8 +56,7 @@ public class Event implements Serializable {
         this.clients = clients;
     }
 
-   
-     public Long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -137,7 +140,7 @@ public class Event implements Serializable {
 
     public void setComents(List<Coment> coments) {
         this.coments = coments;
-    } 
+    }
 
     @Override
     public int hashCode() {
@@ -161,7 +164,7 @@ public class Event implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.User1[ id=" + id + " ]";
+        return this.name;
     }
-    
+
 }

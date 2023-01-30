@@ -1,0 +1,76 @@
+
+.root{
+
+    -fx-disabled-opacity: 0.8;
+    -fx-background: #000;
+
+    /* Darker than -fx-background and used to draw boxes around text boxes and
+    * password boxes.
+    */
+    -fx-text-box-border: ladder(
+        -fx-background,
+        black 10%,
+        derive(-fx-background, -15%) 30%
+        );
+
+    /* The color to use as -fx-text-fill when painting text on top of
+  * backgrounds filled with -fx-control-inner-background.
+  */
+    -fx-text-inner-color: ladder(
+        -fx-control-inner-background,
+        -fx-light-text-color 45%,
+        -fx-dark-text-color  46%,
+        -fx-dark-text-color  59%,
+        -fx-mid-text-color   60%
+        );
+
+    /* Typically lighter than -fx-background and used to provide a small
+    * highlight under controls and tick marks for checkboxes and radio buttons.
+    * Often used with an insets of 0 0 -1 0, and is also often the first
+    * color in a -fx-background-color list.  Also is typically replaced by
+    * -fx-focus-color with an insets of -1.4 in the "focused" pseudoclass.
+    */
+    -fx-shadow-highlight-color: ladder(
+        -fx-background,
+        transparent 0%,
+        derive(-fx-background,40%)   5%,
+        derive(-fx-background,60%)  70%,
+        derive(-fx-background,100%) 85%,
+        derive(-fx-background,100%) 97%,
+        derive(-fx-background,-10%) 97.5%
+        );
+}
+
+
+Pane{
+    -fx-background-image: url("new-bg.png");
+    -fx-background-repeat: stretch;
+    -fx-background-position: center center;
+}
+TextField{
+    -fx-background-color: #000;
+}
+
+
+.text-field {
+    -fx-background-color: #000;
+    -fx-background-insets: 0, 1, 2;
+    -fx-background-radius: 3, 2, 2;
+    -fx-padding: 0.25em 0.416667em  0.333333em 0.416667em; /* 3 5 4 5 */
+    -fx-text-fill: #fff;
+    -fx-prompt-text-fill: #fff;
+    -fx-cursor: text;
+}
+
+.text-field:focused {
+    -fx-background-color: -fx-focus-color, -fx-text-box-border, -fx-control-inner-background;
+    -fx-background-insets: -0.4, 1, 2;
+    -fx-background-radius: 3.4, 2, 2;
+    -fx-prompt-text-fill: transparent;
+}
+
+.text-field:disabled {
+    -fx-opacity: -fx-disabled-opacity;
+}
+
+

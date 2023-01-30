@@ -5,6 +5,7 @@
  */
 package ofc2_cliente.controller;
 
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -22,6 +23,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.TableView;
@@ -29,6 +31,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.MenuItem;
@@ -71,7 +74,7 @@ public class CommentWindowController {
     @FXML
     private TextField findCommentTxTF;
     @FXML
-    private MenuButton filterMenu;
+    private ComboBox<?> filterMenu;
     @FXML
     private Button searchButton;
     @FXML
@@ -114,6 +117,9 @@ public class CommentWindowController {
         LOGGER.info("starting initStage(SignIN)");
         //Create a scene associated to the node graph root.
         Scene scene = new Scene(root);
+
+        scene.getStylesheets().addAll(this.getClass().getResource("/ofc2_cliente/ui/resources/style.css").toExternalForm());
+
         //Associate scene to primaryStage(Window)
         stage.setScene(scene);
         //title of the window: OFC SIGN IN.
@@ -201,20 +207,13 @@ public class CommentWindowController {
         addRating.setPromptText("10");
         addRating.setMaxWidth(ratingComment.getPrefWidth());
 
-        /*
-        final TextField addFirstName = new TextField();
-        addFirstName.setPromptText("First Name");
-        addFirstName.setMaxWidth(firstNameCol.getPrefWidth());
-        final TextField addFirstName = new TextField();
-        addFirstName.setPromptText("First Name");
-        addFirstName.setMaxWidth(firstNameCol.getPrefWidth());*/
         //-------------------------------------------------
         createNewCommentMenuIt.setOnAction((ActionEvent e) -> {
             ZoneId defaultZoneId = ZoneId.systemDefault();
             LocalDate localDate = LocalDate.now();
             Date date = Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
 
-            Coment comment = new Coment(1L, 3L, date, date, addMessage.getPromptText(), addRating.getPromptText(), addPrivacity.getPromptText(), addSubject.getPromptText());
+            Coment comment = new Coment(1L, 4L, date, date, addMessage.getPromptText(), addRating.getPromptText(), addPrivacity.getPromptText(), addSubject.getPromptText());
             comments.add(comment);
             addMessage.clear();
             addSubject.clear();
@@ -222,19 +221,24 @@ public class CommentWindowController {
             addRating.clear();
             try {
                 newCommentCommit(comment);
-                commentTableView.refresh();
+                try {
+                    this.cargarTodo();
+                } catch (Exception ex) {
+                    Logger.getLogger(CommentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
             } catch (BusinessLogicException ex) {
                 Logger.getLogger(CommentWindowController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
 
         MenuItem refreshWindow = new MenuItem("Refresh Table");
-        refreshWindow.setOnAction((event) -> {
-          
-         this.commentTableView.refresh();
+        refreshWindow.setOnAction((e) -> {
+            this.cargarTodo();
+            this.commentTableView.refresh();
         });
         contextMenu.getItems().add(refreshWindow);
-        
+
         contextMenu.getItems().add(createNewCommentMenuIt);
         commentTableView.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent e) -> {
             if (e.getButton() == MouseButton.SECONDARY) {
@@ -257,14 +261,64 @@ public class CommentWindowController {
 
         stage.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
             if (commentTableView.getSelectionModel().getSelectedItem() != null && e.getCode() == KeyCode.ENTER) {
-                commentTableView.refresh();
+                try {
+                    //Coment comentModify = commentTableView.getSelectionModel().getSelectedItem();
+                    commentRest.editComent_XML(commentTableView.getSelectionModel().getSelectedItem());
+                    commentTableView.refresh();
+                } catch (BusinessLogicException ex) {
+                    Logger.getLogger(CommentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
             }
         });
 
-        //Show window
+        showCommentBTN.setOnAction(this::openModalCommnet); //Show window
         informeBtn.setOnAction(this::showReport);
         stage.show();
         LOGGER.info("finished initStage(CommentWindow)");
+    }
+
+    private void openModalCommnet(ActionEvent e) {
+        Coment comment = this.commentTableView.getSelectionModel().getSelectedItem();
+        try {
+
+            Stage loginStage = new Stage();
+
+            URL viewLink = getClass().getResource("/ofc2_cliente/ui/commentModal.fxml");
+
+            FXMLLoader loader = new FXMLLoader(viewLink);
+            Parent rootModal = (Parent) loader.load();
+            CommentModalController modalStageController
+                    = ((CommentModalController) loader.getController());
+            LOGGER.info("sending the User");
+            modalStageController.getComment(comment);
+            LOGGER.info("has send the User");
+
+            modalStageController.setStage(loginStage);
+            modalStageController.initStage(rootModal);
+
+            LOGGER.info("Method signIn is finished");
+
+        } catch (Exception ex) {
+            Logger.getLogger(CommentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+
+    }
+
+    private void cargarTodo() {
+        try {
+            List<Coment> listComent;
+            listComent = commentRest.
+                    findAllComents_XML(new GenericType<List<Coment>>() {
+                    });
+            comments.clear();
+            comments = FXCollections.observableList(listComent);
+            commentTableView.setItems(comments);
+            commentTableView.refresh();
+        } catch (BusinessLogicException ex) {
+            Logger.getLogger(CommentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void showReport(ActionEvent event) {
@@ -284,7 +338,6 @@ public class CommentWindowController {
         }
     }
 
-    @FXML
     private void newCommentCommit(Coment coment) throws BusinessLogicException {
         try {
             commentRest.createComent_XML(coment);
@@ -302,7 +355,7 @@ public class CommentWindowController {
 
     }
 
-    @FXML
+    // sub class Editar comment
     private void editComment(ActionEvent event) {
 
     }
@@ -327,7 +380,6 @@ public class CommentWindowController {
     private void setCommentSelected() {
         final Coment coment = getTableComentSelected();
         posicionComent = comments.indexOf(coment);
-        System.out.println(coment.getMessage());
     }
 
     class EditingCell extends TableCell<Coment, String> {
@@ -394,6 +446,7 @@ public class CommentWindowController {
         }
 
     }
+// sub class datepicker comment
 
     class DateEditingCell extends TableCell<Coment, Date> {
 
@@ -454,4 +507,5 @@ public class CommentWindowController {
             return getItem() == null ? LocalDate.now() : getItem().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         }
     }
+
 }

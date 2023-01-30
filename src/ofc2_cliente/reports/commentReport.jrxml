@@ -24,6 +24,12 @@
 		</box>
 	</style>
 	<subDataset name="Table Dataset 1" uuid="95a6f196-b7a1-42a7-8ef7-e0757fb5c752"/>
+	<field name="subject" class="java.lang.String"/>
+	<field name="event" class="java.lang.Object"/>
+	<field name="publication_date" class="java.util.Date"/>
+	<field name="message" class="java.lang.String"/>
+	<field name="valoration" class="java.lang.String"/>
+	<field name="comClie" class="java.lang.Object"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -88,10 +94,30 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="125" splitType="Stretch">
+		<band height="35" splitType="Stretch">
 			<textField>
 				<reportElement x="10" y="15" width="61" height="20" uuid="7f01be0e-22fb-46ca-8019-b71cd37218c1"/>
 				<textFieldExpression><![CDATA[$F{subject}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="393" y="15" width="82" height="20" uuid="913a3b80-2d40-4839-aafa-0c2a6132e4a6"/>
+				<textFieldExpression><![CDATA[$F{message}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="497" y="15" width="58" height="20" uuid="d80ef673-5c71-4afb-bc23-9d02b4c0328d"/>
+				<textFieldExpression><![CDATA[$F{valoration}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="306" y="15" width="50" height="20" uuid="bec55249-1baf-422f-a3e1-38077020b4b5"/>
+				<textFieldExpression><![CDATA[$F{publication_date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="206" y="15" width="100" height="20" uuid="4a3a1ecd-1e6c-416e-b6b5-3e9ad16c009b"/>
+				<textFieldExpression><![CDATA[""+$F{comClie}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="103" y="15" width="100" height="20" uuid="31301064-03b5-489f-b453-459841dc213a"/>
+				<textFieldExpression><![CDATA[$F{event}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

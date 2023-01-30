@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.MenuButton?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofc2_cliente.controller.CommentWindowController">
+<Pane prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofc2_cliente.controller.CommentWindowController">
    <children>
       <TableView fx:id="commentTableView" editable="true" layoutX="112.0" layoutY="200.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" style="-fx-border-radius: 10 10 10; -fx-border-color: black; -fx-border-width: 7px; -fx-border-insets: -3;">
         <columns>
@@ -24,20 +23,12 @@
         </columns>
       </TableView>
       <ImageView fitHeight="95.0" fitWidth="127.0" layoutX="40.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true" />
-      <TextField fx:id="findCommentTxTF" layoutX="575.0" layoutY="153.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="34.0" prefWidth="150.0" />
-      <MenuButton fx:id="filterMenu" layoutX="790.0" layoutY="154.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="97.0" text="MenuButton">
-        <items>
-          <MenuItem mnemonicParsing="false" text="Action 1" />
-          <MenuItem mnemonicParsing="false" text="Action 2" />
-            <MenuItem mnemonicParsing="false" text="Action 3" />
-            <MenuItem mnemonicParsing="false" text="Action 3" />
-            <MenuItem mnemonicParsing="false" text="Action 3" />
-        </items>
-      </MenuButton>
-      <Button fx:id="searchButton" layoutX="732.0" layoutY="153.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="42.0" text="0" />
+      <TextField fx:id="findCommentTxTF" layoutX="706.0" layoutY="149.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="34.0" prefWidth="150.0" />
+      <Button fx:id="searchButton" layoutX="870.0" layoutY="151.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="42.0" text="0" />
       <Label layoutX="131.0" layoutY="94.0" />
       <Button fx:id="showCommentBTN" layoutX="781.0" layoutY="667.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="114.0" text="Show Comment" />
       <Button fx:id="informeBtn" layoutX="122.0" layoutY="667.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="76.0" text="Report" />
       <ImageView fitHeight="95.0" fitWidth="127.0" layoutX="449.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true" />
+      <ComboBox fx:id="filterMenu" layoutX="546.0" layoutY="154.0" prefWidth="150.0" />
    </children>
 </Pane>
