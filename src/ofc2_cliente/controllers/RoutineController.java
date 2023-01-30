@@ -147,6 +147,7 @@ public class RoutineController {
     
     private Client cli;
     
+    
     private RoutineController mainStageController;
 
     
@@ -159,6 +160,7 @@ public class RoutineController {
      This method starts the RoutineWindow window with all its components
      */
     public void initStage(Parent root) {
+        
         LOGGER.info("starting initStage(SignIN)");
         //Create a scene associated to the node graph root.
         Scene scene = new Scene(root);
@@ -219,10 +221,7 @@ public class RoutineController {
     
     private void filterMethod(ActionEvent event) {
         ObservableList<Routine> list = null;
-        
-        
-            
-        
+
         try {
             switch (filterCH.getSelectionModel().getSelectedItem().toString()) {
 
@@ -364,15 +363,17 @@ public class RoutineController {
             Logger.getLogger(SignInWindowController.class.getName())
                     .log(Level.SEVERE, ex.getMessage(), ex);
         }
+        routineTable.getSelectionModel().clearSelection();
 
     }
     
     private void showReport(ActionEvent event){
         
         try {
-            JasperReport jr= JasperCompileManager.compileReport("C:\\Users\\2dam\\Desktop\\Reto2\\Cliente\\OFC2_CLIENT\\src\\ofc2_reports\\RoutineReport.jrxml");
+            JasperReport jr= JasperCompileManager.compileReport("\\ofc2_cliente\\report\\RoutineReport.jrxml");
             JRBeanCollectionDataSource dataItems=
                     new JRBeanCollectionDataSource((Collection<Routine>)this.routineTable.getItems());
+            
             //Map of parameter to be passed to the report
             Map<String,Object> parameters=new HashMap<>();
             //Fill report with data
@@ -414,7 +415,7 @@ public class RoutineController {
         alert.showAndWait();
         } catch (Exception e) {
         }
-       
+       routineTable.getSelectionModel().clearSelection();
     }
     
      
@@ -489,10 +490,15 @@ public class RoutineController {
     }
 
     private void windowShowing(WindowEvent event) {
-       // try {
+            //Long id= new Long(1);
+            
+            
+        //cli.setId(id);
+        try {
+           
             LOGGER.info("Method windowShowing is starting ");
-            rutinaDePrueba();
-            //routineList= FXCollections.observableArrayList(routineREST.consultAllClientRoutines_XML(new GenericType<List<Routine>>() {}, cli.getId().toString()));
+            //rutinaDePrueba();
+            routineList= FXCollections.observableArrayList(routineREST.consultAllClientRoutines_XML(new GenericType<List<Routine>>() {}, "1"));
             chargeTable(routineList);
             
             deleteMn.setText("Delete");
@@ -512,9 +518,12 @@ public class RoutineController {
             //The HyperLink (signUpLink) will be shown with a ToolTip the message “Click para abrir la ventana de registro”.
             //signUpLink.setTooltip(new Tooltip("Click para abrir la ventana de registro"));
             LOGGER.info("Method windowShowing is finished");
-       // } catch (BusinessLogicException ex) {
+            
             Logger.getLogger(RoutineController.class.getName()).log(Level.SEVERE, null, ex);
-        //}
+            
+        } catch (BusinessLogicException ex) {
+            Logger.getLogger(RoutineController.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
 

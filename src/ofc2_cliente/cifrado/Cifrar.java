@@ -17,8 +17,9 @@ import javax.crypto.Cipher;
  */
 public class Cifrar {
  
-     public byte[] cifrarTexto(String mensaje) {
+     public String cifrarTexto(String mensaje) {
         byte[] encodedMessage = null;
+        String password = null;
         try {
             // Recuperar Clave pública
             byte fileKey[] = ResourceBundle.getBundle("PropertiesFile").getString("PublicKey").getBytes();;
@@ -34,10 +35,22 @@ public class Cifrar {
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
             encodedMessage= cipher.doFinal(mensaje.getBytes());
             
-            
+            //convertimos la contrasenia en hexadecimal
+            password= hexadecimal(encodedMessage);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return encodedMessage;
+        return password;
+    }
+     
+     public static String hexadecimal(byte[] encryptedText) {
+        char hexDigit[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+        StringBuffer buf = new StringBuffer();
+        
+        for (int j = 0; j < encryptedText.length; j++) {
+            buf.append(hexDigit[(encryptedText[j] >> 4) & 0x0f]);
+            buf.append(hexDigit[encryptedText[j] & 0x0f]);
+        }
+        return buf.toString();
     }
 }

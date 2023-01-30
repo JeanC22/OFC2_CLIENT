@@ -3,6 +3,11 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<field name="name" class="java.lang.String"/>
+	<field name="kcal" class="java.lang.Double"/>
+	<field name="time" class="java.lang.Float"/>
+	<field name="start_date" class="java.util.Date"/>
+	<field name="end_date" class="java.util.Date"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -61,26 +66,31 @@
 	</columnHeader>
 	<detail>
 		<band height="57" splitType="Stretch">
-			<staticText>
-				<reportElement x="0" y="22" width="100" height="20" uuid="6e63ab11-77b9-4973-8957-6adf5bf909b1"/>
-				<text><![CDATA[$F{name}]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="115" y="22" width="100" height="20" uuid="392ecbd7-8501-4e82-bac3-347adcf92bf5"/>
-				<text><![CDATA[$F{kcal}]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="229" y="22" width="100" height="20" uuid="057b5068-40ae-4c97-b2d3-81aa0b4bddfe"/>
-				<text><![CDATA[$F{time}]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="339" y="22" width="100" height="20" uuid="c28df84c-8d5b-4d88-80ec-c80848edeaab"/>
-				<text><![CDATA[$F{start_date}]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="455" y="22" width="100" height="20" uuid="11e90a8d-738c-4a3c-b29e-76055fda2325"/>
-				<text><![CDATA[$F{end_date}]]></text>
-			</staticText>
+			<textField>
+				<reportElement x="0" y="22" width="100" height="20" uuid="7606990c-465c-459d-9f65-75e851b408b6"/>
+				<textElement markup="none"/>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="115" y="22" width="100" height="20" uuid="e7cd2f02-602e-43af-8e25-aa7a9732eccf"/>
+				<textElement markup="none"/>
+				<textFieldExpression><![CDATA[$F{kcal}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="229" y="22" width="100" height="20" uuid="74eea295-735c-4a8e-97c0-e762b3b8821c"/>
+				<textElement markup="none"/>
+				<textFieldExpression><![CDATA[$F{time}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="339" y="22" width="100" height="20" uuid="bb46f5b1-be3a-48df-9ab5-dd1ad4033da4"/>
+				<textElement markup="none"/>
+				<textFieldExpression><![CDATA[$F{start_date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="455" y="22" width="100" height="20" uuid="049ed6d6-06da-443a-9ba5-5f0fbff3e4e9"/>
+				<textElement markup="none"/>
+				<textFieldExpression><![CDATA["$F{end_date}"]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<columnFooter>

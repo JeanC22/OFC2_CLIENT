@@ -98,8 +98,7 @@ public class ExerciseWindowController {
         stage.setOnShowing(this::windowShowing);
         createBtn.setDisable(true);
         returnBtn.setOnAction(this::closeWindow);
-        nameTxTF.setOnKeyReleased(this::enableDisableCreateBtn);
-        timeTxTF.setOnKeyReleased(this::enableDisableCreateBtn);
+        
         timeTxTF.setOnKeyReleased(this::validateTimeTxTX);
         nameTxTF.setOnKeyReleased(this::validateName);
         //findBtn.setOnAction(this::signIn);
@@ -116,7 +115,7 @@ public class ExerciseWindowController {
         this.stage.close();
     }
     
-    private void enableDisableCreateBtn(KeyEvent key){
+    private void enableDisableCreateBtn(){
         if (!nameTxTF.getText().isEmpty() && !timeTxTF.getText().isEmpty()) {
             createBtn.setDisable(false);
         }else{
@@ -134,6 +133,7 @@ public class ExerciseWindowController {
             a.showAndWait();
             timeTxTF.setText("");
             }
+            enableDisableCreateBtn();
         } catch (Exception e) {
             Alert a= new Alert(Alert.AlertType.WARNING);
             a.setContentText("El campo time debe contener solo números");
@@ -149,7 +149,10 @@ public class ExerciseWindowController {
             Alert a= new Alert(Alert.AlertType.WARNING);
             a.setContentText("El campo name debe contener menos de 30 caracteres");
             a.showAndWait();
+             enableDisableCreateBtn();
+             nameTxTF.setText("");
         }
+       
         
     }
     
