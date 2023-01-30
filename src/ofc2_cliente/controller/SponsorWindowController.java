@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -105,6 +106,8 @@ public class SponsorWindowController{
     SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
     SponsorManagerFactory sponsorFactory = new SponsorManagerFactory();
     private static final Logger LOGGER=Logger.getLogger("ofc2_cliente.controller.SponsorWindowController");
+    @FXML
+    private Button helpBtn;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -125,20 +128,21 @@ public class SponsorWindowController{
             LOGGER.info("Init Window Sponsor");
             stage.setTitle("OFC Sponsor");
             stage.setResizable(false);
+            stage.setOnCloseRequest(this::closeWindow);
             stage.setOnShowing(this::windowShowing);
             createBtn.setOnAction(this::formSponsorWindow);
             modifyBtn.setOnAction(this::modifySponsor);
             deleteBtn.setOnAction(this::deleteSponsor);
+            mItModify.setOnAction(this::modifySponsor);
+            mItDelete.setOnAction(this::deleteSponsor);
+            helpBtn.setOnAction(this::helpPage);
+            cbxFilter.valueProperty().addListener(this::message);
             //reportBtn.setOnAction(this::sponsorReport);
             tbvSponsor.getSelectionModel().selectedItemProperty()
                     .addListener(this::enbledButtons);
             findBtn.setOnAction(this::findData);
-            
-
             //Show window
             stage.show();
-
-
     }
     /**
      * 
@@ -149,11 +153,14 @@ public class SponsorWindowController{
      */
     private void windowShowing(WindowEvent event) {
 
-        try {
             LOGGER.info("Window Showing in start");
+            //Buttons
             createBtn.setDisable(false);
             modifyBtn.setDisable(true);
             deleteBtn.setDisable(true);
+            //Context Menu
+            mItDelete.setDisable(true);
+            mItModify.setDisable(true);
             clName.setCellValueFactory(new PropertyValueFactory<>("name"));
             clState.setCellValueFactory(new PropertyValueFactory<>("status"));
             clEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
@@ -162,17 +169,14 @@ public class SponsorWindowController{
             clAdType.setCellValueFactory(new PropertyValueFactory<>("ad"));
             clEvents.setCellValueFactory(new PropertyValueFactory<>("events"));
             //Factory call method to find all sponsor data and adds into the table
-            sponsorList = FXCollections.observableArrayList(sponsorFactory.createSponsorManager().
-                    findAllSponsors_XML(new GenericType<List<Sponsor>>() {}));
+            //sponsorList = FXCollections.observableArrayList(sponsorFactory.createSponsorManager().
+              //      findAllSponsors_XML(new GenericType<List<Sponsor>>() {}));
             tbvSponsor.setItems(sponsorList);
             //ComboBox Options
             cbxFilter.getItems().addAll("Name", "Date");
             //Default selected
             cbxFilter.getSelectionModel().selectFirst();
-        } catch (BusinessLogicException ex) {
-            LOGGER.log(Level.SEVERE, "Error al buscar los datos de los anuncios", 
-                    ex.getMessage());
-        }
+            
             
             
 
@@ -189,6 +193,16 @@ public class SponsorWindowController{
         if(newValue!=null){
             modifyBtn.setDisable(false);
             deleteBtn.setDisable(false);
+            mItDelete.setDisable(false);
+            mItModify.setDisable(false);
+        }
+    }
+    
+    private void message(ObservableValue observable,Object oldValue, Object newValue){
+        if(cbxFilter.getValue().toString().equalsIgnoreCase("Date")){
+            txtfFind.setPromptText("dd/MM/yyyy");
+        }else{
+            txtfFind.setPromptText("Name");
         }
     }
     /**
@@ -196,7 +210,6 @@ public class SponsorWindowController{
      * This method opens the form window 
      * @param event 
      */
-    @FXML
     private void formSponsorWindow(ActionEvent event) {
         try {
             LOGGER.info("Open the form Sponsor Window");
@@ -236,7 +249,6 @@ public class SponsorWindowController{
      * This method opens the form window sending the Sponsor data of the selected row.
      * @param event 
      */
-    @FXML
     private void modifySponsor(ActionEvent event) {
         //This is the Sponsor selected row
         sponsor = ((Sponsor) this.tbvSponsor.getSelectionModel().getSelectedItem());
@@ -276,7 +288,6 @@ public class SponsorWindowController{
      * and asks for confirmation to delete it.
      * @param event Action Event
      */
-    @FXML
     private void deleteSponsor(ActionEvent event) {
         try {
             //This saves the selected row into the object Sponsor
@@ -303,8 +314,8 @@ public class SponsorWindowController{
      * This method searches the Sponsor data by date and name.
      * @param event 
      */
-    @FXML
     private void findData(ActionEvent event) {
+        ObservableList<Sponsor> list = null;
         try {
             //if field is empty error message displayed
             if(txtfFind.getText().isEmpty()){
@@ -338,19 +349,21 @@ public class SponsorWindowController{
                 throw new Exception("No se ha podido encontrar el anuncio con"
                         + "el nombre introducido"); 
             }
-             if(cbxFilter.getSelectionModel().isSelected(0)){
-                 sponsorList = FXCollections.observableArrayList(sponsorFactory.
-                    createSponsorManager().findSponsorByName_XML(new GenericType<List<Sponsor>>() {}, txtfFind.getText()));
-                 tbvSponsor.setItems(sponsorList);
-             }else if(cbxFilter.getSelectionModel().isSelected(1)){
-                 sponsorList = FXCollections.observableArrayList(sponsorFactory.
-                    createSponsorManager().findSponsorByDate_XML(new GenericType<List<Sponsor>>() {}, txtfFind.getText()));
-                 tbvSponsor.setItems(sponsorList);
-             }
+            if(cbxFilter.getSelectionModel().isSelected(0)){
+                 list = FXCollections.observableArrayList(sponsorFactory.
+                    createSponsorManager().findSponsorByName_XML
+                    (new GenericType<List<Sponsor>>() {}, txtfFind.getText()));
+            }else if(cbxFilter.getSelectionModel().isSelected(1)){
+                 list = FXCollections.observableArrayList(sponsorFactory.
+                    createSponsorManager().findSponsorByDate_XML
+                    (new GenericType<List<Sponsor>>() {}, txtfFind.getText()));
+            }
+            tbvSponsor.getItems().remove(sponsorList);
+            tbvSponsor.setItems(list);
             
             
         } catch (Exception e) {
-            new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK)
+            new Alert(Alert.AlertType.WARNING, e.getMessage(), ButtonType.OK)
                     .showAndWait();
         }
     }
@@ -363,11 +376,10 @@ public class SponsorWindowController{
     private void sponsorReport(ActionEvent event) {
         try {
             JasperReport report = JasperCompileManager.compileReport("/ofc2_cliente/report/sponsorReport.jrxml");
-            JasperReport report = JasperCompileManager.compileReport("C:\\Users\\2dam\\Documents\\NetBeansProjects\\OFC2_Client\\OFC2_CLIENT\\src\\ofc2_cliente\\report\\sponsorReport.jrxml");
             JRBeanCollectionDataSource dataItems = new JRBeanCollectionDataSource((Collection<Sponsor>)this.tbvSponsor.getItems());
             Map<String, Object> parameters = new HashMap<>();
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
-            JasperViewer jasperV = new JasperViewer(jasperPrint);
+            JasperViewer jasperV = new JasperViewer(jasperPrint, false);
             jasperV.setVisible(true);
             
         } catch (JRException ex) {
@@ -388,4 +400,57 @@ public class SponsorWindowController{
         }
         return true;
     }
+    
+    /**
+     * This Method confirm if the user want to close the window
+     *
+     * @author Elias
+     * @param event
+     */
+    public void closeWindow(WindowEvent event) {
+        LOGGER.info("starting cerrarVentana");
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setContentText("Quiere salir de la aplicacion?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            Platform.exit();
+            LOGGER.info("finished cerrarVentana");
+
+        } else {
+            event.consume();
+        }
+    }
+    
+    /**
+     * 
+     * This method opens the Help Window
+     * @param event 
+     */
+    @FXML
+    private void helpPage(ActionEvent event) {
+        try {
+            LOGGER.info("Open the Help Window");
+            Stage mainStage = new Stage();
+            URL viewLink = getClass().getResource(
+                    "/ofc2_cliente/ui/HelpSponsor.fxml");
+            // initialition loader
+            FXMLLoader loader = new FXMLLoader(viewLink);
+            //make the root with the loader
+            Parent root = (Parent) loader.load();
+            //Get the controller
+            HelpSponsorController mainStageController
+                    = ((HelpSponsorController) loader.getController());
+            //set the stage
+            mainStageController.setStage(mainStage);
+            //start the stage
+            mainStageController.initStage(root);
+
+        } catch (IOException ex) {
+            LOGGER.log(Level.SEVERE, "Error al abrir la ventana", 
+                    ex.getMessage());
+        }
+    }
+    
+    
 }
