@@ -51,7 +51,6 @@ import net.sf.jasperreports.view.JasperViewer;
 */
 import ofc2_cliente.logic.BusinessLogicException;
 import ofc2_cliente.logic.SponsorManagerFactory;
-import ofc2_cliente.logic.SponsorRESTfulClient;
 import ofc2_cliente.model.Sponsor;
 
 /**
@@ -77,8 +76,6 @@ public class SponsorWindowController{
     private TableColumn clDate;
     @FXML
     private TableColumn clPhone;
-    @FXML
-    private TableColumn clEvents;
     @FXML
     private TextField txtfFind;
     @FXML
@@ -122,6 +119,7 @@ public class SponsorWindowController{
     public void initStage(Parent root) {
             //Create a scene associated to the node graph root.
             Scene scene = new Scene(root);
+            scene.getStylesheets().addAll(this.getClass().getResource("/ofc2_cliente/ui/resources/style.css").toExternalForm());
             //Associate scene to primaryStage(Window)
             stage.setScene(scene);
             //title of the window: OFC SIGN IN.
@@ -153,6 +151,7 @@ public class SponsorWindowController{
      */
     private void windowShowing(WindowEvent event) {
 
+        try {
             LOGGER.info("Window Showing in start");
             //Buttons
             createBtn.setDisable(false);
@@ -167,15 +166,17 @@ public class SponsorWindowController{
             clDate.setCellValueFactory(new PropertyValueFactory<>("date"));
             clPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
             clAdType.setCellValueFactory(new PropertyValueFactory<>("ad"));
-            clEvents.setCellValueFactory(new PropertyValueFactory<>("events"));
             //Factory call method to find all sponsor data and adds into the table
-            //sponsorList = FXCollections.observableArrayList(sponsorFactory.createSponsorManager().
-              //      findAllSponsors_XML(new GenericType<List<Sponsor>>() {}));
+            sponsorList = FXCollections.observableArrayList(sponsorFactory.createSponsorManager().
+                    findAllSponsors_XML(new GenericType<List<Sponsor>>() {}));
             tbvSponsor.setItems(sponsorList);
             //ComboBox Options
             cbxFilter.getItems().addAll("Name", "Date");
             //Default selected
             cbxFilter.getSelectionModel().selectFirst();
+        } catch (BusinessLogicException ex) {
+            Logger.getLogger(SponsorWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
             
             
             
@@ -427,7 +428,6 @@ public class SponsorWindowController{
      * This method opens the Help Window
      * @param event 
      */
-    @FXML
     private void helpPage(ActionEvent event) {
         try {
             LOGGER.info("Open the Help Window");

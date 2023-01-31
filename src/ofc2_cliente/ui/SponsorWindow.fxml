@@ -8,21 +8,22 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane fx:id="sponsorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofc2_cliente.controller.SponsorWindowController">
+<Pane fx:id="sponsorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" stylesheets="@resources/style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofc2_cliente.controller.SponsorWindowController">
    <children>
+      <fx:include fx:id="menuBar" source="menu.fxml" /> 
       <TableView fx:id="tbvSponsor" layoutX="112.0" layoutY="200.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" style="-fx-border-radius: 10 10 10; -fx-border-color: black; -fx-border-width: 7px; -fx-border-insets: -3; -fx-padding: 0 2 0 2;">
         <columns>
           <TableColumn fx:id="clName" prefWidth="116.80001068115234" text="Name" />
-          <TableColumn fx:id="clEmail" prefWidth="106.39996337890625" text="Email" />
-            <TableColumn fx:id="clState" prefWidth="91.20001220703125" text="State" />
-            <TableColumn fx:id="clDate" prefWidth="106.39993286132812" text="Date" />
-            <TableColumn fx:id="clPhone" minWidth="0.0" prefWidth="99.19998168945312" text="Phone" />
-            <TableColumn fx:id="clAdType" prefWidth="122.39996337890625" text="Ad Type" />
-            <TableColumn fx:id="clEvents" prefWidth="147.20001220703125" text="Events" />
+          <TableColumn fx:id="clEmail" prefWidth="119.0" text="Email" />
+            <TableColumn fx:id="clState" text="State" />
+            <TableColumn fx:id="clDate" prefWidth="158.0" text="Date" />
+            <TableColumn fx:id="clPhone" minWidth="0.0" prefWidth="133.0" text="Phone" />
+            <TableColumn fx:id="clAdType" prefWidth="182.0" text="Ad Type" />
         </columns>
          <contextMenu>
             <ContextMenu fx:id="contextMenu">
@@ -33,9 +34,9 @@
             </ContextMenu>
          </contextMenu>
       </TableView>
-      <TextField fx:id="txtfFind" layoutX="575.0" layoutY="153.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="34.0" prefWidth="150.0" />
+      <TextField fx:id="txtfFind" layoutX="575.0" layoutY="153.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="34.0" prefWidth="150.0" style="-fx-text-fill: black;" />
       <Button fx:id="createBtn" layoutX="323.0" layoutY="670.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="89.0" text="Create" />
-      <Text fx:id="txtSponsor" layoutX="226.0" layoutY="175.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sponsors" wrappingWidth="89.336669921875">
+      <Text fx:id="txtSponsor" fill="#ffe98f" layoutX="226.0" layoutY="175.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sponsors" wrappingWidth="89.336669921875">
          <font>
             <Font size="18.0" />
          </font>
@@ -51,10 +52,14 @@
             </ContextMenu>
          </contextMenu>
       </Button>
-      <ComboBox fx:id="cbxFilter" layoutX="790.0" layoutY="154.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="97.0" />
+      <ComboBox fx:id="cbxFilter" layoutX="790.0" layoutY="154.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="97.0" style="-fx-text-fill: #fff; -fx-border-color: #000;" />
       <Button fx:id="reportBtn" layoutX="122.0" layoutY="667.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="76.0" text="Report" />
       <ImageView fitHeight="95.0" fitWidth="127.0" layoutX="40.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fitHeight="95.0" fitWidth="127.0" layoutX="449.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="95.0" fitWidth="127.0" layoutX="449.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true" >
+          <image>
+              <Image url="@resources/OFCLogo.png" />
+          </image>
+      </ImageView>
       <Button fx:id="helpBtn" layoutX="824.0" layoutY="670.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="76.0" text="Help" />
    </children>
 </Pane>

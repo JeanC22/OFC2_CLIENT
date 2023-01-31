@@ -9,36 +9,30 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane fx:id="sponsorForm" maxHeight="500.0" maxWidth="700.0" minHeight="400.0" minWidth="700.0" prefHeight="400.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofc2_cliente.controller.FormSponsorWindowController">
+<Pane fx:id="sponsorForm" stylesheets="@resources/style.css" maxHeight="500.0" maxWidth="700.0" minHeight="400.0" minWidth="700.0" prefHeight="400.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofc2_cliente.controller.FormSponsorWindowController">
    <children>
-      <Text fx:id="txtName" layoutX="78.0" layoutY="119.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name" />
+      <Text fx:id="txtName" fill="#ffe98f" layoutX="78.0" layoutY="119.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name" />
       <Button fx:id="confirmBtn" layoutX="434.0" layoutY="334.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="136.0" text="Confirm" />
       <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-      <ComboBox fx:id="cmbAdType" layoutX="448.0" layoutY="102.0" prefHeight="25.0" prefWidth="163.0" />
-      <Text fx:id="txtAdType" layoutX="380.0" layoutY="119.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ad Type">
+      <ComboBox fx:id="cmbAdType" layoutX="448.0" layoutY="102.0" prefHeight="25.0" prefWidth="163.0" style="-fx-text-fill: #fff; -fx-border-color: #000;"/>
+      <Text fx:id="txtAdType" fill="#ffe98f" layoutX="380.0" layoutY="119.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ad Type">
          <font>
             <Font size="13.0" />
          </font>
       </Text>
-      <Text fx:id="txtSponsor" layoutX="323.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sponsor" wrappingWidth="86.92034912109375">
+      <Text fx:id="txtSponsor" fill="#ffe98f" layoutX="323.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sponsor" wrappingWidth="86.92034912109375">
          <font>
             <Font size="18.0" />
          </font>
       </Text>
-      <TextField fx:id="txtFName" layoutX="166.0" layoutY="102.0" prefHeight="25.0" prefWidth="163.0" promptText="Name" />
-      <TextField fx:id="txtFPhone" layoutX="166.0" layoutY="156.0" prefHeight="25.0" prefWidth="163.0" promptText="000000000" />
-      <Text fx:id="txtPhone" layoutX="72.0" layoutY="173.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Phone" />
-      <Text fx:id="txtDate" layoutX="78.0" layoutY="223.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date" />
-      <TextField fx:id="txtFEmail" layoutX="166.0" layoutY="256.0" prefHeight="25.0" prefWidth="163.0" promptText="example@example.com" />
-      <Text fx:id="txtEmail" layoutX="78.0" layoutY="273.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email" />
+      <TextField fx:id="txtFName" layoutX="166.0" layoutY="102.0" prefHeight="25.0" prefWidth="163.0" promptText="Name" style="-fx-text-fill: black;"/>
+      <TextField fx:id="txtFPhone" layoutX="166.0" layoutY="156.0" prefHeight="25.0" prefWidth="163.0" promptText="000000000" style="-fx-text-fill: black;"/>
+      <Text fx:id="txtPhone" fill="#ffe98f" layoutX="72.0" layoutY="173.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Phone" />
+      <Text fx:id="txtDate" fill="#ffe98f" layoutX="78.0" layoutY="223.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date" />
+      <TextField fx:id="txtFEmail" layoutX="166.0" layoutY="256.0" prefHeight="25.0" prefWidth="163.0" promptText="example@example.com" style="-fx-text-fill: black;"/>
+      <Text fx:id="txtEmail" fill="#ffe98f" layoutX="78.0" layoutY="273.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email" />
       <Button fx:id="returnBtn" layoutX="187.0" layoutY="334.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="136.0" text="Return" />
-      <Text fx:id="txtAdType1" layoutX="380.0" layoutY="170.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Events">
-         <font>
-            <Font size="13.0" />
-         </font>
-      </Text>
-      <ComboBox fx:id="cmbEvents" layoutX="448.0" layoutY="153.0" prefHeight="25.0" prefWidth="163.0" />
-      <CheckBox fx:id="chbxState" layoutX="383.0" layoutY="201.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="68.0" text="State" />
-      <DatePicker fx:id="dpDate" layoutX="166.0" layoutY="206.0" prefHeight="25.0" prefWidth="163.0" promptText="dd/mm/yyyy" />
+      <CheckBox fx:id="chbxState" layoutX="380.0" layoutY="151.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="68.0" text="State" style="-fx-text-fill: #fff; -fx-border-color: #000;"/>
+      <DatePicker fx:id="dpDate" layoutX="166.0" layoutY="206.0" prefHeight="25.0" prefWidth="163.0" promptText="dd/mm/yyyy" style="-fx-text-fill: black;"/>
    </children>
 </Pane>
