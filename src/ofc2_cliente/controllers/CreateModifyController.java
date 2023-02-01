@@ -108,7 +108,6 @@ public class CreateModifyController {
         //init the scene with the root you got from singInController
         Scene scene = new Scene(root);
         scene.getStylesheets().addAll(this.getClass().getResource("/ofc2_cliente/ui/resources/style.css").toExternalForm());
-        
         stage.setScene(scene);
         stage.setTitle("OFC Event");
         crtBtns.setVisible(true);
