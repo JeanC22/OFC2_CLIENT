@@ -10,8 +10,10 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -100,7 +102,7 @@ public class FormSponsorWindowController{
     public void initStage(Parent root){
         //Create a scene associated to the node graph root.
         Scene scene = new Scene(root);
-
+        scene.getStylesheets().addAll(this.getClass().getResource("/ofc2_cliente/ui/resources/style.css").toExternalForm());
         //Associate scene to primaryStage(Window)
         stage.setScene(scene);
         LOGGER.info("Init The From Window");
@@ -278,7 +280,7 @@ public class FormSponsorWindowController{
 
         } catch (Exception e) {
             //This alert show when the validations of fields is not correct
-            new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK)
+            new Alert(Alert.AlertType.WARNING, e.getMessage(), ButtonType.OK)
                     .showAndWait();
 
         }
@@ -289,6 +291,27 @@ public class FormSponsorWindowController{
      */
     public Sponsor getSponsor() {
         return sponsor;
+    }
+    
+    /**
+     * This Method confirm if the user want to close the window
+     *
+     * @author Elias
+     * @param event
+     */
+    public void closeWindow(WindowEvent event) {
+        LOGGER.info("starting cerrarVentana");
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setContentText("Quiere salir de la aplicacion?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            Platform.exit();
+            LOGGER.info("finished cerrarVentana");
+
+        } else {
+            event.consume();
+        }
     }
 
 }

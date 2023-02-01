@@ -9,13 +9,19 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,6 +36,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -101,6 +108,8 @@ public class SponsorWindowController{
     SimpleDateFormat format;
     SponsorManagerFactory sponsorFactory = new SponsorManagerFactory();
     private static final Logger LOGGER=Logger.getLogger("ofc2_cliente.controller.SponsorWindowController");
+    @FXML
+    private Button helpBtn;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -115,6 +124,7 @@ public class SponsorWindowController{
     public void initStage(Parent root) {
             //Create a scene associated to the node graph root.
             Scene scene = new Scene(root);
+            scene.getStylesheets().addAll(this.getClass().getResource("/ofc2_cliente/ui/resources/style.css").toExternalForm());
             //Associate scene to primaryStage(Window)
             stage.setScene(scene);
             //title of the window: OFC SIGN IN.
@@ -131,6 +141,7 @@ public class SponsorWindowController{
             cbxFilter.valueProperty().addListener(this::changePrompText);
             tbvSponsor.getSelectionModel().selectedItemProperty()
                     .addListener(this::enbledButtons);
+            helpBtn.setOnAction(this::helpPage);
             //ComboBox Options
             ObservableList<String> opciones = FXCollections.observableArrayList("Name", "Date", "Find All");
             cbxFilter.setItems(opciones);
@@ -160,6 +171,26 @@ public class SponsorWindowController{
             clState.setCellValueFactory(new PropertyValueFactory<>("status"));
             clEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
             clDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+            clDate.setCellFactory(column -> {
+                TableCell<Sponsor, Date> cell = new TableCell<Sponsor, Date>() {
+                    private SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+
+                    @Override
+                    protected void updateItem(Date item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        if (empty) {
+                            setText(null);
+                        } else {
+                            if (item != null) {
+                                setText(getDate(item).format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)));
+                            }
+                        }
+                    }
+                };
+
+                return cell;
+            });
             clPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
             clAdType.setCellValueFactory(new PropertyValueFactory<>("ad"));
             //Factory call method to find all sponsor data and adds into the table
@@ -205,7 +236,6 @@ public class SponsorWindowController{
      * This method opens the form window 
      * @param event 
      */
-    @FXML
     private void formSponsorWindow(ActionEvent event) {
         try {
             LOGGER.info("Open the form Sponsor Window");
@@ -240,7 +270,6 @@ public class SponsorWindowController{
      * This method opens the form window sending the Sponsor data of the selected row.
      * @param event 
      */
-    @FXML
     private void modifySponsor(ActionEvent event) {
         //This is the Sponsor selected row
         sponsor = ((Sponsor) this.tbvSponsor.getSelectionModel().getSelectedItem());
@@ -281,7 +310,6 @@ public class SponsorWindowController{
      * and asks for confirmation to delete it.
      * @param event Action Event
      */
-    @FXML
     private void deleteSponsor(ActionEvent event) {
         try {
             //This saves the selected row into the object Sponsor
@@ -311,7 +339,6 @@ public class SponsorWindowController{
      *
      * @param event
      */
-    @FXML
     private void findData(ActionEvent event) {
         ObservableList<Sponsor> list = null;
         String value = cbxFilter.getSelectionModel().getSelectedItem().toString();
@@ -372,7 +399,6 @@ public class SponsorWindowController{
      * @param event 
      */
     
-    @FXML
     private void sponsorReport(ActionEvent event) {
         try {
             JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/ofc2_cliente/report/sponsorReport.jrxml"));
@@ -399,5 +425,60 @@ public class SponsorWindowController{
             return false;
         }
         return true;
+    }
+    
+    /**
+     * 
+     * This method opens the Help Window
+     * @param event 
+     */
+    @FXML
+    private void helpPage(ActionEvent event) {
+        try {
+            LOGGER.info("Open the Help Window");
+            Stage mainStage = new Stage();
+            URL viewLink = getClass().getResource(
+                    "/ofc2_cliente/ui/HelpSponsor.fxml");
+            // initialition loader
+            FXMLLoader loader = new FXMLLoader(viewLink);
+            //make the root with the loader
+            Parent root = (Parent) loader.load();
+            //Get the controller
+            HelpSponsorController mainStageController
+                    = ((HelpSponsorController) loader.getController());
+            //set the stage
+            mainStageController.setStage(mainStage);
+            //start the stage
+            mainStageController.initStage(root);
+
+        } catch (IOException ex) {
+            LOGGER.log(Level.SEVERE, "Error al abrir la ventana", 
+                    ex.getMessage());
+        }
+    }
+    
+    /**
+     * This Method confirm if the user want to close the window
+     *
+     * @author Elias
+     * @param event
+     */
+    public void closeWindow(WindowEvent event) {
+        LOGGER.info("starting cerrarVentana");
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setContentText("Quiere salir de la aplicacion?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            Platform.exit();
+            LOGGER.info("finished cerrarVentana");
+
+        } else {
+            event.consume();
+        }
+    }
+    
+     private LocalDate getDate(Date date) {
+        return date == null ? LocalDate.now() : date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 }
