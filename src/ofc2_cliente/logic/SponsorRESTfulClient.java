@@ -1,38 +1,39 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/WebServices/JerseyClient.java to edit this template
  */
 package ofc2_cliente.logic;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
 
 /**
  * Jersey REST client generated for REST resource:SponsorFacadeREST
  * [sponsor]<br>
  * USAGE:
  * <pre>
- *        SponsorRESTfulClient client = new SponsorRESTfulClient();
+ *        SponsorRestClient client = new SponsorRestClient();
  *        Object response = client.XXX(...);
  *        // do whatever with response
  *        client.close();
  * </pre>
  *
- * @author Elias
+ * @author eliaslogacho
  */
 public class SponsorRESTfulClient implements SponsorManager{
 
     private WebTarget webTarget;
     private Client client;
-    private static final String BASE_URI = "http://localhost:8080/OFC_SERVER/webresources";
+    private static final String BASE_URI = "http://localhost:9090/OFC_Server/webresources";
 
     public SponsorRESTfulClient() {
         client = javax.ws.rs.client.ClientBuilder.newClient();
         webTarget = client.target(BASE_URI).path("sponsor");
     }
-    /**
+
+     /**
      * Update Sponsor entity XML and send it as a request to update 
      * it to the SponsorRESTful web service
      * @param requestEntity Sponsor Object
@@ -150,6 +151,7 @@ public class SponsorRESTfulClient implements SponsorManager{
         resource = resource.path(java.text.MessageFormat.format("findSponsorByDate/{0}", new Object[]{date}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
+
 
     public void close() {
         client.close();

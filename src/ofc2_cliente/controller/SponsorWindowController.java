@@ -9,7 +9,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +36,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -40,7 +46,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javax.ws.rs.core.GenericType;
-/**
+
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -48,7 +54,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
-*/
+
 import ofc2_cliente.logic.BusinessLogicException;
 import ofc2_cliente.logic.SponsorManagerFactory;
 import ofc2_cliente.model.Sponsor;
@@ -135,7 +141,7 @@ public class SponsorWindowController{
             mItDelete.setOnAction(this::deleteSponsor);
             helpBtn.setOnAction(this::helpPage);
             cbxFilter.valueProperty().addListener(this::message);
-            //reportBtn.setOnAction(this::sponsorReport);
+            reportBtn.setOnAction(this::sponsorReport);
             tbvSponsor.getSelectionModel().selectedItemProperty()
                     .addListener(this::enbledButtons);
             findBtn.setOnAction(this::findData);
@@ -164,6 +170,26 @@ public class SponsorWindowController{
             clState.setCellValueFactory(new PropertyValueFactory<>("status"));
             clEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
             clDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+            clDate.setCellFactory(column -> {
+                TableCell<Sponsor, Date> cell = new TableCell<Sponsor, Date>() {
+                    private SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+
+                    @Override
+                    protected void updateItem(Date item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        if (empty) {
+                            setText(null);
+                        } else {
+                            if (item != null) {
+                                setText(getDate(item).format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)));
+                            }
+                        }
+                    }
+                };
+
+                return cell;
+            });
             clPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
             clAdType.setCellValueFactory(new PropertyValueFactory<>("ad"));
             //Factory call method to find all sponsor data and adds into the table
@@ -317,51 +343,50 @@ public class SponsorWindowController{
      */
     private void findData(ActionEvent event) {
         ObservableList<Sponsor> list = null;
+        String value = cbxFilter.getSelectionModel().getSelectedItem().toString();
         try {
-            //if field is empty error message displayed
-            if(txtfFind.getText().isEmpty()){
-                throw new Exception("El campo de Busqueda tiene que estar informado"); 
-            }
             //If select the Date option in combobox
             //and enter a data that is not a date will display an error message
-            if(cbxFilter.getSelectionModel().isSelected(1) && 
-                    !validateDate(txtfFind.getText())){
+            if (cbxFilter.getSelectionModel().isSelected(1)
+                    && !validateDate(txtfFind.getText())) {
                 throw new Exception("El valor introducido no es una fecha, "
-                        + "el formato para buscar por fecha es (dd/MM/yyyy)"); 
-            }
-            //If select the Date option in combobox
-            //and cannot find the date entered will display an error message
-            if(cbxFilter.getSelectionModel().isSelected(1) && 
-                    !sponsor.getDate().equals(format.parse(txtfFind.getText()))){
-                throw new Exception("No se ha podido encontrar el anuncio con"
-                        + " la fecha introducida"); 
+                        + "el formato para buscar por fecha es (yyyy-MM-dd)");
             }
             //If select the Name option in combobox
             //and enter data is a date will display an error message
-            if(cbxFilter.getSelectionModel().isSelected(0) && 
-                    validateDate(txtfFind.getText())){
+            if (cbxFilter.getSelectionModel().isSelected(0)
+                    && validateDate(txtfFind.getText())) {
                 throw new Exception("No se puede introducir una fecha si estas "
-                        + "buscando por nombre"); 
+                        + "buscando por nombre");
             }
-            //If select the Name option in combobox
-            //and cannot find the Name entered will display an error message
-            if(cbxFilter.getSelectionModel().isSelected(0) && 
-                    !sponsor.getName().equalsIgnoreCase(txtfFind.getText())){
-                throw new Exception("No se ha podido encontrar el anuncio con"
-                        + "el nombre introducido"); 
+
+            if (txtfFind.getText().isEmpty() && cbxFilter.getSelectionModel().getSelectedItem() != "Find All") {
+                throw new Exception("El campo de Busqueda tiene que estar informado");
+            } else {
+                switch (value) {
+                    case "Date":
+                        list = FXCollections.observableArrayList(sponsorFactory.createSponsorManager().
+                                findSponsorByDate_XML(new GenericType<Sponsor>() {
+                                }, txtfFind.getText()));
+
+                        break;
+                    case "Name":
+                        list = FXCollections.observableArrayList(sponsorFactory.createSponsorManager().
+                                findSponsorByName_XML(new GenericType<Sponsor>() {
+                                }, txtfFind.getText()));
+                        break;
+                    case "Find All":
+                        list = FXCollections.observableArrayList(sponsorFactory.createSponsorManager().
+                                findAllSponsors_XML(new GenericType<List<Sponsor>>() {
+                                }));
+
+                        break;
+                }
+                tbvSponsor.getItems().remove(sponsorList);
+                tbvSponsor.setItems(list);
+                txtfFind.clear();
             }
-            if(cbxFilter.getSelectionModel().isSelected(0)){
-                 list = FXCollections.observableArrayList(sponsorFactory.
-                    createSponsorManager().findSponsorByName_XML
-                    (new GenericType<List<Sponsor>>() {}, txtfFind.getText()));
-            }else if(cbxFilter.getSelectionModel().isSelected(1)){
-                 list = FXCollections.observableArrayList(sponsorFactory.
-                    createSponsorManager().findSponsorByDate_XML
-                    (new GenericType<List<Sponsor>>() {}, txtfFind.getText()));
-            }
-            tbvSponsor.getItems().remove(sponsorList);
-            tbvSponsor.setItems(list);
-            
+
             
         } catch (Exception e) {
             new Alert(Alert.AlertType.WARNING, e.getMessage(), ButtonType.OK)
@@ -372,11 +397,10 @@ public class SponsorWindowController{
      * This method show a report from Sponsor
      * @param event 
      */
-    /**
-    @FXML
+    
     private void sponsorReport(ActionEvent event) {
         try {
-            JasperReport report = JasperCompileManager.compileReport("/ofc2_cliente/report/sponsorReport.jrxml");
+            JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/ofc2_cliente/reports/sponsorReport.jrxml"));
             JRBeanCollectionDataSource dataItems = new JRBeanCollectionDataSource((Collection<Sponsor>)this.tbvSponsor.getItems());
             Map<String, Object> parameters = new HashMap<>();
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
@@ -386,7 +410,7 @@ public class SponsorWindowController{
         } catch (JRException ex) {
             Logger.getLogger(SponsorWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }*/
+    }
     /**
      * This method validate the date entered
      * @param fecha Date
@@ -451,6 +475,8 @@ public class SponsorWindowController{
                     ex.getMessage());
         }
     }
-    
+     private LocalDate getDate(Date date) {
+        return date == null ? LocalDate.now() : date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    }
     
 }

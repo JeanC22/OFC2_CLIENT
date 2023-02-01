@@ -5,83 +5,99 @@
  */
 package ofc2_cliente.model;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.SimpleLongProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.ObservableList;
-
-
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 /**
  * Entity for Sponsor
  * @author Elias
  */
+@XmlRootElement(name="sponsor")
 public class Sponsor implements Serializable {
+    private Long id;
+    private String name;
+    private Integer phone;
+    private String email;
+    private Date date;
+    private Boolean status;
+    
+    private List<Event> events;
+    
+    private Admin admin;
 
-    private final SimpleLongProperty id;
-    private final SimpleStringProperty name;
-    private final SimpleIntegerProperty phone;
-    private final SimpleStringProperty email;
-    private final SimpleStringProperty date;
-    private final SimpleBooleanProperty status;
-    private final SimpleListProperty<Event> events;
-    private final SimpleObjectProperty<Admin> admin;
-    private final SimpleObjectProperty<AdType> ad;
+    private AdType ad;
 
-    public Sponsor(Long id, String name, Integer phone, String email, String date, 
-            Boolean status, List<Event> events, Admin admin, AdType ad) {
-        this.id = new SimpleLongProperty(id);
-        this.name = new SimpleStringProperty(name);
-        this.phone = new SimpleIntegerProperty(phone);
-        this.email = new SimpleStringProperty(email);
-        this.date = new SimpleStringProperty(date);
-        this.status = new SimpleBooleanProperty(status);
-        this.events = new SimpleListProperty<>((ObservableList<Event>) events);
-        this.admin = new SimpleObjectProperty(admin);
-        this.ad = new  SimpleObjectProperty(ad);
+     public Sponsor() {
+         this.admin = admin;
     }
 
-    public SimpleLongProperty getId() {
+
+    public Long getId() {
         return id;
     }
-
-    public SimpleStringProperty getName() {
+    public void setId(Long id) {
+        this.id = id;
+    }
+    @XmlElement(name = "name")
+    public String getName() {
         return name;
     }
-
-    public SimpleIntegerProperty getPhone() {
+    public void setName(String name) {
+        this.name = name;
+    }
+    @XmlElement(name = "phone")
+    public Integer getPhone() {
         return phone;
     }
-
-    public SimpleStringProperty getEmail() {
+    public void setPhone(Integer phone) {
+        this.phone = phone;
+    }
+    @XmlElement(name = "email")
+    public String getEmail() {
         return email;
     }
-
-    public SimpleStringProperty getDate() {
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    @XmlElement(name = "date")
+    public Date getDate() {
         return date;
     }
-
-    public SimpleBooleanProperty getStatus() {
+    public void setDate(Date date) {
+        this.date = date;
+    }
+    @XmlElement(name = "status")
+    public Boolean getStatus() {
         return status;
     }
-
-    public SimpleListProperty<Event> getEvents() {
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+    public List<Event> getEvents() {
         return events;
     }
-
-    public SimpleObjectProperty<Admin> getAdmin() {
+    public void setEvents(List<Event> events) {
+        this.events = events;
+    }
+    public Admin getAdmin() {
         return admin;
     }
-
-    public SimpleObjectProperty<AdType> getAd() {
+    public void setAdmin(Admin admin) {
+        this.admin = admin;
+    }
+    @XmlElement(name = "ad")
+    public AdType getAd() {
         return ad;
     }
-
+    public void setAd(AdType ad) {
+        this.ad = ad;
+    }
+     
+     
+    
     @Override
     public int hashCode() {
         int hash = 7;
@@ -96,7 +112,6 @@ public class Sponsor implements Serializable {
         hash = 79 * hash + Objects.hashCode(this.ad);
         return hash;
     }
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -138,8 +153,11 @@ public class Sponsor implements Serializable {
         }
         return true;
     }
-
     
-    
+    public void getEventName(){
+        for (Event event : events) {
+            event.getName();
+        }
+    }
     
 }

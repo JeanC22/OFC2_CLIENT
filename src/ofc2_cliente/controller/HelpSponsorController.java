@@ -55,7 +55,7 @@ public class HelpSponsorController{
         WebEngine webEngine = webView.getEngine();
         //Load help Page
         webEngine.load(getClass()
-                .getResource("/ofc2_cliente/ui/helpSponsor.html").toExternalForm());
+                .getResource("/ofc2_cliente/ui/help/helpSponsor.html").toExternalForm());
     }
     
 }

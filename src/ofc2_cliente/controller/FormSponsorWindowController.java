@@ -9,13 +9,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import static java.time.temporal.TemporalQueries.localDate;
 import java.util.Date;
-import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.collections.ObservableList;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -36,10 +34,11 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import ofc2_cliente.logic.BusinessLogicException;
 import ofc2_cliente.logic.SponsorManagerFactory;
-import ofc2_cliente.logic.SponsorRESTfulClient;
 import ofc2_cliente.model.AdType;
 import ofc2_cliente.model.Admin;
+import ofc2_cliente.model.Event;
 import ofc2_cliente.model.Sponsor;
+import ofc2_cliente.model.User;
 /**
  * This class will be controller all in the FormSponsorWindow FXML 
  *
@@ -48,10 +47,10 @@ import ofc2_cliente.model.Sponsor;
 public class FormSponsorWindowController{
    private static String regexEmail = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
             + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+   private static String regexNumber = "[0-9]+";
     private Stage stage;
     private Sponsor sponsor;
     private AdType ad;
-    private Admin admin;
     @FXML
     private Pane sponsorForm;
     @FXML
@@ -81,11 +80,10 @@ public class FormSponsorWindowController{
     @FXML
     private Text txtAdType1;
     @FXML
-    private ComboBox cmbEvents;
-    @FXML
     private CheckBox chbxState;
     @FXML
     private DatePicker dpDate;
+    Event eventos = new Event();
     SponsorManagerFactory sponsorFactory = new SponsorManagerFactory();
     private static final Logger LOGGER=Logger.getLogger("ofc2_cliente.controller.FormSponsorWindowController");
 
@@ -101,6 +99,7 @@ public class FormSponsorWindowController{
     public void initStage(Parent root){
         //Create a scene associated to the node graph root.
         Scene scene = new Scene(root);
+        scene.getStylesheets().addAll(this.getClass().getResource("/ofc2_cliente/ui/resources/style.css").toExternalForm());
         //Associate scene to primaryStage(Window)
         stage.setScene(scene);
         LOGGER.info("Init The From Window");
@@ -108,6 +107,7 @@ public class FormSponsorWindowController{
         stage.setTitle("OFC Sponsor Form");
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setResizable(false);
+        stage.setOnCloseRequest(this::closeWindow);
         stage.setOnShowing(this::windowShowing);
         returnBtn.setOnAction(this::returnSponsorWindow);
         confirmBtn.setOnAction(this::createAndUpdateSponsor);
@@ -129,9 +129,8 @@ public class FormSponsorWindowController{
         txtFPhone.setOnKeyReleased(this::enableConfirmBtn);
         txtFEmail.setOnKeyReleased(this::enableConfirmBtn);
         dpDate.setOnKeyReleased(this::enableConfirmBtn);
-        cmbAdType.getItems().addAll(" ",ad.VIDEO.toString(), 
+        cmbAdType.getItems().addAll(ad.VIDEO.toString(), 
                 ad.PANCARTA.toString(), ad.POSTER.toString());
-        
     }
     /**
      * This method returns to the previous window by closing the form window.
@@ -211,6 +210,7 @@ public class FormSponsorWindowController{
     @FXML
     private void createAndUpdateSponsor(ActionEvent event) {
         LocalDate date = dpDate.getValue();
+        User admin = new Admin();
 
         try {
             //In the field name the max length is 30 characters
@@ -219,7 +219,7 @@ public class FormSponsorWindowController{
                         + "del campo Name es de 30 caracteres");
             }
             //This check the field phone is numeric
-            if (!isNumeric(this.txtFPhone.getText())) {
+            if (!this.txtFPhone.getText().matches(regexNumber)) {
                 throw new Exception("El campo Phone no es numerico");
             }
             //In the field phone max an min length is 9 digits
@@ -232,7 +232,7 @@ public class FormSponsorWindowController{
             if (!this.txtFEmail.getText().matches(regexEmail)) {
                 throw new Exception("El campo Email no tiene el formato adecuado");
             }
-           
+            
             try {
                 //If Sponsor object is exist you can change the data
                 //Then Factory call method to update Sponsor data
@@ -244,6 +244,7 @@ public class FormSponsorWindowController{
                     this.sponsor.setStatus(chbxState.isSelected());
                     this.sponsor.setDate(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
                     this.sponsor.setAd(AdType.valueOf(cmbAdType.getSelectionModel().getSelectedItem().toString()));
+                    this.sponsor.setAdmin((Admin) admin);
                     sponsorFactory.createSponsorManager().edit_XML(this.sponsor);
                 //or if not exist you can create a new Sponsor data
                 //And Factory call method to create Sponsor
@@ -256,52 +257,21 @@ public class FormSponsorWindowController{
                     sponsorD.setStatus(chbxState.isSelected());
                     sponsorD.setDate(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
                     sponsorD.setAd(AdType.valueOf(cmbAdType.getSelectionModel().getSelectedItem().toString()));
+                    sponsorD.setAdmin((Admin) admin);
                     sponsorFactory.createSponsorManager().create_XML(sponsorD);
                 }
-                //If all fields is correct then it will open the window where the table is located
-                Stage mainStage = new Stage();
-                URL viewLink = getClass().getResource(
-                        "/ofc2_cliente/ui/SponsorWindow.fxml");
-                // initialition loader
-                FXMLLoader loader = new FXMLLoader(viewLink);
-                //make the root with the loader
-                Parent root = (Parent) loader.load();
-                //Get the controller
-                SponsorWindowController mainStageController
-                        = ((SponsorWindowController) loader.getController());
+                returnSponsorWindow(event);
                 
-                //set the stage
-                mainStageController.setStage(mainStage);
-                //start the stage
-                mainStageController.initStage(root);
-                this.stage.close();
-                
-            } catch (IOException | BusinessLogicException ex) {
+            } catch (BusinessLogicException ex) {
                 LOGGER.log(Level.SEVERE, "Error al abrir la ventana,"
                         + "o al crear el nuevo anuncio o al actualizar el anuncio", 
                         ex.getMessage());
             }
         } catch (Exception e) {
             //This alert show when the validations of fields is not correct
-            new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK)
+            new Alert(Alert.AlertType.WARNING, e.getMessage(), ButtonType.OK)
                     .showAndWait();
         }
-    }
-    /**
-     * This method check the field phone is numeric or not
-     * @param valor Th field value
-     * @return true or false
-     */
-    public Boolean isNumeric(String valor){
-        try {
-            LOGGER.info("Check the field phone is numeric or not");
-            if(valor !=null){
-                Integer.parseInt(valor);
-            }
-        } catch (NumberFormatException e) {
-            return false;
-        }
-        return true;
     }
     /**
      * This method get Sponsor object
@@ -311,6 +281,27 @@ public class FormSponsorWindowController{
         return sponsor;
     }
     
+     /**
+     * This Method confirm if the user want to close the window
+     *
+     * @author Elias
+     * @param event
+     */
+    @FXML
+    public void closeWindow(WindowEvent event) {
+        LOGGER.info("starting cerrarVentana");
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setContentText("Quiere salir de la aplicacion?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            Platform.exit();
+            LOGGER.info("finished cerrarVentana");
+
+        } else {
+            event.consume();
+        }
+    }
     
     
     
