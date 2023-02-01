@@ -8,12 +8,12 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.image.Image?>
 
-<Pane stylesheets="@resources/style.css" fx:id="OFC_SIGN_IN" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="762.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofc2_cliente.controllers.RoutineController">
+<Pane fx:id="RoutineWindow" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="762.0" prefWidth="1024.0" stylesheets="@resources/style.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofc2_cliente.controllers.RoutineController">
    <children>
       <AnchorPane layoutX="44.0" layoutY="-20.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0">
          <children>
@@ -37,29 +37,30 @@
                   </ContextMenu>
                </contextMenu>
             </TableView>
-            <TextField id="nameTxTF" fx:id="nameTxTF" layoutX="575.0" layoutY="153.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="34.0" prefWidth="150.0" style="-fx-text-fill: black"/>
-            <Button id="findBtn" fx:id="findBtn" layoutX="732.0" layoutY="153.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="42.0" text="Find" >
+            <TextField id="nameTxTF" fx:id="nameTxTF" layoutX="575.0" layoutY="153.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="34.0" prefWidth="150.0" style="-fx-text-fill: black" />
+            <Button id="findBtn" fx:id="findBtn" layoutX="732.0" layoutY="153.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="42.0" text="Find">
                 <graphic>
                     <ImageView fitHeight="30.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
                         <image>
-                            <Image url="@resources/magnifying-glass-solid.png"/>
+                            <Image url="@resources/magnifying-glass-solid.png" />
                         </image>
                     </ImageView>
                 </graphic>
             </Button>
-            <Label layoutX="732.0" layoutY="116.0" prefHeight="18.0" prefWidth="42.0" text="Filter" style="-fx-text-fill: #fff; -fx-border-color: #000"/>
-            <Button id="deleteBtn" fx:id="deleteBtn" layoutX="481.0" layoutY="667.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="73.0" text="Delete" />
-            <Button id="updateBtn" fx:id="updateBtn" layoutX="650.0" layoutY="667.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="73.0" text="Update" />
-            <Button id="createBtn" fx:id="createBtn" layoutX="320.0" layoutY="667.0" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="73.0" text="Create" />
+            <Label layoutX="732.0" layoutY="116.0" prefHeight="18.0" prefWidth="42.0" style="-fx-text-fill: #fff; -fx-border-color: #000" text="Filter" />
+            <Button id="deleteBtn" fx:id="deleteBtn" layoutX="650.0" layoutY="667.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="73.0" text="Delete" />
+            <Button id="updateBtn" fx:id="updateBtn" layoutX="488.0" layoutY="667.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="73.0" text="Update" />
+            <Button id="createBtn" fx:id="createBtn" layoutX="320.0" layoutY="667.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="73.0" text="Create" />
             <Button id="reportBtn" fx:id="reportBtn" layoutX="122.0" layoutY="667.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="73.0" text="Report" />
             <ImageView id="symbolIM" fitHeight="95.0" fitWidth="127.0" layoutX="40.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView fitHeight="95.0" fitWidth="127.0" layoutX="449.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true">
                 <image> 
-                    <Image url="@resources/OFCLogo.png"/>    
+                    <Image url="@resources/OFCLogo.png" />    
                 </image>        
             </ImageView>
             <ComboBox fx:id="filterCH" layoutX="780.0" layoutY="153.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="34.0" prefWidth="150.0" />
-            <Label layoutX="525.0" layoutY="161.0" prefHeight="18.0" prefWidth="42.0" text="Name" style="-fx-text-fill: #fff; -fx-border-color: #000"/>
+            <Label layoutX="525.0" layoutY="161.0" prefHeight="18.0" prefWidth="42.0" style="-fx-text-fill: #fff; -fx-border-color: #000" text="Name" />
+            <Button fx:id="helpBtn" layoutX="806.0" layoutY="667.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="73.0" text="Help" />
          </children>
       </AnchorPane>
    </children>

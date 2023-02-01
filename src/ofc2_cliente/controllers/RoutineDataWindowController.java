@@ -60,7 +60,7 @@ public class RoutineDataWindowController {
     private Label label;
     
     @FXML
-    private TextField nameTxTF;
+    private TextField nameTxTF1;
     
     @FXML
     private TextField timeTxTF;
@@ -118,16 +118,14 @@ public class RoutineDataWindowController {
         LOGGER.info("starting initStage(RoutineDataWindow)");
         //Create a scene associated to the node graph root.
         Scene scene = new Scene(root);
-
-        //Associate scene to primaryStage(Window)
         stage.setScene(scene);
-        //title of the window: OFC SIGN IN.
-        stage.setTitle("OFC SING IN");
+        
+        stage.setTitle("Routine form Window");
         stage.setResizable(false);
         stage.initModality(Modality.APPLICATION_MODAL);
         changeButtonAction();
         timeTxTF.setOnKeyReleased(this::validateTimeTxTX);
-        nameTxTF.setOnKeyReleased(this::validateName);
+        nameTxTF1.setOnKeyReleased(this::validateName);
         kcalTxTF.setOnKeyReleased(this::validateKcalTxTX);
         endDateDT.setOnKeyReleased(this::enableDisableCreateUpdateBtn1);
         chargeExerciseCB();
@@ -135,17 +133,13 @@ public class RoutineDataWindowController {
         exerciseCB.setOnKeyReleased(this::enableDisableCreateUpdateBtn1);
         
         if (createOrupdateBtn.getText().equalsIgnoreCase("Create")) {
+            createOrupdateBtn.setDisable(true);
             createOrupdateBtn.setOnAction(this::createRoutine);
         }else{
             createOrupdateBtn.setOnAction(this::updateRoutine);
         }
         returnBtn.setOnAction(this::closeWindow);
         newExerciseBtn.setOnAction(this::newExercise);
-        
-       // stage.setOnShowing(this::windowShowing);
-        //
-        //createBtn.setOnAction(this::signUpWindow);
-        //updateBtn.setOnAction(this::routineDataWindow);
         stage.setOnCloseRequest(this::cerrarVentana);
         //Show window
         stage.show();
@@ -154,7 +148,7 @@ public class RoutineDataWindowController {
     }
     
     private void enableDisableCreateUpdateBtn(){
-        if (!nameTxTF.getText().isEmpty() && !timeTxTF.getText().isEmpty() && !kcalTxTF.getText().isEmpty() && endDateDT.getValue()!=null) {
+        if (!nameTxTF1.getText().isEmpty() && !timeTxTF.getText().isEmpty() && !kcalTxTF.getText().isEmpty()) {
             createOrupdateBtn.setDisable(false);
         }else{
             createOrupdateBtn.setDisable(true);
@@ -181,12 +175,16 @@ public class RoutineDataWindowController {
             }
             enableDisableCreateUpdateBtn();
         } catch (Exception e) {
-            Alert a= new Alert(Alert.AlertType.WARNING);
+            if (!timeTxTF.getText().isEmpty()) {
+                 Alert a= new Alert(Alert.AlertType.WARNING);
             a.setContentText("El campo time debe contener solo números");
             a.showAndWait();
             timeTxTF.setText("");
+            }
+           
+            
         }
-        
+     
        
     }
      private void validateKcalTxTX(KeyEvent key){
@@ -197,41 +195,85 @@ public class RoutineDataWindowController {
                  Alert a= new Alert(Alert.AlertType.WARNING);
             a.setContentText("El campo kcal debe contener numeros positivos");
             a.showAndWait();
-            timeTxTF.setText("");
+            kcalTxTF.setText("");
             }
             enableDisableCreateUpdateBtn();
         } catch (Exception e) {
-            Alert a= new Alert(Alert.AlertType.WARNING);
+            if (!kcalTxTF.getText().isEmpty()) {
+                Alert a= new Alert(Alert.AlertType.WARNING);
             a.setContentText("El campo kcal debe contener solo números");
             a.showAndWait();
-            timeTxTF.setText("");
+            kcalTxTF.setText("");
+            }
+            
+            
         }
         
-       
+        
     }
     
     private void validateName(KeyEvent event){
-        if (nameTxTF.getText().length()>30) {
+        if (nameTxTF1.getText().length()>30) {
             Alert a= new Alert(Alert.AlertType.WARNING);
             a.setContentText("El campo name debe contener menos de 30 caracteres");
             a.showAndWait();
-            nameTxTF.setText("");
+            nameTxTF1.setText("");
             
+        }else{
+            enableDisableCreateUpdateBtn();
         }
-        enableDisableCreateUpdateBtn();
+        
         
         
     }
     
-   
+      private void updateRoutine(ActionEvent event){
+        Routine updatedRoutine=new Routine();
+        try {
+             LocalDate ld= endDateDT.getValue();
+             updatedRoutine.setEnd_date(Date.from(ld.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        } catch (Exception e) {
+        }
+      
+        updatedRoutine.setName(nameTxTF1.getText());
+        updatedRoutine.setKcal(Double.valueOf(kcalTxTF.getText()));
+        
+        updatedRoutine.setTime(Float.valueOf(timeTxTF.getText()));
+        updatedRoutine.setStart_date(routine.getStart_date());
+        
+        
+         try {
+            routineREST.edit_XML(updatedRoutine);
+             routineController.refreshTable();
+            Alert alert= new Alert(Alert.AlertType.INFORMATION);
+            alert.setContentText("La rutina se ha modificado correctamente");
+            alert.showAndWait();
+        } catch (BusinessLogicException e) {
+            LOGGER.severe(e.getMessage());
+             Alert alert= new Alert(Alert.AlertType.ERROR,"No se puede "
+                     + "conectar con el servidor");
+             alert.showAndWait();
+        }
+         
+         this.routineController.refreshTable();
+
+            
+         this.stage.close();
+    }
     
     private void createRoutine(ActionEvent event){
-        LocalDate ld= endDateDT.getValue();
-        Routine newRoutine= new Routine();
-        newRoutine.setName(nameTxTF.getText());
+         Routine newRoutine= new Routine();
+        try {
+            LocalDate ld= endDateDT.getValue();
+            newRoutine.setEnd_date(Date.from(ld.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        } catch (Exception e) {
+        }
+        
+       
+        newRoutine.setName(nameTxTF1.getText());
         newRoutine.setKcal(Double.valueOf(kcalTxTF.getText()));
-        newRoutine.setStart_date(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-        newRoutine.setEnd_date(Date.from(ld.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+         newRoutine.setStart_date(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+
         newRoutine.setTime(Float.valueOf(timeTxTF.getText()));
         newRoutine.setClie(this.client);
         
@@ -243,9 +285,10 @@ public class RoutineDataWindowController {
             alert.showAndWait();
             
             
-        } catch (Exception e) {
+        } catch (BusinessLogicException e) {
             LOGGER.severe(e.getMessage());
-             Alert alert= new Alert(Alert.AlertType.ERROR,e.getMessage());
+             Alert alert= new Alert(Alert.AlertType.ERROR,"No se puede "
+                     + "conectar con el servidor");
              alert.showAndWait();
             
         }
@@ -279,32 +322,12 @@ public class RoutineDataWindowController {
             LOGGER.info("Method routineDataWindow is finished");
 
         } catch (IOException ex) {
-            Logger.getLogger(SignInWindowController.class.getName())
+            Logger.getLogger(ExerciseWindowController.class.getName())
                     .log(Level.SEVERE, ex.getMessage(), ex);
         }
     }
     
-    private void updateRoutine(ActionEvent event){
-        Routine updatedRoutine=new Routine();
-       LocalDate ld= endDateDT.getValue();
-        updatedRoutine.setName(nameTxTF.getText());
-        updatedRoutine.setKcal(Double.valueOf(kcalTxTF.getText()));
-        updatedRoutine.setEnd_date(Date.from(ld.atStartOfDay(ZoneId.systemDefault()).toInstant()));
-        updatedRoutine.setTime(Float.valueOf(timeTxTF.getText()));
-        updatedRoutine.setStart_date(routine.getStart_date());
-        System.out.println(updatedRoutine.getKcal());
-        
-         try {
-            routineREST.edit_XML(updatedRoutine);
-        } catch (Exception e) {
-            LOGGER.severe(e.getMessage());
-        }
-         
-         this.routineController.refreshTable();
-
-            
-         this.stage.close();
-    }
+ 
     
     
     private void changeButtonAction(){
@@ -330,8 +353,7 @@ public class RoutineDataWindowController {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setContentText("Quiere salir de la aplicacion?");
-        alert.getDialogPane().getStylesheets().add(
-                getClass().getResource("/ofc2_cliente/ui/dialog.css").toExternalForm());
+       
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
@@ -347,7 +369,7 @@ public class RoutineDataWindowController {
         LOGGER.info("Method windowShowing is starting ");
 
         //The field (userNameTxTF) has the focus
-        nameTxTF.requestFocus();
+        nameTxTF1.requestFocus();
         //The field (userNameTxTF) will be shown with a ToolTip the message “max 15 characters”. 
         //nameTxTF.setTooltip(new Tooltip("max 15 characters"));
         //The field (usernameTT) will be shown with a ToolTip the message “max 15 characters”. 
@@ -364,7 +386,7 @@ public class RoutineDataWindowController {
        
        private void setTooltips() {
 
-        nameTxTF.setTooltip(new Tooltip("Max 30 characters"));
+        nameTxTF1.setTooltip(new Tooltip("Max 30 characters"));
         newExerciseBtn.setTooltip(new Tooltip("Create a new exerise"));
        
 
@@ -378,7 +400,7 @@ public class RoutineDataWindowController {
         } catch (Exception e) {
         }
        
-        nameTxTF.setText(routine.getName());
+        nameTxTF1.setText(routine.getName());
         endDateDT.setValue(routine.getEnd_date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         kcalTxTF.setText(routine.getKcal().toString());
         timeTxTF.setText(routine.getTime().toString());
