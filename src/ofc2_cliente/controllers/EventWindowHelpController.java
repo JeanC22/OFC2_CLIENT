@@ -55,7 +55,7 @@ public class EventWindowHelpController{
     @FXML
     private void shoWindow(WindowEvent event) {
        WebEngine webEngine = webHelp.getEngine();
-                webEngine.load(getClass().getResource("/ofc2_cliente/ui/helpEvent.html").toExternalForm());
+                webEngine.load(getClass().getResource("/ofc2_cliente/ui/help/helpEvent.html").toExternalForm());
     }
      
      

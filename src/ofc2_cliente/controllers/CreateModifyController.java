@@ -79,11 +79,11 @@ public class CreateModifyController {
 
     private EventFactory eventFact = new EventFactory();
     ObservableList<Event> events;
-    
+
     private Long id;
 
-    private static String regex = "^[a-zA-Z]*$";
-    private static String regexNum = "^[1-9]*$";
+    private static String regex = "^[a-zA-Z\\s]*$";
+    private static String regexNum = "^[0-9]*$";
     private static final Logger LOGGER = Logger.getLogger("ofc2_cliente.Controllers");
     @FXML
     private ContextMenu menuCont;
@@ -107,6 +107,8 @@ public class CreateModifyController {
         LOGGER.info("Starting Stage");
         //init the scene with the root you got from singInController
         Scene scene = new Scene(root);
+        scene.getStylesheets().addAll(this.getClass().getResource("/ofc2_cliente/ui/resources/style.css").toExternalForm());
+        
         stage.setScene(scene);
         stage.setTitle("OFC Event");
         crtBtns.setVisible(true);
@@ -136,49 +138,69 @@ public class CreateModifyController {
     public void modifyEvent(ActionEvent event) {
         Event eve = new Event();
         Date newDate = null;
-        
-
-        newDate = Date.from(datePick.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
-        eve.setId(id);
-        eve.setName(nameFld.getText());
-        eve.setActivity(actFld.getText());
-        eve.setDate(newDate);
-        eve.setPlace(plcFld.getText());
-        eve.setCapacity(Integer.parseInt(capFld.getText()));
-        eve.setPrice(Float.valueOf(priceFld.getText()));
-
+        Date otherDate = null;
         try {
+            otherDate = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
+            newDate = Date.from(datePick.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+            if (nameFld.getText().isEmpty() || actFld.getText().isEmpty()
+                    || datePick.getValue() == null || capFld.getText().isEmpty()
+                    || priceFld.getText().isEmpty() || plcFld.getText().isEmpty()) {
+                throw new Exception("Alguno de los campos no esta informado");
+            }
+            if (this.nameFld.getText().length() > 30) {
+                throw new Exception("El campo de name tiene mas de 30 caracteres");
+            }
+            if (this.actFld.getText().length() > 50 || !this.actFld.getText().matches(regex)) {
+                throw new Exception("El campo de activity tiene mas de 50 caracteres o tiene caracteres especiales");
+            }
+            if (newDate.before(otherDate)) {
+                throw new Exception("La fecha es anterior a la de el dia de hoy");
+            }
+            if (this.plcFld.getText().length() > 30 || !this.plcFld.getText().matches(regex)) {
+                throw new Exception("El campo de place tiene mas de 30 caracteres o tiene caracteres especiales");
+            }
+            if (!this.capFld.getText().matches(regexNum)) {
+                throw new Exception("El campo capacity solo permite numeros");
+            }
+
+            eve.setId(id);
+            eve.setName(nameFld.getText());
+            eve.setActivity(actFld.getText());
+            eve.setDate(newDate);
+            eve.setPlace(plcFld.getText());
+            eve.setCapacity(Integer.parseInt(capFld.getText()));
+            eve.setPrice(Float.valueOf(priceFld.getText()));
+
             eventFact.getFactory().edit_XML(eve);
             backBtn(event);
-        } catch (BusinessLogicException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(CreateModifyController.class.getName()).log(Level.SEVERE, null, ex);
             Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
             alert.showAndWait();
         }
 
-        
     }
 
     /**
      * This method validates the fields and if they are correct it creates an
      * event in the database.
-     * @param event 
+     *
+     * @param event
      */
     public void createEvent(ActionEvent event) {
         try {
             events = FXCollections.observableArrayList(eventFact.getFactory().findEventByName_XML(new GenericType<Event>() {
-                        }, nameFld.getText()));
-         
-                 throw new Exception("El nombre de el evento ya existe");
-             
+            }, nameFld.getText()));
+
+            throw new Exception("El nombre de el evento ya existe");
+
         } catch (InternalServerErrorException e) {
-            crearEvento();
-            backBtn(event);
-        }catch(Exception e){
+            crearEvento(event);
+        } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
             alert.showAndWait();
         }
-        
+
     }
 
     /**
@@ -200,9 +222,10 @@ public class CreateModifyController {
     }
 
     /**
-     * This method is to send us to the previous window when we click on 
-     * the back button.
-     * @param event 
+     * This method is to send us to the previous window when we click on the
+     * back button.
+     *
+     * @param event
      */
     public void backBtn(ActionEvent event) {
 
@@ -227,9 +250,10 @@ public class CreateModifyController {
     }
 
     /**
-     * The method loads the event data into the textfields of the window and 
+     * The method loads the event data into the textfields of the window and
      * makes the modify button visible and the create button invisible.
-     * @param event 
+     *
+     * @param event
      */
     public void loadDate(Event event) {
         nameFld.setText(event.getName());
@@ -246,36 +270,35 @@ public class CreateModifyController {
 
     }
 
-    private void crearEvento() {
+    private void crearEvento(ActionEvent event) {
         Event eve = new Event();
         Date newDate = null;
         User u = new Admin();
         Date otherDate = null;
         try {
-            otherDate =Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()); 
+            otherDate = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
             newDate = Date.from(datePick.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
             if (nameFld.getText().isEmpty() || actFld.getText().isEmpty()
                     || datePick.getValue() == null || capFld.getText().isEmpty()
                     || priceFld.getText().isEmpty() || plcFld.getText().isEmpty()) {
                 throw new Exception("Alguno de los campos no esta informado");
             }
-            if(this.nameFld.getText().length() > 30){
+            if (this.nameFld.getText().length() > 30) {
                 throw new Exception("El campo de name tiene mas de 30 caracteres");
             }
-            if(this.actFld.getText().length() > 50 || !this.actFld.getText().matches(regex)){
+            if (this.actFld.getText().length() > 50 || !this.actFld.getText().matches(regex)) {
                 throw new Exception("El campo de activity tiene mas de 50 caracteres o tiene caracteres especiales");
             }
-            if(newDate.before(otherDate)){
+            if (newDate.before(otherDate)) {
                 throw new Exception("La fecha es anterior a la de el dia de hoy");
             }
-            if(this.plcFld.getText().length() > 30 || !this.plcFld.getText().matches(regex) ){
+            if (this.plcFld.getText().length() > 30 || !this.plcFld.getText().matches(regex)) {
                 throw new Exception("El campo de place tiene mas de 30 caracteres o tiene caracteres especiales");
             }
-            if(!this.capFld.getText().matches(regexNum)){
-                throw new Exception("El campo price solo permite numeros");
+            if (!this.capFld.getText().matches(regexNum)) {
+                throw new Exception("El campo capacity solo permite numeros");
             }
-            
-            
+
             eve.setName(nameFld.getText());
             eve.setActivity(actFld.getText());
             eve.setDate(newDate);
@@ -284,9 +307,9 @@ public class CreateModifyController {
             eve.setPrice(Float.valueOf(priceFld.getText()));
             u.setId(1L);
             eve.setAdmin((Admin) u);
-            
-             
-            eventFact.getFactory().create_XML(eve);   
+
+            eventFact.getFactory().create_XML(eve);
+            backBtn(event);
         } catch (Exception ex) {
             Logger.getLogger(CreateModifyController.class.getName()).log(Level.SEVERE, null, ex);
             Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);

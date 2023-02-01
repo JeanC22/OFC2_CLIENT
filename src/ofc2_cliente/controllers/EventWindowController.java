@@ -144,7 +144,7 @@ public class EventWindowController {
             Scene scene = new Scene(root);
             scene.getStylesheets().addAll(this.getClass().getResource("/ofc2_cliente/ui/resources/style.css").toExternalForm());
             stage.setScene(scene);
-            
+
             stage.setTitle("OFC Event");
             modifyBtn.setDisable(true);
             delBtn.setDisable(true);
@@ -166,19 +166,16 @@ public class EventWindowController {
             deleteMenu.setOnAction(this::deleteData);
             showComents.setOnAction(this::showComent);
             helpBtn.setOnAction(this::showWindowHelper);
-            
-            
 
             stage.show();
 
             LOGGER.info("Stage Started");
-            } catch (Exception e) {
-            
+        } catch (Exception e) {
+
             Alert alert = new Alert(Alert.AlertType.ERROR, "El servidor glashfish no se encuentra disponible", ButtonType.OK);
             alert.showAndWait();
         }
-            
-            
+
     }
 
     /**
@@ -433,16 +430,16 @@ public class EventWindowController {
                     case "FindByActivity":
                         events = FXCollections.observableArrayList(eventFact.getFactory().findEventByActivity_XML(new GenericType<List<Event>>() {
                         }, dataFld.getText()));
-                            
+                        break;
                     case "FindByName":
                         events = FXCollections.observableArrayList(eventFact.getFactory().findEventByName_XML(new GenericType<Event>() {
                         }, dataFld.getText()));
-                        
+
                         break;
                     case "FindByDate":
                         events = FXCollections.observableArrayList(eventFact.getFactory().findEventByDate_XML(new GenericType<List<Event>>() {
                         }, dataFld.getText()));
-                        
+
                         break;
                     case "FindAll":
                         events = FXCollections.observableArrayList(eventFact.getFactory().findAllEvents_XML(new GenericType<List<Event>>() {
@@ -451,7 +448,7 @@ public class EventWindowController {
                 }
                 eventTable.setItems(events);
                 eventTable.refresh();
-                
+
             }
         } catch (Exception ex) {
             Logger.getLogger(EventWindowController.class.getName()).log(Level.SEVERE, null, ex);
