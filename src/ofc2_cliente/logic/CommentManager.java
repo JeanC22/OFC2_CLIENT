@@ -9,7 +9,7 @@ import javax.ws.rs.core.GenericType;
 
 /**
  *
- * @author 2dam
+ * @author Jeanpierr Caraballo
  */
 interface CommentManager {
 
@@ -50,5 +50,9 @@ interface CommentManager {
     public <T> T findOrderByMoreRecent_XML(GenericType<T> responseType) throws BusinessLogicException;
 
     public <T> T findOrderByMoreRecent_JSON(GenericType<T> responseType) throws BusinessLogicException;
+
+    public <T> T EventComents_XML(GenericType<T> responseType, String eventID) throws BusinessLogicException;
+
+    public <T> T EventComents_JSON(GenericType<T> responseType, String eventID) throws BusinessLogicException;
 
 }

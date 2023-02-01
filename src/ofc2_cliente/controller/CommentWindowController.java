@@ -20,6 +20,8 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -28,6 +30,7 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -36,7 +39,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.MenuItem;
@@ -98,7 +103,7 @@ public class CommentWindowController {
     @FXML
     private TableColumn clientComment;
     @FXML
-    private TableColumn<Coment, String> PrivacityComment;
+    private TableColumn<Coment, Boolean> PrivacityComment;
     @FXML
     private TableColumn<Coment, Date> dateComment;
     @FXML
@@ -113,7 +118,7 @@ public class CommentWindowController {
 
     CommentFactoryManager commentFactory = new CommentFactoryManager();
     CommetRESTClient commentRest = (CommetRESTClient) commentFactory.getFactory();
-    ObservableList<String> options = FXCollections.observableArrayList("FindAll", "FindBySubject");
+    ObservableList<String> options = FXCollections.observableArrayList("Find All", "Find By Subject", "Find ID Event");
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -155,17 +160,17 @@ public class CommentWindowController {
                 new PropertyValueFactory<>("event"));
         clientComment.setCellValueFactory(
                 new PropertyValueFactory<>("comClie"));
-        PrivacityComment.setCellValueFactory(
-                new PropertyValueFactory<>("privacity"));
-        PrivacityComment.setCellFactory(TextFieldTableCell.<Coment>forTableColumn());
-        PrivacityComment.setOnEditCommit(
-                (CellEditEvent<Coment, String> t) -> {
-                    ((Coment) t.getTableView().getItems().get(
-                            t.getTablePosition().getRow()))
-                            .setPrivacity(t.getNewValue());
-                });
+        Callback<TableColumn<Coment, Boolean>, TableCell<Coment, Boolean>> booleanCellFactory
+                = new Callback<TableColumn<Coment, Boolean>, TableCell<Coment, Boolean>>() {
+            @Override
+            public TableCell<Coment, Boolean> call(TableColumn<Coment, Boolean> p) {
+                return new CheckBoxTableCell();
+            }
+        };
+        PrivacityComment.setCellValueFactory(new PropertyValueFactory<Coment, Boolean>("privacity"));
+        PrivacityComment.setCellFactory(booleanCellFactory);
         dateComment.setCellValueFactory(
-                new PropertyValueFactory<>("privacity"));
+                new PropertyValueFactory<>("publication_date"));
         Callback<TableColumn<Coment, Date>, TableCell<Coment, Date>> dateCellFactory
                 = (TableColumn<Coment, Date> param) -> new DateEditingCell();
         dateComment.setCellValueFactory(cellData -> cellData.getValue()
@@ -194,10 +199,17 @@ public class CommentWindowController {
                             t.getTablePosition().getRow())).setValoration(t.getNewValue());
                 });
         //Show window.messageComment.setCellValueFactory(
-        comments = FXCollections.observableArrayList(commentRest.
-                findAllComents_XML(new GenericType<List<Coment>>() {
-                }));
-        commentTableView.setItems(comments);
+        try {
+            comments = FXCollections.observableArrayList(commentFactory.getFactory().
+                    findAllComents_XML(new GenericType<List<Coment>>() {
+                    }));
+            commentTableView.setItems(comments);
+
+        } catch (BusinessLogicException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
+            alert.showAndWait();
+            Logger.getLogger(CommentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         final ObservableList<Coment> tablaCommentCel = commentTableView.
                 getSelectionModel().getSelectedItems();
@@ -212,9 +224,6 @@ public class CommentWindowController {
         final TextField addSubject = new TextField();
         addSubject.setPromptText("Subject");
 
-        final TextField addPrivacity = new TextField();
-        addPrivacity.setPromptText("true");
-
         final TextField addMessage = new TextField();
         addMessage.setPromptText("message");
 
@@ -228,11 +237,10 @@ public class CommentWindowController {
             Date date = Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
             Coment comment = new Coment(1L, this.client.getId(), date, date, addMessage
                     .getPromptText(), addRating.getPromptText(),
-                    addPrivacity.getPromptText(), addSubject.getPromptText());
+                    Boolean.TRUE, addSubject.getPromptText());
             comments.add(comment);
             addMessage.clear();
             addSubject.clear();
-            addPrivacity.clear();
             addRating.clear();
             try {
                 newCommentCommit(comment);
@@ -341,25 +349,39 @@ public class CommentWindowController {
             //check that the field is informed as long as it is not selected search all in the combo box
             if (findCommentTxTF.getText().isEmpty()
                     && filterMenu.getSelectionModel()
-                            .getSelectedItem() != "FindAll") {
+                            .getSelectedItem() != "Find All") {
                 throw new Exception("The field cannot be empty");
             } else {
                 //depending on the value that is selected in the combo box we 
                 //will use different search engines.
                 switch (optionSelected) {
-                    case "FindAll":
+                    case "Find All":
+
                         coments = FXCollections.observableArrayList(commentRest.
                                 findAllComents_XML(new GenericType<List<Coment>>() {
                                 }));
-
+                        if (coments.isEmpty()) {
+                            throw new IOException("No comment found");
+                        }
                         break;
-                    case "FindBySubject":
+                    case "Find By Subject":
                         coments = FXCollections
                                 .observableArrayList(commentFactory.getFactory()
                                         .find_XML(new GenericType<List<Coment>>() {
                                         }, findCommentTxTF.getText()));
+                        if (coments.isEmpty()) {
+                            throw new IOException("No comment found with that subject");
+                        }
                         break;
-
+                    case "Find ID Event":
+                        coments = FXCollections
+                                .observableArrayList(commentFactory.getFactory()
+                                        .EventComents_XML(new GenericType<List<Coment>>() {
+                                        }, findCommentTxTF.getText()));
+                        if (coments.isEmpty()) {
+                            throw new IOException("No Events found with this ID");
+                        }
+                        break;
                 }
                 commentTableView.setItems(coments);
                 commentTableView.refresh();
@@ -622,6 +644,68 @@ public class CommentWindowController {
                     .atZone(ZoneId.systemDefault()).toLocalDate();
         }
     }
+
+   
+    //CheckBoxTableCell for creating a CheckBox in a table cell
+
+    public static class CheckBoxTableCell<S, T> extends TableCell<S, T> {
+
+        private final CheckBox checkBox;
+
+        private ObservableValue<T> ov;
+
+ 
+
+        public CheckBoxTableCell() {
+
+            this.checkBox = new CheckBox();
+
+            this.checkBox.setAlignment(Pos.CENTER);
+
+ 
+
+            setAlignment(Pos.CENTER);
+
+            setGraphic(checkBox);
+
+        } 
+
+         
+
+        @Override public void updateItem(T item, boolean empty) {
+
+            super.updateItem(item, empty);
+
+            if (empty) {
+
+                setText(null);
+
+                setGraphic(null);
+
+            } else {
+
+                setGraphic(checkBox);
+
+                if (ov instanceof BooleanProperty) {
+
+                    checkBox.selectedProperty().unbindBidirectional((BooleanProperty) ov);
+
+                }
+
+                ov = getTableColumn().getCellObservableValue(getIndex());
+
+                if (ov instanceof BooleanProperty) {
+
+                    checkBox.selectedProperty().bindBidirectional((BooleanProperty) ov);
+
+                }
+
+            }
+
+        }
+
+    }
+
 
     public Integer btnStatus(Integer count) {
         return this.commentCount = count;

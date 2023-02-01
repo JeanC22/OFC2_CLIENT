@@ -412,8 +412,14 @@
     -fx-cell-size: 1.66667em; 
 }
 .normal-label {
-    -fx-text-fill: #FFE98F;
+    -fx-text-fill: -fx-primary;
 }
 .normal-text-field {
-    -fx-text-fill: #FFE98F;
+    -fx-text-fill: -fx-primary;
+}
+.text-field-table-cell .text-field {
+    -fx-padding: 1; 
+    -fx-border-color:-fx-primary; 
+    -fx-text-fill: -fx-primary;
+    -fx-background-color:-fx-secondary;
 }
