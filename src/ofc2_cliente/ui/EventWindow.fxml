@@ -7,10 +7,11 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofc2_cliente.controllers.EventWindowController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" stylesheets="@resources/style.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofc2_cliente.controllers.EventWindowController">
     <children>
         <fx:include fx:id="menuBar" source="menu.fxml" /> 
       <TableView fx:id="eventTable" layoutX="112.0" layoutY="200.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" style="-fx-border-radius: 10; -fx-border-color: black; -fx-border-width: 7px; -fx-border-insets: -3;">
@@ -32,17 +33,26 @@
             </ContextMenu>
          </contextMenu>
       </TableView>
-      <ComboBox fx:id="comboFind" layoutX="790.0" layoutY="154.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="130.0" />
-      <TextField fx:id="dataFld" layoutX="575.0" layoutY="153.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="34.0" prefWidth="150.0" />
-      <Button fx:id="findBtn" layoutX="732.0" layoutY="153.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#find" prefHeight="30.0" prefWidth="42.0" />
+      <ComboBox fx:id="comboFind" layoutX="577.0" layoutY="155.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="34.0" prefWidth="127.0" />
+      <TextField fx:id="dataFld" layoutX="715.0" layoutY="155.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="34.0" prefWidth="150.0" style="-fx-text-fill: black;" />
+      <Button fx:id="findBtn" layoutX="875.0" layoutY="157.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#find" prefHeight="30.0" prefWidth="42.0" style="-fx-border-color: none; -fx-background-color: none;" textFill="TRANSPARENT">
+         <graphic>
+            <ImageView fitHeight="37.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@resources/magnifying-glass-solid.png" />
+               </image>
+            </ImageView>
+         </graphic></Button>
       <Button fx:id="modifyBtn" layoutX="597.0" layoutY="667.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#createModifyWindowMod" prefHeight="30.0" prefWidth="107.0" text="Modify" />
       <Button fx:id="delBtn" layoutX="737.0" layoutY="667.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#deleteData" prefHeight="30.0" prefWidth="107.0" text="Delete" />
-      <Button fx:id="registerBtn" layoutX="199.0" layoutY="667.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="76.0" text="Register" />
       <Button fx:id="createBtn" layoutX="459.0" layoutY="667.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#createModifyWindowCre" prefHeight="30.0" prefWidth="107.0" text="Create" />
       <Button fx:id="reportBtn" layoutX="122.0" layoutY="667.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#generateReport" prefHeight="30.0" prefWidth="76.0" text="Report" />
-      <Button fx:id="helpBtn" layoutX="275.0" layoutY="667.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"  onAction="#showWindowHelper" prefHeight="30.0" prefWidth="76.0" text="Help" />
+      <Button fx:id="helpBtn" layoutX="198.0" layoutY="667.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showWindowHelper" prefHeight="30.0" prefWidth="76.0" text="Help" />
       <ImageView fx:id="Event" fitHeight="95.0" fitWidth="127.0" layoutX="40.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fitHeight="95.0" fitWidth="127.0" layoutX="449.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="81.0" fitWidth="218.0" layoutX="411.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@resources/OFCLogo.png" />
+         </image></ImageView>
       
    </children>
 </Pane>

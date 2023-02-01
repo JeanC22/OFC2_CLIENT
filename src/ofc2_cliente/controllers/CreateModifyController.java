@@ -40,6 +40,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.core.GenericType;
 import ofc2_cliente.logic.BusinessLogicException;
 import ofc2_cliente.logic.EventFactory;
@@ -164,54 +165,20 @@ public class CreateModifyController {
      * @param event 
      */
     public void createEvent(ActionEvent event) {
-        Event eve = new Event();
-        Date newDate = null;
-        User u = new Admin();
-        Date otherDate = null;
         try {
-            otherDate =Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()); 
-            newDate = Date.from(datePick.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
-            if (nameFld.getText().isEmpty() || actFld.getText().isEmpty()
-                    || datePick.getValue() == null || capFld.getText().isEmpty()
-                    || priceFld.getText().isEmpty() || plcFld.getText().isEmpty()) {
-                throw new Exception("Alguno de los campos no esta informado");
-            }
-            if(this.nameFld.getText().length() > 30){
-                throw new Exception("El campo de name tiene mas de 30 caracteres");
-            }
-            if(this.actFld.getText().length() > 50 || !this.actFld.getText().matches(regex)){
-                throw new Exception("El campo de activity tiene mas de 50 caracteres o tiene caracteres especiales");
-            }
-            if(newDate.before(otherDate)){
-                throw new Exception("La fecha es anterior a la de el dia de hoy");
-            }
-            if(this.plcFld.getText().length() > 30 || !this.plcFld.getText().matches(regex) ){
-                throw new Exception("El campo de place tiene mas de 30 caracteres o tiene caracteres especiales");
-            }
-            if(!this.capFld.getText().matches(regexNum)){
-                throw new Exception("El campo price solo permite numeros");
-            }
-            
-
-            
-            eve.setName(nameFld.getText());
-            eve.setActivity(actFld.getText());
-            eve.setDate(newDate);
-            eve.setPlace(plcFld.getText());
-            eve.setCapacity(Integer.parseInt(capFld.getText()));
-            eve.setPrice(Float.valueOf(priceFld.getText()));
-            u.setId(1L);
-            eve.setAdmin((Admin) u);
-            
-            
-            eventFact.getFactory().create_XML(eve);
+            events = FXCollections.observableArrayList(eventFact.getFactory().findEventByName_XML(new GenericType<Event>() {
+                        }, nameFld.getText()));
+         
+                 throw new Exception("El nombre de el evento ya existe");
+             
+        } catch (InternalServerErrorException e) {
+            crearEvento();
             backBtn(event);
-        } catch (Exception ex) {
-            Logger.getLogger(CreateModifyController.class.getName()).log(Level.SEVERE, null, ex);
-            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
+        }catch(Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
             alert.showAndWait();
         }
-
+        
     }
 
     /**
@@ -253,6 +220,8 @@ public class CreateModifyController {
             //inicializar la scena
         } catch (IOException ex) {
             Logger.getLogger(EventWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
+            alert.showAndWait();
         }
 
     }
@@ -275,6 +244,54 @@ public class CreateModifyController {
         crtBtns.setVisible(false);
         crtBtns.setDisable(true);
 
+    }
+
+    private void crearEvento() {
+        Event eve = new Event();
+        Date newDate = null;
+        User u = new Admin();
+        Date otherDate = null;
+        try {
+            otherDate =Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()); 
+            newDate = Date.from(datePick.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+            if (nameFld.getText().isEmpty() || actFld.getText().isEmpty()
+                    || datePick.getValue() == null || capFld.getText().isEmpty()
+                    || priceFld.getText().isEmpty() || plcFld.getText().isEmpty()) {
+                throw new Exception("Alguno de los campos no esta informado");
+            }
+            if(this.nameFld.getText().length() > 30){
+                throw new Exception("El campo de name tiene mas de 30 caracteres");
+            }
+            if(this.actFld.getText().length() > 50 || !this.actFld.getText().matches(regex)){
+                throw new Exception("El campo de activity tiene mas de 50 caracteres o tiene caracteres especiales");
+            }
+            if(newDate.before(otherDate)){
+                throw new Exception("La fecha es anterior a la de el dia de hoy");
+            }
+            if(this.plcFld.getText().length() > 30 || !this.plcFld.getText().matches(regex) ){
+                throw new Exception("El campo de place tiene mas de 30 caracteres o tiene caracteres especiales");
+            }
+            if(!this.capFld.getText().matches(regexNum)){
+                throw new Exception("El campo price solo permite numeros");
+            }
+            
+            
+            eve.setName(nameFld.getText());
+            eve.setActivity(actFld.getText());
+            eve.setDate(newDate);
+            eve.setPlace(plcFld.getText());
+            eve.setCapacity(Integer.parseInt(capFld.getText()));
+            eve.setPrice(Float.valueOf(priceFld.getText()));
+            u.setId(1L);
+            eve.setAdmin((Admin) u);
+            
+             
+            eventFact.getFactory().create_XML(eve);   
+        } catch (Exception ex) {
+            Logger.getLogger(CreateModifyController.class.getName()).log(Level.SEVERE, null, ex);
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
+            alert.showAndWait();
+        }
     }
 
 }

@@ -104,11 +104,14 @@ public class MenuController {
         } catch (IOException ex) {
             Logger.getLogger(CreateModifyController.class.getName())
                     .log(Level.SEVERE, null, ex);
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
+            alert.showAndWait();
         }
     }
     
     public void showRoutineWindow(ActionEvent event) {
         try {
+            
             Stage mainStage = new Stage();
             URL viewLink = getClass().getResource(
                     "/ofc2_cliente/ui/ventanaModificarEvento.fxml");
@@ -127,6 +130,8 @@ public class MenuController {
         } catch (IOException ex) {
             Logger.getLogger(CreateModifyController.class.getName())
                     .log(Level.SEVERE, null, ex);
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
+            alert.showAndWait();
         }
     }
     
@@ -151,6 +156,8 @@ public class MenuController {
         } catch (IOException ex) {
             Logger.getLogger(CreateModifyController.class.getName())
                     .log(Level.SEVERE, null, ex);
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
+            alert.showAndWait();
         }
     }
     
@@ -174,6 +181,8 @@ public class MenuController {
         } catch (IOException ex) {
             Logger.getLogger(CreateModifyController.class.getName())
                     .log(Level.SEVERE, null, ex);
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
+            alert.showAndWait();
         }
     }
     
@@ -197,6 +206,8 @@ public class MenuController {
         } catch (IOException ex) {
             Logger.getLogger(CreateModifyController.class.getName())
                     .log(Level.SEVERE, null, ex);
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
+            alert.showAndWait();
         }
     }
     /*

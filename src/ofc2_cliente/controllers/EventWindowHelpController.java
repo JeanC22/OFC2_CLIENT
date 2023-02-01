@@ -17,6 +17,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -44,6 +45,7 @@ public class EventWindowHelpController{
         //init the scene with the root you got from singInController
         Scene scene = new Scene(root);
         stage.setScene(scene);
+        stage.initModality(Modality.WINDOW_MODAL);
         stage.setOnShowing(this::shoWindow);
         
         this.stage.show();

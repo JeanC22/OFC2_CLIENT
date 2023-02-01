@@ -14,7 +14,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import sun.java2d.pipe.SpanShapeRenderer;
 
 /**
  * This class is where the Entities and their relationships are declared, as

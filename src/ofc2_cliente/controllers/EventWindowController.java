@@ -84,8 +84,6 @@ public class EventWindowController {
     @FXML
     private Button delBtn;
     @FXML
-    private Button registerBtn;
-    @FXML
     private Button reportBtn;
     @FXML
     private TableView eventTable;
@@ -114,6 +112,7 @@ public class EventWindowController {
     @FXML
     private Button helpBtn;
 
+    MenuController menu;
     private EventFactory eventFact = new EventFactory();
     ObservableList<Event> events;
     ObservableList<String> combo = FXCollections.observableArrayList("FindByActivity", "FindByName", "FindByDate", "FindAll");
@@ -143,11 +142,12 @@ public class EventWindowController {
             LOGGER.info("Starting Stage");
             //init the scene with the root you got from singInController
             Scene scene = new Scene(root);
+            scene.getStylesheets().addAll(this.getClass().getResource("/ofc2_cliente/ui/resources/style.css").toExternalForm());
             stage.setScene(scene);
+            
             stage.setTitle("OFC Event");
             modifyBtn.setDisable(true);
             delBtn.setDisable(true);
-            registerBtn.setDisable(true);
             comboFind.setItems(combo);
             comboFind.getItems();
             comboFind.getSelectionModel().selectFirst();
@@ -166,14 +166,19 @@ public class EventWindowController {
             deleteMenu.setOnAction(this::deleteData);
             showComents.setOnAction(this::showComent);
             helpBtn.setOnAction(this::showWindowHelper);
+            
+            
 
             stage.show();
 
             LOGGER.info("Stage Started");
-        } catch (Exception e) {
+            } catch (Exception e) {
+            
             Alert alert = new Alert(Alert.AlertType.ERROR, "El servidor glashfish no se encuentra disponible", ButtonType.OK);
             alert.showAndWait();
         }
+            
+            
     }
 
     /**
@@ -244,11 +249,9 @@ public class EventWindowController {
         if (newValue != null) {
             modifyBtn.setDisable(false);
             delBtn.setDisable(false);
-            registerBtn.setDisable(false);
         } else {
             modifyBtn.setDisable(true);
             delBtn.setDisable(true);
-            registerBtn.setDisable(true);
         }
     }
 
@@ -335,6 +338,8 @@ public class EventWindowController {
         } catch (IOException ex) {
             Logger.getLogger(CreateModifyController.class.getName())
                     .log(Level.SEVERE, null, ex);
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
+            alert.showAndWait();
         }
 
     }
@@ -368,6 +373,8 @@ public class EventWindowController {
         } catch (IOException ex) {
             Logger.getLogger(CreateModifyController.class.getName())
                     .log(Level.SEVERE, null, ex);
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
+            alert.showAndWait();
         }
 
     }
@@ -389,10 +396,11 @@ public class EventWindowController {
             mainStageController.setStage(mainStage);
             //start the stage
             mainStageController.initStage(root);
-            this.stage.close();
         } catch (IOException ex) {
             Logger.getLogger(CreateModifyController.class.getName())
                     .log(Level.SEVERE, null, ex);
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
+            alert.showAndWait();
         }
     }
 
@@ -425,15 +433,16 @@ public class EventWindowController {
                     case "FindByActivity":
                         events = FXCollections.observableArrayList(eventFact.getFactory().findEventByActivity_XML(new GenericType<List<Event>>() {
                         }, dataFld.getText()));
-
-                        break;
+                            
                     case "FindByName":
                         events = FXCollections.observableArrayList(eventFact.getFactory().findEventByName_XML(new GenericType<Event>() {
                         }, dataFld.getText()));
+                        
                         break;
                     case "FindByDate":
                         events = FXCollections.observableArrayList(eventFact.getFactory().findEventByDate_XML(new GenericType<List<Event>>() {
                         }, dataFld.getText()));
+                        
                         break;
                     case "FindAll":
                         events = FXCollections.observableArrayList(eventFact.getFactory().findAllEvents_XML(new GenericType<List<Event>>() {
@@ -442,7 +451,7 @@ public class EventWindowController {
                 }
                 eventTable.setItems(events);
                 eventTable.refresh();
-                dataFld.clear();
+                
             }
         } catch (Exception ex) {
             Logger.getLogger(EventWindowController.class.getName()).log(Level.SEVERE, null, ex);
@@ -450,6 +459,7 @@ public class EventWindowController {
             alert.showAndWait();
 
         }
+        dataFld.clear();
 
     }
 
@@ -483,6 +493,8 @@ public class EventWindowController {
         } catch (IOException ex) {
             Logger.getLogger(CreateModifyController.class.getName())
                     .log(Level.SEVERE, null, ex);
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
+            alert.showAndWait();
         }
     }
 
