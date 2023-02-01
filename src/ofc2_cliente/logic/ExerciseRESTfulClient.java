@@ -36,80 +36,77 @@ public class ExerciseRESTfulClient implements ExerciseInterface{
         webTarget = client.target(BASE_URI).path("entities.exercise");
     }
 
-    @Override
-    public String countREST() throws ClientErrorException {
-        WebTarget resource = webTarget;
-        resource = resource.path("count");
-        return resource.request(javax.ws.rs.core.MediaType.TEXT_PLAIN).get(String.class);
-    }
-
-    @Override
-    public void edit_XML(Object requestEntity, String id) throws ClientErrorException {
-        webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
-    }
-
-    @Override
-    public void edit_JSON(Object requestEntity, String id) throws ClientErrorException {
-        webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request(javax.ws.rs.core.MediaType.APPLICATION_JSON).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
-    }
-
-    @Override
-    public <T> T find_XML(GenericType<T> responseType, String id) throws ClientErrorException {
-        WebTarget resource = webTarget;
-        resource = resource.path(java.text.MessageFormat.format("{0}", new Object[]{id}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
-    }
-
-    @Override
-    public <T> T find_JSON(GenericType<T> responseType, String id) throws ClientErrorException {
-        WebTarget resource = webTarget;
-        resource = resource.path(java.text.MessageFormat.format("{0}", new Object[]{id}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
-    }
-
-    @Override
-    public <T> T findRange_XML(GenericType<T> responseType, String from, String to) throws ClientErrorException {
-        WebTarget resource = webTarget;
-        resource = resource.path(java.text.MessageFormat.format("{0}/{1}", new Object[]{from, to}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
-    }
-
-    @Override
-    public <T> T findRange_JSON(GenericType<T> responseType, String from, String to) throws ClientErrorException {
-        WebTarget resource = webTarget;
-        resource = resource.path(java.text.MessageFormat.format("{0}/{1}", new Object[]{from, to}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
-    }
-
-    @Override
-    public void create_XML(Object requestEntity) throws ClientErrorException {
-        webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
-    }
-
-    @Override
-    public void create_JSON(Object requestEntity) throws ClientErrorException {
-        webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
-    }
-
-    @Override
-    public <T> T findAll_XML(GenericType<T> responseType) throws ClientErrorException {
-        WebTarget resource = webTarget;
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
-    }
-
-    @Override
-    public <T> T findAll_JSON(GenericType<T> responseType) throws ClientErrorException {
-        WebTarget resource = webTarget;
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
-    }
-
-    @Override
-    public void remove(String id) throws ClientErrorException {
-        webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete();
-    }
+    
 
     public void close() {
         client.close();
     }
+
+    @Override
+    public <T> T consultExerciseById_XML(GenericType<T> responseType, String id) throws BusinessLogicException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("consultExerciseById/{0}", new Object[]{id}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+    }
+
+    @Override
+    public <T> T consultExerciseById_JSON(GenericType<T> responseType, String id) throws BusinessLogicException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("consultExerciseById/{0}", new Object[]{id}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
+    }
+
+    @Override
+    public void edit_XML(Object requestEntity) throws BusinessLogicException {
+        webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
+    }
+
+    @Override
+    public void edit_JSON(Object requestEntity) throws BusinessLogicException {
+        webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
+    }
+
+    @Override
+    public <T> T consultAllExercises_XML(GenericType<T> responseType) throws BusinessLogicException {
+        WebTarget resource = webTarget;
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+    }
+
+    @Override
+    public <T> T consultAllExercises_JSON(GenericType<T> responseType) throws BusinessLogicException {
+        WebTarget resource = webTarget;
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
+    }
+
+    @Override
+    public void create_XML(Object requestEntity) throws BusinessLogicException {
+        webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
+    }
+
+    @Override
+    public void create_JSON(Object requestEntity) throws BusinessLogicException {
+        webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
+    }
+
+    @Override
+    public <T> T consultExerciseByName_XML(GenericType<T> responseType, String name) throws BusinessLogicException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("consultExerciseByName/{0}", new Object[]{name}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+    }
+
+    @Override
+    public <T> T consultExerciseByName_JSON(GenericType<T> responseType, String name) throws BusinessLogicException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("consultExerciseByName/{0}", new Object[]{name}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
+    }
+
+    @Override
+    public void remove(String id) throws BusinessLogicException {
+        webTarget.path(java.text.MessageFormat.format("delete/{0}", new Object[]{id})).request().delete();
+    }
+
+    
     
 }

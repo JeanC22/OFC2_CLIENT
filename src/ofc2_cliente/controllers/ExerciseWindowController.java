@@ -37,9 +37,12 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javax.ws.rs.core.GenericType;
+import net.sf.jasperreports.web.actions.AbstractAction;
+import ofc2_cliente.logic.BusinessLogicException;
 import ofc2_cliente.logic.ExerciseInterfaceFactory;
 import ofc2_cliente.logic.ExerciseRESTfulClient;
 import ofc2_cliente.model.Exercise;
+import ofc2_cliente.model.Exercises;
 import ofc2_cliente.model.Routine;
 
 /**
@@ -97,6 +100,7 @@ public class ExerciseWindowController {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setOnShowing(this::windowShowing);
         createBtn.setDisable(true);
+        createBtn.setOnAction(this::createExercise);
         returnBtn.setOnAction(this::closeWindow);
         
         timeTxTF.setOnKeyReleased(this::validateTimeTxTX);
@@ -143,6 +147,45 @@ public class ExerciseWindowController {
         
        
     }
+
+    private void createExercise(ActionEvent event) {
+        try {
+            Exercise ex = new Exercise();
+            
+            switch (nameTxTF.getText().toUpperCase()) {
+                case "CORRER":
+                    ex.setExercise(Exercises.CORRER);
+                    break;
+                    
+                case "ABDOMINALES":
+                    ex.setExercise(Exercises.ABDOMINALES);
+                    break;
+                case "CAMINAR":
+                    ex.setExercise(Exercises.CAMINAR);
+                    break;
+                    
+                case "DOMINADAS":
+                    ex.setExercise(Exercises.DOMINADAS);
+                    break;
+                case "FLEXIONES":
+                    ex.setExercise(Exercises.FLEXIONES);
+                    break;
+                case "PLANCHA":
+                    ex.setExercise(Exercises.PLANCHA);
+                    break;
+                case "SENTADILLAS":
+                    ex.setExercise(Exercises.SENTADILLAS);
+                    break;
+            }
+            ex.setTime(Float.valueOf(timeTxTF.getText()));
+            
+            exerciseREST.create_XML(ex);
+        } catch (BusinessLogicException ex1) {
+            Logger.getLogger(ExerciseWindowController.class.getName()).log(Level.SEVERE, null, ex1);
+        }
+        
+        
+    }
     
     private void validateName(KeyEvent event){
         if (nameTxTF.getText().length()>30) {
@@ -157,12 +200,7 @@ public class ExerciseWindowController {
     }
     
     
-    
-    
-    
-   
-     
-     
+
      public void cerrarVentana(WindowEvent event) {
         LOGGER.info("Method cerrarVentana is starting");
 
@@ -183,34 +221,45 @@ public class ExerciseWindowController {
      
       private void chargeTable(ObservableList<Routine> routineList) {
        
-        //exerciseList= FXCollections.observableArrayList(exerciseREST.findAll_XML(new GenericType<List<Exercise>>() {}));
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        
-        timeColumn.setCellValueFactory(new PropertyValueFactory<>("time"));
-        
-        
-        exerciseTable.setItems(exerciseList);
+        try {
+            exerciseList= FXCollections.observableArrayList(exerciseREST.consultAllExercises_XML(new GenericType<List<Exercise>>() {}));
+            nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+            
+            timeColumn.setCellValueFactory(new PropertyValueFactory<>("time"));
+            
+            
+            exerciseTable.setItems(exerciseList);
+        } catch (BusinessLogicException ex) {
+            Logger.getLogger(ExerciseWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
      
        private void windowShowing(WindowEvent event) {
-        LOGGER.info("Method windowShowing is starting ");
-
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        
-        timeColumn.setCellValueFactory(new PropertyValueFactory<>("time"));
-        //The field (userNameTxTF) has the focus
-        nameTxTF.requestFocus();
-        //The field (userNameTxTF) will be shown with a ToolTip the message “max 15 characters”. 
-        //filterCB.setTooltip(new Tooltip("Filter by name or exercise"));
-        //The field (usernameTT) will be shown with a ToolTip the message “max 15 characters”. 
-        //Tooltip.install(usernameTT, new Tooltip("max 15 characters"));
-        //The field (passwdTxPF) will be shown with a ToolTip the message “min 6 max 12 characters”
-        //passwdTxPF.setTooltip(new Tooltip("min 6 max 12 characters"));
-        //The field (passwrdTT) will be shown with a ToolTip the message “min 6 max 12 characters”
-        //Tooltip.install(passwrdTT, new Tooltip("min 6 max 12 characters"));
-        //The HyperLink (signUpLink) will be shown with a ToolTip the message “Click para abrir la ventana de registro”. 
-        //signUpLink.setTooltip(new Tooltip("Click para abrir la ventana de registro"));
-        LOGGER.info("Method windowShowing is finished");
+        try {
+            LOGGER.info("Method windowShowing is starting ");
+            
+            exerciseList= FXCollections.observableArrayList(exerciseREST.consultAllExercises_XML(new GenericType<List<Exercise>>() {}));
+            nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+            
+            timeColumn.setCellValueFactory(new PropertyValueFactory<>("time"));
+            
+            exerciseTable.setItems(exerciseList);
+            //The field (userNameTxTF) has the focus
+            nameTxTF.requestFocus();
+            //The field (userNameTxTF) will be shown with a ToolTip the message “max 15 characters”.
+            //filterCB.setTooltip(new Tooltip("Filter by name or exercise"));
+            //The field (usernameTT) will be shown with a ToolTip the message “max 15 characters”.
+            //Tooltip.install(usernameTT, new Tooltip("max 15 characters"));
+            //The field (passwdTxPF) will be shown with a ToolTip the message “min 6 max 12 characters”
+            //passwdTxPF.setTooltip(new Tooltip("min 6 max 12 characters"));
+            //The field (passwrdTT) will be shown with a ToolTip the message “min 6 max 12 characters”
+            //Tooltip.install(passwrdTT, new Tooltip("min 6 max 12 characters"));
+            //The HyperLink (signUpLink) will be shown with a ToolTip the message “Click para abrir la ventana de registro”.
+            //signUpLink.setTooltip(new Tooltip("Click para abrir la ventana de registro"));
+            LOGGER.info("Method windowShowing is finished");
+        } catch (BusinessLogicException ex) {
+            Logger.getLogger(ExerciseWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
        public void getExercise(ObservableList<Exercise> e){

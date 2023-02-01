@@ -38,10 +38,15 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javax.ws.rs.core.GenericType;
+import ofc2_cliente.logic.BusinessLogicException;
+import ofc2_cliente.logic.ExerciseInterfaceFactory;
+import ofc2_cliente.logic.ExerciseRESTfulClient;
 import ofc2_cliente.logic.RoutineInterfaceFactory;
 import ofc2_cliente.logic.RoutineRESTfulClient;
 import ofc2_cliente.model.Client;
 import ofc2_cliente.model.Exercise;
+import ofc2_cliente.model.Exercises;
 import ofc2_cliente.model.Routine;
 
 /**
@@ -78,6 +83,8 @@ public class RoutineDataWindowController {
     @FXML
     private Button returnBtn;
     
+    private Integer tablePosition;
+    
     private RoutineController routineController;
     
     private Client client;
@@ -90,7 +97,11 @@ public class RoutineDataWindowController {
     
     private RoutineRESTfulClient routineREST=  (RoutineRESTfulClient) routineFactory.createRoutineManager();
                             
-    private static String numbers= "[0-9]+";
+   // private static String numbers= "[0-9]+";
+    
+    private ExerciseInterfaceFactory exerciseFactory= new ExerciseInterfaceFactory();
+    
+    private ExerciseRESTfulClient exerciseREST=  (ExerciseRESTfulClient) exerciseFactory.createExerciseManager();
             
             
             
@@ -118,7 +129,9 @@ public class RoutineDataWindowController {
         timeTxTF.setOnKeyReleased(this::validateTimeTxTX);
         nameTxTF.setOnKeyReleased(this::validateName);
         kcalTxTF.setOnKeyReleased(this::validateKcalTxTX);
-       
+        endDateDT.setOnKeyReleased(this::enableDisableCreateUpdateBtn1);
+        chargeExerciseCB();
+
         exerciseCB.setOnKeyReleased(this::enableDisableCreateUpdateBtn1);
         
         if (createOrupdateBtn.getText().equalsIgnoreCase("Create")) {
@@ -141,7 +154,7 @@ public class RoutineDataWindowController {
     }
     
     private void enableDisableCreateUpdateBtn(){
-        if (!nameTxTF.getText().isEmpty() && !timeTxTF.getText().isEmpty() && !kcalTxTF.getText().isEmpty() && !exerciseCB.getSelectionModel().isEmpty()) {
+        if (!nameTxTF.getText().isEmpty() && !timeTxTF.getText().isEmpty() && !kcalTxTF.getText().isEmpty() && endDateDT.getValue()!=null) {
             createOrupdateBtn.setDisable(false);
         }else{
             createOrupdateBtn.setDisable(true);
@@ -149,6 +162,8 @@ public class RoutineDataWindowController {
             
         }
     }
+    
+    
      private void enableDisableCreateUpdateBtn1(KeyEvent event){
         enableDisableCreateUpdateBtn();
         
@@ -222,8 +237,17 @@ public class RoutineDataWindowController {
         
         try {
             routineREST.create_XML(newRoutine);
+            routineController.refreshTable();
+            Alert alert= new Alert(Alert.AlertType.INFORMATION);
+            alert.setContentText("La rutina se ha creado correctamente");
+            alert.showAndWait();
+            
+            
         } catch (Exception e) {
             LOGGER.severe(e.getMessage());
+             Alert alert= new Alert(Alert.AlertType.ERROR,e.getMessage());
+             alert.showAndWait();
+            
         }
         
         this.stage.close();
@@ -261,19 +285,22 @@ public class RoutineDataWindowController {
     }
     
     private void updateRoutine(ActionEvent event){
+        Routine updatedRoutine=new Routine();
        LocalDate ld= endDateDT.getValue();
-        routine.setName(nameTxTF.getText());
-        routine.setKcal(Double.valueOf(kcalTxTF.getText()));
-        routine.setEnd_date(Date.from(ld.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        updatedRoutine.setName(nameTxTF.getText());
+        updatedRoutine.setKcal(Double.valueOf(kcalTxTF.getText()));
+        updatedRoutine.setEnd_date(Date.from(ld.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        updatedRoutine.setTime(Float.valueOf(timeTxTF.getText()));
+        updatedRoutine.setStart_date(routine.getStart_date());
+        System.out.println(updatedRoutine.getKcal());
         
          try {
-            routineREST.edit_XML(routine);
+            routineREST.edit_XML(updatedRoutine);
         } catch (Exception e) {
             LOGGER.severe(e.getMessage());
         }
          
          this.routineController.refreshTable();
-         this.routineController.updateTable();
 
             
          this.stage.close();
@@ -289,35 +316,7 @@ public class RoutineDataWindowController {
         }
     }
     
-    /* @FXML
-    private void routineDataWindow(ActionEvent event) {
-        LOGGER.info("Method signUpWindow is starting");
-
-        try {
-            Stage mainStage = new Stage();
-            URL viewLink = getClass().getResource(
-                    "/model/views/SignUpWindow.fxml");
-            // initialition loader
-            FXMLLoader loader = new FXMLLoader(viewLink);
-            //make the root with the loader
-            Parent root = (Parent) loader.load();
-            //Get the controller
-            RoutineDataWindow mainStageController
-                    = ((RoutineDataWindow) loader.getController());
-            //set the stage
-            mainStageController.setStage(mainStage);
-            //start the stage
-            mainStageController.initStage(root);
-
-            this.stage.close();
-            LOGGER.info("Method signUpWindow is finished");
-
-        } catch (IOException ex) {
-            Logger.getLogger(SignInWindowController.class.getName())
-                    .log(Level.SEVERE, ex.getMessage(), ex);
-        }
-
-    }*/
+    
     
     
     public void closeWindow(ActionEvent event) {
@@ -348,7 +347,7 @@ public class RoutineDataWindowController {
         LOGGER.info("Method windowShowing is starting ");
 
         //The field (userNameTxTF) has the focus
-        //nameTxTF.requestFocus();
+        nameTxTF.requestFocus();
         //The field (userNameTxTF) will be shown with a ToolTip the message “max 15 characters”. 
         //nameTxTF.setTooltip(new Tooltip("max 15 characters"));
         //The field (usernameTT) will be shown with a ToolTip the message “max 15 characters”. 
@@ -374,7 +373,11 @@ public class RoutineDataWindowController {
     
     public void getRoutine(Routine routine){
         this.routine=routine;
-        this.exerciseList= FXCollections.observableArrayList(routine.getEjercicios());
+        try {
+             this.exerciseList= FXCollections.observableArrayList(routine.getEjercicios());
+        } catch (Exception e) {
+        }
+       
         nameTxTF.setText(routine.getName());
         endDateDT.setValue(routine.getEnd_date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         kcalTxTF.setText(routine.getKcal().toString());
@@ -387,6 +390,24 @@ public class RoutineDataWindowController {
     void setRoutineController(RoutineController RoutineController) {
         this.routineController= RoutineController;
     }
+
+    private void chargeExerciseCB() {
+        //try {
+             ObservableList<String> exercisesNames = FXCollections.observableArrayList("CORRER","ABDOMINALES","CAMINAR","DOMINADAS","FLEXIONES","PLANCHA","SENTADILLAS");
+             
+            //ObservableList<Exercise> exercises= FXCollections.observableArrayList(exerciseREST.consultAllExercises_XML(new GenericType<List<Exercise>>() {}));
+           
+            /*for (int i = 0; i < exercises.size(); i++) {
+                exercisesNames.add(exercises.get(i).getExercise());
+            }*/
+            exerciseCB.setItems(exercisesNames);
+       /*} catch (BusinessLogicException ex) {
+            Logger.getLogger(RoutineDataWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
+
+    }
+
+ 
     
     
 }

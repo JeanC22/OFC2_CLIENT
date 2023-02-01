@@ -5,8 +5,6 @@
  */
 package ofc2_cliente.logic;
 
-import javax.ws.rs.ClientErrorException;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 
 /**
@@ -15,28 +13,25 @@ import javax.ws.rs.core.GenericType;
  */
 public interface ExerciseInterface {
     
- 
-    public String countREST() throws ClientErrorException;
 
-    public void edit_XML(Object requestEntity, String id) throws ClientErrorException;
+    public <T> T consultExerciseById_XML(GenericType<T> responseType, String id) throws BusinessLogicException;
 
-    public void edit_JSON(Object requestEntity, String id) throws ClientErrorException;
+    public <T> T consultExerciseById_JSON(GenericType<T> responseType, String id) throws BusinessLogicException;
 
-    public <T> T find_XML(GenericType<T> responseType, String id) throws ClientErrorException;
+    public void edit_XML(Object requestEntity) throws BusinessLogicException;
 
-    public <T> T find_JSON(GenericType<T> responseType, String id) throws ClientErrorException;
+    public void edit_JSON(Object requestEntity) throws BusinessLogicException;
 
-    public <T> T findRange_XML(GenericType<T> responseType, String from, String to) throws ClientErrorException;
+    public <T> T consultAllExercises_XML(GenericType<T> responseType) throws BusinessLogicException;
 
-    public <T> T findRange_JSON(GenericType<T> responseType, String from, String to) throws ClientErrorException;
+    public <T> T consultAllExercises_JSON(GenericType<T> responseType) throws BusinessLogicException;
 
-    public void create_XML(Object requestEntity) throws ClientErrorException;
+    public void create_XML(Object requestEntity) throws BusinessLogicException;
+    public void create_JSON(Object requestEntity) throws BusinessLogicException;
 
-    public void create_JSON(Object requestEntity) throws ClientErrorException;
+    public <T> T consultExerciseByName_XML(GenericType<T> responseType, String name) throws BusinessLogicException;
 
-    public <T> T findAll_XML(GenericType<T> responseType) throws ClientErrorException;
+    public <T> T consultExerciseByName_JSON(GenericType<T> responseType, String name) throws BusinessLogicException;
 
-    public <T> T findAll_JSON(GenericType<T> responseType) throws ClientErrorException;
-
-    public void remove(String id) throws ClientErrorException;
+    public void remove(String id) throws BusinessLogicException;
 }

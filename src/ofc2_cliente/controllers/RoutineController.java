@@ -164,7 +164,8 @@ public class RoutineController {
         LOGGER.info("starting initStage(SignIN)");
         //Create a scene associated to the node graph root.
         Scene scene = new Scene(root);
-   
+        //scene.getStylesheets().addAll(this.getClass().getResource("C:\\Users\\2dam\\Desktop\\Reto2\\Cliente\\OFC2_CLIENT\\src\\ofc2_cliente\\ui\\resources\\style.css").toExternalForm());
+        
         //Associate scene to primaryStage(Window)
         stage.setScene(scene);
         //title of the window: OFC SIGN IN.
@@ -182,11 +183,11 @@ public class RoutineController {
         deleteMn.setOnAction(this::deleteRoutine);
         updateMn.setOnAction(this::routineDataWindowUpdate);
         createMn.setOnAction(this::routineDataWindowCreate);
-        
+        reportBtn.setDisable(true);
         findBtn.setOnAction(this::filterMethod);
         findMn.setOnAction(this::filterMethod);
         nameTxTF.setOnKeyReleased(this::enabledFindBtn);
-        //filterCH.setOnAction(this::enableFindBtnC);
+        
         deleteBtn.setOnAction(this::deleteRoutine);
         createBtn.setOnAction(this::routineDataWindowCreate);
         updateBtn.setOnAction(this::routineDataWindowUpdate);
@@ -195,8 +196,7 @@ public class RoutineController {
         
         stage.setOnShowing(this::windowShowing);
        
-        //findBtn.setOnAction(this::signIn);
-        //updateBtn.setOnAction(this::routineDataWindowUpdate);
+      
         stage.setOnCloseRequest(this::cerrarVentana);
         //Show window
         stage.show();
@@ -274,9 +274,14 @@ public class RoutineController {
     }
     
     public void refreshTable(){
-        routineTable.getItems().remove(this.routineList);
-        chargeTable(routineList);
-        routineTable.refresh();
+        try {
+            //routineTable.getItems().remove(this.routineList);
+            routineList= FXCollections.observableArrayList(routineREST.consultAllRoutines_XML(new GenericType<List<Routine>>() {}));
+            chargeTable(routineList);
+            //routineTable.refresh();
+        } catch (BusinessLogicException ex) {
+            Logger.getLogger(RoutineController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     /**
      * This method enables or disables the findBtn
@@ -289,6 +294,7 @@ public class RoutineController {
             findBtn.setTooltip(new Tooltip("Write the name of the "+filterCH.getSelectionModel().getSelectedItem()));
         }else{
              findBtn.setDisable(true);
+             findMn.setDisable(true);
         }
     }
     
@@ -318,6 +324,7 @@ public class RoutineController {
             
             mainStageController.setRoutineController(this.mainStageController);
             mainStageController.getRoutine(routine);
+            
             //set the stage
             mainStageController.setStage(mainStage);
            
@@ -389,16 +396,18 @@ public class RoutineController {
     
     private void tableControl(ObservableValue observableValue, Object oldValue, Object newValue){
        
-        if (newValue!=null) {
+       if (newValue!=null) {
              deleteBtn.setDisable(false);
             deleteMn.setDisable(false);
             updateBtn.setDisable(false);
             updateMn.setDisable(false);
+            reportBtn.setDisable(false);
         }else{
             deleteBtn.setDisable(true);
             deleteMn.setDisable(true);
             updateBtn.setDisable(true);
             updateMn.setDisable(true);
+            reportBtn.setDisable(true);
         }
     }
     
@@ -413,7 +422,10 @@ public class RoutineController {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setContentText("La rutina se ha borrado correctamente");
         alert.showAndWait();
-        } catch (Exception e) {
+        } catch (BusinessLogicException e) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setContentText(e.getMessage());
+        alert.showAndWait();
         }
        routineTable.getSelectionModel().clearSelection();
     }
@@ -482,10 +494,48 @@ public class RoutineController {
         timeColumn.setCellValueFactory(new PropertyValueFactory<>("time"));
         start_dateColumn.setCellValueFactory(new PropertyValueFactory<>("start_date"));
         end_dateColumn.setCellValueFactory(new PropertyValueFactory<>("end_date"));
-        
-     
+        start_dateColumn.setCellFactory(column -> {
+                TableCell<Routine, Date> cell = new TableCell<Routine, Date>() {
+                    private SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 
+                    @Override
+                    protected void updateItem(Date item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        if (empty) {
+                            setText(null);
+                        } else {
+                            if (item != null) {
+                                setText(getDate(item).format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)));
+                            }
+                        }
+                    }
+                };
+
+                return cell;
+            });
         
+        end_dateColumn.setCellFactory(column -> {
+                TableCell<Routine, Date> cell = new TableCell<Routine, Date>() {
+                    private SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+
+                    @Override
+                    protected void updateItem(Date item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        if (empty) {
+                            setText(null);
+                        } else {
+                            if (item != null) {
+                                setText(getDate(item).format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)));
+                            }
+                        }
+                    }
+                };
+
+                return cell;
+            });
+
         routineTable.setItems(routineList);
     }
 
@@ -498,8 +548,11 @@ public class RoutineController {
            
             LOGGER.info("Method windowShowing is starting ");
             //rutinaDePrueba();
-            routineList= FXCollections.observableArrayList(routineREST.consultAllClientRoutines_XML(new GenericType<List<Routine>>() {}, "1"));
+            routineList= FXCollections.observableArrayList(routineREST.consultAllRoutines_XML(new GenericType<List<Routine>>() {}));
             chargeTable(routineList);
+            } catch (BusinessLogicException ex) {
+            //Logger.getLogger(RoutineController.class.getName()).log(Level.SEVERE, null, ex);
+        }
             
             deleteMn.setText("Delete");
             updateMn.setText("Update");
@@ -521,9 +574,7 @@ public class RoutineController {
             
             Logger.getLogger(RoutineController.class.getName()).log(Level.SEVERE, null, ex);
             
-        } catch (BusinessLogicException ex) {
-            Logger.getLogger(RoutineController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
 
     }
 
@@ -538,11 +589,7 @@ public class RoutineController {
 
     }
     
-    public void updateTable(){
-       
-        routineList.add(rutinaDePrueba2().get(0));
-        
-    }
+   
     
     private void rutinaDePrueba(){
         Routine r= new Routine();
@@ -586,6 +633,10 @@ public class RoutineController {
     
     public void setClient(Client cli){
         this.cli=cli;
+    }
+    
+    private LocalDate getDate(Date date) {
+        return date == null ? LocalDate.now() : date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
 }
