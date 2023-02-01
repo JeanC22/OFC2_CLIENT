@@ -51,8 +51,4 @@ interface CommentManager {
 
     public <T> T findOrderByMoreRecent_JSON(GenericType<T> responseType) throws BusinessLogicException;
 
-    public <T> T EventComents_XML(GenericType<T> responseType, String eventID) throws BusinessLogicException;
-
-    public <T> T EventComents_JSON(GenericType<T> responseType, String eventID) throws BusinessLogicException;
-
 }

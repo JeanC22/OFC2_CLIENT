@@ -20,6 +20,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ofc2_cliente.model.Coment;
@@ -34,8 +35,6 @@ public class CommentModalController {
     @FXML
     private Button backBtn;
     @FXML
-    private Text userTxTF;
-    @FXML
     private Text subjectTxTF;
     @FXML
     private Text eventTxTF;
@@ -46,6 +45,10 @@ public class CommentModalController {
     private static final Logger LOGGER = Logger.getLogger(CommentModalController.class.getName());
     private Stage stage;
     private Coment comment;
+    @FXML
+    private Pane modalComment;
+    @FXML
+    private Text usersTxTF;
 
     /**
      * Initializes the controller class.
@@ -60,7 +63,7 @@ public class CommentModalController {
             stage.setTitle("OFC Modal Comment");
             scene.getStylesheets().addAll(this.getClass().getResource("/ofc2_cliente/ui/resources/style.css").toExternalForm());
             stage.resizableProperty().set(false);
-            userTxTF.setText(this.comment.getComClie().getUsername());
+            usersTxTF.setText(this.comment.getComClie().getUsername());
 
             subjectTxTF.setText(this.comment.getSubject());
 
@@ -86,7 +89,10 @@ public class CommentModalController {
         event.consume();
     }
 
-  
+   public Stage GetStage() {
+
+        return this.stage;
+    }
 
     public void setStage(Stage stage) {
 

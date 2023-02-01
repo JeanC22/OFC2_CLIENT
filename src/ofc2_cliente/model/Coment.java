@@ -145,13 +145,16 @@ public class Coment implements Serializable {
     }
 
     @XmlElement(name = "privacity")
-
-    public SimpleBooleanProperty getPrivacity() {
-        return privacity;
+    public Boolean getPrivacity() {
+        return this.privacity.get();
     }
 
     public void setPrivacity(Boolean privacity) {
         this.privacity.set(privacity);
+    }
+
+    public SimpleBooleanProperty getPrivacityProperty() {
+        return this.privacity;
     }
 
     @XmlElement(name = "subject")

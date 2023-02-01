@@ -43,8 +43,8 @@
 				<text><![CDATA[COMMENT REPORT]]></text>
 			</staticText>
 			<image>
-				<reportElement x="169" y="0" width="224" height="70" uuid="812123eb-b516-4e26-9bd8-1b67bdb9bac3"/>
-				<imageExpression><![CDATA["C:\\Users\\2dam\\Desktop\\OFC2_CLIENT\\src\\ofc2_cliente\\ui\\resources\\OFCLogo.png"]]></imageExpression>
+				<reportElement x="177" y="0" width="216" height="70" uuid="23518af7-9ea2-4a04-afe0-04fd358405c3"/>
+				<imageExpression><![CDATA["C:\\Users\\DarkD\\OneDrive\\Documentos\\program\\OFC2_CLIENT\\src\\ofc2_cliente\\ui\\resources\\OFCLogo.png"]]></imageExpression>
 			</image>
 		</band>
 	</title>

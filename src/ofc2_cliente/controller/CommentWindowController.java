@@ -20,8 +20,6 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -30,7 +28,6 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -39,15 +36,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableColumn.CellEditEvent;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
@@ -118,7 +115,9 @@ public class CommentWindowController {
 
     CommentFactoryManager commentFactory = new CommentFactoryManager();
     CommetRESTClient commentRest = (CommetRESTClient) commentFactory.getFactory();
-    ObservableList<String> options = FXCollections.observableArrayList("Find All", "Find By Subject", "Find ID Event");
+    ObservableList<String> options = FXCollections.observableArrayList("Find All", "Find By Subject");
+    @FXML
+    private Button helpBTN;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -160,15 +159,9 @@ public class CommentWindowController {
                 new PropertyValueFactory<>("event"));
         clientComment.setCellValueFactory(
                 new PropertyValueFactory<>("comClie"));
-        Callback<TableColumn<Coment, Boolean>, TableCell<Coment, Boolean>> booleanCellFactory
-                = new Callback<TableColumn<Coment, Boolean>, TableCell<Coment, Boolean>>() {
-            @Override
-            public TableCell<Coment, Boolean> call(TableColumn<Coment, Boolean> p) {
-                return new CheckBoxTableCell();
-            }
-        };
-        PrivacityComment.setCellValueFactory(new PropertyValueFactory<Coment, Boolean>("privacity"));
-        PrivacityComment.setCellFactory(booleanCellFactory);
+        PrivacityComment.setCellFactory(CheckBoxTableCell.<Coment>forTableColumn(PrivacityComment));
+        PrivacityComment.setCellValueFactory((CellDataFeatures<Coment, Boolean> param) -> param.getValue().getPrivacityProperty());
+
         dateComment.setCellValueFactory(
                 new PropertyValueFactory<>("publication_date"));
         Callback<TableColumn<Coment, Date>, TableCell<Coment, Date>> dateCellFactory
@@ -235,7 +228,7 @@ public class CommentWindowController {
             ZoneId defaultZoneId = ZoneId.systemDefault();
             LocalDate localDate = LocalDate.now();
             Date date = Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
-            Coment comment = new Coment(1L, this.client.getId(), date, date, addMessage
+            Coment comment = new Coment(1L, 2L, date, date, addMessage
                     .getPromptText(), addRating.getPromptText(),
                     Boolean.TRUE, addSubject.getPromptText());
             comments.add(comment);
@@ -287,6 +280,7 @@ public class CommentWindowController {
 
             if (commentTableView.getSelectionModel().getSelectedItem() != null
                     && e.getCode() == KeyCode.ENTER) {
+
                 try {
                     //Coment comentModify = commentTableView.getSelectionModel().getSelectedItem();
                     commentRest.editComent_XML(commentTableView
@@ -314,7 +308,7 @@ public class CommentWindowController {
         this.showCommentBTN.setDisable(true);
         showCommentBTN.setOnAction(this::openModalCommnet); //Show window
         stage.setOnCloseRequest(this::cerrarVentana);
-
+        helpBTN.setOnAction(this::showWindowHelper);
         informeBtn.setOnAction(this::showReport);
         stage.show();
         LOGGER.info("finished initStage(CommentWindow)");
@@ -330,7 +324,7 @@ public class CommentWindowController {
     public void cerrarVentana(WindowEvent event) {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setContentText("¿Quiere salir de la aplicacion?");
+        alert.setContentText("You want to exit the application?");
         alert.getDialogPane().getStylesheets().add(
                 getClass().getResource("/ofc2_cliente/ui/resources/dialog.css").toExternalForm());
         Optional<ButtonType> result = alert.showAndWait();
@@ -338,6 +332,31 @@ public class CommentWindowController {
             Platform.exit();
         } else {
             event.consume();
+        }
+    }
+
+    public void showWindowHelper(ActionEvent event) {
+
+        try {
+            Stage mainStage = new Stage();
+            URL viewLink = getClass().getResource(
+                    "/ofc2_cliente/ui/commentWindowHelp.fxml");
+            // initialition loader
+            FXMLLoader loader = new FXMLLoader(viewLink);
+            //make the root with the loader
+            Parent root = (Parent) loader.load();
+            //Get the controller
+            ComentWindowHelpController mainStageController
+                    = ((ComentWindowHelpController) loader.getController());
+            //set the stage
+            mainStageController.setStage(mainStage);
+            //start the stage
+            mainStageController.initStage(root);
+        } catch (IOException ex) {
+            Logger.getLogger(CommentWindowController.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
+            alert.showAndWait();
         }
     }
 
@@ -373,15 +392,7 @@ public class CommentWindowController {
                             throw new IOException("No comment found with that subject");
                         }
                         break;
-                    case "Find ID Event":
-                        coments = FXCollections
-                                .observableArrayList(commentFactory.getFactory()
-                                        .EventComents_XML(new GenericType<List<Coment>>() {
-                                        }, findCommentTxTF.getText()));
-                        if (coments.isEmpty()) {
-                            throw new IOException("No Events found with this ID");
-                        }
-                        break;
+
                 }
                 commentTableView.setItems(coments);
                 commentTableView.refresh();
@@ -411,7 +422,7 @@ public class CommentWindowController {
             modalStage.initModality(Modality.APPLICATION_MODAL);
             modalStageController.setStage(modalStage);
             modalStageController.initStage(rootModal);
-            modalStage.showAndWait();
+            modalStage.show();
 
             LOGGER.info("Method open modal finished");
 
@@ -477,7 +488,7 @@ public class CommentWindowController {
     private void deleteComment() throws BusinessLogicException {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setContentText("¿Quiere borrar este comentario?");
+        alert.setContentText("Do you want to delete this comment?");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
             System.out.println("Deleting: " + this.comments.toString());
@@ -644,68 +655,6 @@ public class CommentWindowController {
                     .atZone(ZoneId.systemDefault()).toLocalDate();
         }
     }
-
-   
-    //CheckBoxTableCell for creating a CheckBox in a table cell
-
-    public static class CheckBoxTableCell<S, T> extends TableCell<S, T> {
-
-        private final CheckBox checkBox;
-
-        private ObservableValue<T> ov;
-
- 
-
-        public CheckBoxTableCell() {
-
-            this.checkBox = new CheckBox();
-
-            this.checkBox.setAlignment(Pos.CENTER);
-
- 
-
-            setAlignment(Pos.CENTER);
-
-            setGraphic(checkBox);
-
-        } 
-
-         
-
-        @Override public void updateItem(T item, boolean empty) {
-
-            super.updateItem(item, empty);
-
-            if (empty) {
-
-                setText(null);
-
-                setGraphic(null);
-
-            } else {
-
-                setGraphic(checkBox);
-
-                if (ov instanceof BooleanProperty) {
-
-                    checkBox.selectedProperty().unbindBidirectional((BooleanProperty) ov);
-
-                }
-
-                ov = getTableColumn().getCellObservableValue(getIndex());
-
-                if (ov instanceof BooleanProperty) {
-
-                    checkBox.selectedProperty().bindBidirectional((BooleanProperty) ov);
-
-                }
-
-            }
-
-        }
-
-    }
-
 
     public Integer btnStatus(Integer count) {
         return this.commentCount = count;

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Help Comment Page</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body {
+                font: 16px arial, sans-serif;
+                padding: 1.2rem;
+                color: #FFFF8D;
+                background-color: #2A2E37; 
+            }            
+            h3 {
+                font: 20px arial, sans-serif;
+                text-decoration: underline;
+                font-weight: bold;
+            }            
+            h4 {
+                font: 18px arial, sans-serif;
+                text-decoration: underline;
+                font-weight: bold;
+            }         
+            img{
+                border: 2px solid #FFFF8D;
+            }
+        </style>    
+    </head>
+    <body>
+        <div>
+            <h3>Gestión de Usuarios: Ayuda</h3>
+            <img src="mainComment.png" width="600" height="400" alt="Ventana de gestión de comentarios."/>
+            <h4>Descripción general</h4>
+            <p>Esta ventana permite realizar las operaciones de mantenimiento 
+                básico de los comentarios. El usuario podrá mediante los controles
+                de los que dispone la ventana crear, modificar y eliminar los comentarios de 
+                los eventos. Así mismo podrá generar un informe que contiene un listado 
+                de los comentarios con sus correspondientes datos.</p>
+            <h4>Desplazamiento entre Ventanas</h4>
+            <p>Al precionar el boton <strong>Home</strong> que se encuentra en el menu, 
+                gracias a ello podemos desplazarnos entre ventanas </p>
+            <img src="despalazamientoComment.png" width="600" height="400" alt="Ventana de informe de Comentario"/><br><br>
+            <h4>Operaciones</h4>
+            <strong>Menu de Contexto</strong>
+            <p><img src="contextMenuComment.png" alt="Ventana de gestión de comentarios."/></p>
+            <p>Para desplegar dicho menu se ha de dar click derecho en la tableview,
+                esto desplegara el menu de contexto,
+                dicho menu de contexto contara con las opciones de eliminar y 
+                crear comentario. 
+                <strong>Crear</strong> 
+            <p>Una vez se le de click a la opcion de crear se añadira una nueva 
+                fila con datos por defecto y se guardara en la base de datos,
+                apartir de aqui lo ideal es editar los campos de dicha fila a 
+                gusto del usuario.</p>
+            <strong>Modificar datos de Comentario</strong>
+            <p>Para modificar los datos de los Comentarios se realiza dando dos 
+                veces click sobre la columna a editar
+                Una vez realizadas las acciones anteriores, deberá pulsar el la 
+                tecla <strong>Enter</strong> 
+                para finalizar la operación y guardarlo tanto en la tabla 
+                tambien en la base de datos.
+                Si no se produce ningún error, se modificarán los datos
+                del comentario.</p>
+            <img src="editComment.png" alt="Ventana de informe de Comentario"/><br><br>
+            <strong>Eliminar comentario</strong>
+            <p>Para eliminar un comentario deberá seleccionar el comentario a 
+                borrar. A continuación, pulse en el botón
+                <strong>Eliminar</strong>, del menu de contexto y se le 
+                solicitará confirmación para eliminar el comentario.
+                Si confirma el borrado y no se produce ningún error se eliminará
+                el comentario y se actualizará 
+                la tabla de comentarios que se muestra en la ventana.</p>
+            <strong>Imprimir listado de comentarios</strong>
+            <p>Pulsando el botón <strong>Report</strong> Se abrirá una ventana 
+                donde puede ver un documento
+                que contiene un listado de los Comentarios que se encuentran el 
+                la tabla actual<br><br>
+                <img src="reportComment.png" width="600" height="400" alt="Ventana de informe de Comentario"/><br><br>
+                Mediante los botones de la parte superior de la ventana podrá 
+                imprimir o almacenar dicho informe.</p>
+            <h4>Ver los comentarios</h4>
+            <p>Pulsando el botón <strong>show Comment</strong> Se abrirá una 
+                ventana la cual podremos ver el comentario mejor</p>
+            <img src="commentModal.png" alt="Ventana de modal de Comentario"/><br><br>
+
+            <strong>Salir de la aplicación</strong>
+            <p>Pulsando el botón <strong>Salir</strong> se cerrará la aplicación.</p>
+            <strong>Ayuda</strong>
+            <p>Pulsando el botón <strong>Ayuda</strong> verá este documento de ayuda.</p>
+        </div>
+    </body>
+</html>

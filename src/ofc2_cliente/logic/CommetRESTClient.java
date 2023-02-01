@@ -7,7 +7,6 @@ package ofc2_cliente.logic;
 
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
-import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
@@ -165,19 +164,6 @@ public class CommetRESTClient implements CommentManager {
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 
-    @Override
-    public <T> T EventComents_XML(GenericType<T> responseType, String eventID) throws BusinessLogicException {
-        WebTarget resource = webTarget;
-        resource = resource.path(java.text.MessageFormat.format("EventComents/{0}", new Object[]{eventID}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
-    }
-
-    @Override
-    public <T> T EventComents_JSON(GenericType<T> responseType, String eventID) throws BusinessLogicException {
-        WebTarget resource = webTarget;
-        resource = resource.path(java.text.MessageFormat.format("EventComents/{0}", new Object[]{eventID}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
-    }
 
     public void close() {
         client.close();
