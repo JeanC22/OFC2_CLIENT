@@ -1,18 +1,26 @@
-.myDialog{
+.dialog-pane {
     -fx-background-color: #FFE98F;
 
 }
-.myDialog > button {
-    -fx-background-color: rgb(21, 21, 21);
-    -fx-text-color:#FFE98F;
+.dialog-pane .label{
+    -fx-text-fill: #000;
+
+}
+.dialog-pane > *.header-panel{
+    -fx-background-color: #000;
+
+}
+.dialog-pane > *.header-panel > .label{
+    -fx-text-fill:#FFE98F;
+
+}
+.button {
+    -fx-background-color: #000;
+    -fx-text-fill:#FFE98F;
     -fx-background-radius: 50em;
 }
-.myDialog > button ::hover {
-    -fx-background-color: #FFE98F;
-
+.button:hover {
+    -fx-background-color: #212121;
+    -fx-text-fill:#fff;  
 }
-.myDialog > button :active {
-    -fx-background-color: #FFE98F;
-    -fx-text-color:#FFE98F;
 
-}
