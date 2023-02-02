@@ -9,6 +9,10 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
@@ -17,6 +21,7 @@ import javax.xml.bind.annotation.XmlTransient;
  *
  * @author Iker
  */
+@XmlRootElement(name = "event")
 public class Event implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -43,17 +48,21 @@ public class Event implements Serializable {
 
     private List<Client> clients;
 
-    Event(Long eventID) {
-        this.id = eventID;
-
-    }
-
     public List<Client> getClients() {
         return clients;
     }
 
     public void setClients(List<Client> clients) {
         this.clients = clients;
+    }
+
+    public Event() {
+        this.admin = admin;
+        
+    }
+    
+    public Event(Long id){
+        this.id = id;
     }
 
     public Long getId() {
@@ -63,11 +72,7 @@ public class Event implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-
-    public Event() {
-        super();
-    }
-
+    @XmlElement(name = "name")
     public String getName() {
         return name;
     }
@@ -75,7 +80,7 @@ public class Event implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-
+    @XmlElement(name = "activity") 
     public String getActivity() {
         return activity;
     }
@@ -83,7 +88,7 @@ public class Event implements Serializable {
     public void setActivity(String activity) {
         this.activity = activity;
     }
-
+    @XmlElement(name = "date")
     public Date getDate() {
         return date;
     }
@@ -91,7 +96,7 @@ public class Event implements Serializable {
     public void setDate(Date date) {
         this.date = date;
     }
-
+    @XmlElement(name = "capacity")
     public Integer getCapacity() {
         return capacity;
     }
@@ -99,7 +104,7 @@ public class Event implements Serializable {
     public void setCapacity(Integer capacity) {
         this.capacity = capacity;
     }
-
+    @XmlElement(name = "price")
     public Float getPrice() {
         return price;
     }
@@ -107,7 +112,7 @@ public class Event implements Serializable {
     public void setPrice(Float price) {
         this.price = price;
     }
-
+    @XmlElement(name = "place")
     public String getPlace() {
         return place;
     }
@@ -164,7 +169,7 @@ public class Event implements Serializable {
 
     @Override
     public String toString() {
-        return this.name;
+        return "entities.User1[ id=" + id + " ]";
     }
 
 }

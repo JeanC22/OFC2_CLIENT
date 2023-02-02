@@ -1,4 +1,4 @@
-package ofc2_cliente.controller;
+package ofc2_cliente.controllers;
 
 
 import javafx.fxml.FXML;

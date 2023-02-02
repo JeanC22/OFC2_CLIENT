@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="OFC_SIGN_IN" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="model.controllers.SignInWindowController">
+<Pane fx:id="OFC_SIGN_IN" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofc2_cliente.controllers.SignInWindowController">
    <children>
       <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="275.0" style="-fx-background-color: #FFE98F;">
          <children>
@@ -57,7 +57,7 @@
                <font>
                   <Font name="Arial" size="13.0" />
                </font></PasswordField>
-             <Hyperlink fx:id="signUpLink" layoutX="35.0" layoutY="350.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#signUpWindow" prefHeight="40.0" prefWidth="80.0" style="-fx-font-size: 1.3em;" text="Sign Up" textFill="#143995">
+             <Hyperlink fx:id="signUpLink" layoutX="35.0" layoutY="350.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="80.0" style="-fx-font-size: 1.3em;" text="Sign Up" textFill="#143995">
                <font>
                   <Font name="Arial Black" size="13.0" />
                </font></Hyperlink>
@@ -68,7 +68,7 @@
          <children>
             <ImageView fx:id="imageView" fitHeight="136.0" fitWidth="340.0" layoutX="102.0" layoutY="232.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../sources/OFCLogo.png" />
+                  <Image url="@resources/OFCLogo.png" />
                </image></ImageView>
          </children>
       </AnchorPane>

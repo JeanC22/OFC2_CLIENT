@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="370.0" prefWidth="616.0" stylesheets="@resources/style.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofc2_cliente.controllers.CreateModifyController">
+   <children>
+      <TextField fx:id="nameFld" layoutX="71.0" layoutY="69.0" prefHeight="25.0" prefWidth="202.0" style="-fx-text-fill: black;" />
+      <TextField fx:id="actFld" layoutX="338.0" layoutY="70.0" prefHeight="25.0" prefWidth="202.0" style="-fx-text-fill: black;" />
+      <DatePicker fx:id="datePick" layoutX="71.0" layoutY="157.0" prefHeight="25.0" prefWidth="202.0" style="-fx-text-fill: black;" />
+      <TextField fx:id="plcFld" layoutX="338.0" layoutY="157.0" prefHeight="25.0" prefWidth="202.0" style="-fx-text-fill: black;" />
+      <TextField fx:id="capFld" layoutX="71.0" layoutY="242.0" prefHeight="25.0" prefWidth="202.0" style="-fx-text-fill: black;" />
+      <TextField fx:id="priceFld" layoutX="338.0" layoutY="243.0" prefHeight="25.0" prefWidth="202.0" style="-fx-text-fill: black;" />
+      <Button fx:id="crtBtns" layoutX="215.0" layoutY="311.0" mnemonicParsing="false" onAction="#createEvent" prefHeight="25.0" prefWidth="161.0" text="Create" />
+      <Button fx:id="mdfBtn" layoutX="215.0" layoutY="311.0" mnemonicParsing="false" onAction="#modifyEvent" prefHeight="25.0" prefWidth="161.0" text="Modify" />
+      <Label layoutX="71.0" layoutY="52.0" prefHeight="17.0" prefWidth="95.0" style="-fx-text-fill: white;" text="Name" />
+      <Label layoutX="71.0" layoutY="139.0" prefHeight="17.0" prefWidth="95.0" style="-fx-text-fill: white;" text="Date" />
+      <Label layoutX="341.0" layoutY="52.0" prefHeight="17.0" prefWidth="95.0" style="-fx-text-fill: white;" text="Activity" />
+      <Label layoutX="341.0" layoutY="139.0" prefHeight="17.0" prefWidth="95.0" style="-fx-text-fill: white;" text="Place" />
+      <Label layoutX="71.0" layoutY="225.0" prefHeight="17.0" prefWidth="95.0" style="-fx-text-fill: white;" text="Capacity" />
+      <Label layoutX="341.0" layoutY="225.0" prefHeight="17.0" prefWidth="95.0" style="-fx-text-fill: white;" text="Price" />
+      <Button fx:id="bckBtn" layoutX="19.0" layoutY="14.0" mnemonicParsing="false" onAction="#backBtn" text="Back" />
+     
+   </children>
+</Pane>

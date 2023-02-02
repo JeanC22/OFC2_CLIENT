@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ofc2_cliente.controller;
+package ofc2_cliente.controllers;
 
+import ofc2_cliente.controllers.CommentModalController;
+import ofc2_cliente.controllers.ComentWindowHelpController;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
