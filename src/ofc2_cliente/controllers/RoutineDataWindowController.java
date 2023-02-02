@@ -48,6 +48,7 @@ import ofc2_cliente.model.Client;
 import ofc2_cliente.model.Exercise;
 import ofc2_cliente.model.Exercises;
 import ofc2_cliente.model.Routine;
+import ofc2_cliente.model.User;
 
 /**
  *
@@ -87,9 +88,11 @@ public class RoutineDataWindowController {
     
     private RoutineController routineController;
     
-    private Client client;
+    private User client;
     
     private Routine routine;
+    
+    private TableView routineTable;
     
     private ObservableList<Exercise> exerciseList;
     
@@ -99,9 +102,9 @@ public class RoutineDataWindowController {
                             
    // private static String numbers= "[0-9]+";
     
-    private ExerciseInterfaceFactory exerciseFactory= new ExerciseInterfaceFactory();
+    //private ExerciseInterfaceFactory exerciseFactory= new ExerciseInterfaceFactory();
     
-    private ExerciseRESTfulClient exerciseREST=  (ExerciseRESTfulClient) exerciseFactory.createExerciseManager();
+    //private ExerciseRESTfulClient exerciseREST=  (ExerciseRESTfulClient) exerciseFactory.createExerciseManager();
             
             
             
@@ -233,7 +236,9 @@ public class RoutineDataWindowController {
     }
     
     
-    
+    public void getTable(TableView table){
+        this.routineTable = table;
+    }
     
       private void updateRoutine(ActionEvent event){
         Routine updatedRoutine=new Routine();
@@ -252,7 +257,7 @@ public class RoutineDataWindowController {
         
          try {
             routineREST.edit_XML(updatedRoutine);
-             routineController.refreshTable();
+            
             Alert alert= new Alert(Alert.AlertType.INFORMATION);
             alert.setContentText("La rutina se ha modificado correctamente");
             alert.showAndWait();
@@ -263,7 +268,6 @@ public class RoutineDataWindowController {
              alert.showAndWait();
         }
          
-         this.routineController.refreshTable();
 
             
          this.stage.close();
@@ -283,11 +287,11 @@ public class RoutineDataWindowController {
          newRoutine.setStart_date(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
         newRoutine.setTime(Float.valueOf(timeTxTF.getText()));
-        newRoutine.setClie(this.client);
+        newRoutine.setClie((Client) this.client);
         
         try {
             routineREST.create_XML(newRoutine);
-            routineController.refreshTable();
+            
             Alert alert= new Alert(Alert.AlertType.INFORMATION);
             alert.setContentText("La rutina se ha creado correctamente");
             alert.showAndWait();
@@ -302,6 +306,7 @@ public class RoutineDataWindowController {
         }
         
         this.stage.close();
+        this.routineController.table(newRoutine);
     }
     
     private void newExercise(ActionEvent event){

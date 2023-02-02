@@ -354,6 +354,8 @@ public class RoutineController {
             findMn.setDisable(true);
         }
     }
+    
+    
 
     /**
      * This method opens RoutineDataWindow to update the routine
@@ -387,6 +389,7 @@ public class RoutineController {
 
             //start the stage
             mainStageController.initStage(root);
+            routineTable.refresh();
 
             LOGGER.info("Method routineDataWindow is finished");
 
@@ -644,42 +647,6 @@ public class RoutineController {
 
     }
 
-    private void rutinaDePrueba() {
-        Routine r = new Routine();
-        Exercise e = new Exercise();
-        e.setExercise(Exercises.CORRER);
-
-        ObservableList<Exercise> list = FXCollections.observableArrayList(e);
-
-        float c = 12;
-        r.setName("Prueba1");
-        r.setKcal(12.11);
-        r.setTime(c);
-        r.setStart_date(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-        r.setEnd_date(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-        r.setEjercicios(list);
-        routineList = FXCollections.observableArrayList(r);
-    }
-
-    private ObservableList<Routine> rutinaDePrueba2() {
-        Routine r = new Routine();
-        Exercise e = new Exercise();
-        e.setExercise(Exercises.CORRER);
-
-        ObservableList<Exercise> list = FXCollections.observableArrayList(e);
-
-        float c = 12;
-        r.setName("Prueba2");
-        r.setKcal(12.11);
-        r.setTime(c);
-        r.setStart_date(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-        r.setEnd_date(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-        r.setEjercicios(list);
-        routineList = FXCollections.observableArrayList(r);
-
-        return routineList;
-    }
-
     public void setController(RoutineController mainStageController) {
         this.mainStageController = mainStageController;
     }
@@ -691,5 +658,11 @@ public class RoutineController {
     private LocalDate getDate(Date date) {
         return date == null ? LocalDate.now() : date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
+    
+    public void table(Routine r){
+        routineTable.getItems().add(r);
+    }
+    
+    
 
 }
