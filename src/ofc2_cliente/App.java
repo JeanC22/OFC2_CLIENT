@@ -13,9 +13,7 @@ import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-import ofc2_cliente.controllers.EventWindowController;
 import ofc2_cliente.controllers.SignInWindowController;
 
 /**
@@ -24,7 +22,7 @@ import ofc2_cliente.controllers.SignInWindowController;
  */
 public class App extends Application {
 
-    private Logger logger = Logger.getLogger(App.class.getName());
+    private static final Logger logger = Logger.getLogger(App.class.getName());
 
     @Override
     public void start(Stage stage) throws Exception {

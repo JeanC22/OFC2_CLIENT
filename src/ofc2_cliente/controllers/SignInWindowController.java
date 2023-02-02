@@ -24,6 +24,7 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -73,12 +74,13 @@ public class SignInWindowController {
         LOGGER.info("Incializando la ventana de Sign In");
         //Create a scene associated to the node graph root.
         Scene scene = new Scene(root);
-
+        scene.getStylesheets().addAll(this.getClass().getResource("/ofc2_cliente/ui/resources/style.css").toExternalForm());
         //Associate scene to primaryStage(Window)
         stage.setScene(scene);
         //Set window properties
         stage.setTitle("OFC SING IN");
         stage.setResizable(false);
+        stage.getIcons().add(new Image(this.getClass().getResource("/ofc2_cliente/ui/resources/favicon.png").toString()));
         stage.setOnShowing(this::windowShowing);
         singInBtn.setOnAction(this::signIn);
         signUpLink.setOnAction(this::singUpWindow);
