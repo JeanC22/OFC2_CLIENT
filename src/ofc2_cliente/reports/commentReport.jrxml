@@ -42,10 +42,6 @@
 				</textElement>
 				<text><![CDATA[COMMENT REPORT]]></text>
 			</staticText>
-			<image>
-				<reportElement x="177" y="0" width="216" height="70" uuid="23518af7-9ea2-4a04-afe0-04fd358405c3"/>
-				<imageExpression><![CDATA["C:\\Users\\DarkD\\OneDrive\\Documentos\\program\\OFC2_CLIENT\\src\\ofc2_cliente\\ui\\resources\\OFCLogo.png"]]></imageExpression>
-			</image>
 		</band>
 	</title>
 	<pageHeader>

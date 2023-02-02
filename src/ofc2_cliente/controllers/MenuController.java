@@ -16,12 +16,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
 import javafx.stage.Stage;
-import ofc2_cliente.App;
+import ofc2_cliente.logic.BusinessLogicException;
+import ofc2_cliente.model.User;
 
 /**
  * FXML Controller class
@@ -29,7 +27,9 @@ import ofc2_cliente.App;
  * @author iker
  */
 public class MenuController {
-
+    
+    private User user;
+    private Stage stage2;
     private Stage stage;
     @FXML
     private MenuItem eventMenu;
@@ -44,15 +44,33 @@ public class MenuController {
     @FXML
     private MenuItem logoutMenu;
 
-
     /**
      * setStage
      *
      * @param stage
      */
     public void setStage(Stage stage) {
-
+        
         this.stage = stage;
+    }
+
+    /**
+     * setStage
+     *
+     * @param anotherStage
+     */
+    public void setStage2(Stage anotherStage) {
+        
+        this.stage2 = anotherStage;
+    }
+
+    /**
+     * This Method get the userLogin from the EventWindow
+     *
+     * @param userLogin
+     */
+    public void getUser(User userLogin) {
+        this.user = userLogin;
     }
 
     /**
@@ -75,32 +93,32 @@ public class MenuController {
             
             showProfile.setOnAction(this::showProfileWindow);
             
-
             stage.show();
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "El servidor glashfish no se encuentra disponible", ButtonType.OK);
             alert.showAndWait();
         }
-
+        
     }
-
+    
     public void showEventWindow(ActionEvent event) {
         try {
             Stage mainStage = new Stage();
             URL viewLink = getClass().getResource(
-                    "/ofc2_cliente/ui/ventanaModificarEvento.fxml");
+                    "/ofc2_cliente/ui/EventWindow.fxml");
             // initialition loader
             FXMLLoader loader = new FXMLLoader(viewLink);
             //make the root with the loader
             Parent root = (Parent) loader.load();
             //Get the controller
-            CreateModifyController mainStageController
-                    = ((CreateModifyController) loader.getController());
+            EventWindowController eventWindowController
+                    = ((EventWindowController) loader.getController());
+            eventWindowController.getUser(this.user);
             //set the stage
-            mainStageController.setStage(mainStage);
-
+            eventWindowController.setStage(mainStage);
             //start the stage
-            mainStageController.initStage(root);
+            eventWindowController.initStage(root);
+            stage2.close();
         } catch (IOException ex) {
             Logger.getLogger(CreateModifyController.class.getName())
                     .log(Level.SEVERE, null, ex);
@@ -114,19 +132,19 @@ public class MenuController {
             
             Stage mainStage = new Stage();
             URL viewLink = getClass().getResource(
-                    "/ofc2_cliente/ui/ventanaModificarEvento.fxml");
+                    "/ofc2_cliente/ui/RoutineWindow.fxml");
             // initialition loader
             FXMLLoader loader = new FXMLLoader(viewLink);
             //make the root with the loader
             Parent root = (Parent) loader.load();
             //Get the controller
-            CreateModifyController mainStageController
-                    = ((CreateModifyController) loader.getController());
+            RoutineController routineController
+                    = ((RoutineController) loader.getController());
             //set the stage
-            mainStageController.setStage(mainStage);
-
+            routineController.setStage(mainStage);
+            routineController.getUser(this.user);
             //start the stage
-            mainStageController.initStage(root);
+            routineController.initStage(root);
         } catch (IOException ex) {
             Logger.getLogger(CreateModifyController.class.getName())
                     .log(Level.SEVERE, null, ex);
@@ -135,24 +153,24 @@ public class MenuController {
         }
     }
     
-    
     public void showSponsorWindow(ActionEvent event) {
         try {
             Stage mainStage = new Stage();
             URL viewLink = getClass().getResource(
-                    "/ofc2_cliente/ui/ventanaModificarEvento.fxml");
+                    "/ofc2_cliente/ui/SponsorWindow.fxml");
             // initialition loader
             FXMLLoader loader = new FXMLLoader(viewLink);
             //make the root with the loader
             Parent root = (Parent) loader.load();
             //Get the controller
-            CreateModifyController mainStageController
-                    = ((CreateModifyController) loader.getController());
+            SponsorWindowController sponsorWindowController
+                    = ((SponsorWindowController) loader.getController());
             //set the stage
-            mainStageController.setStage(mainStage);
+            sponsorWindowController.setStage(mainStage);
+            sponsorWindowController.getUser(this.user);
 
             //start the stage
-            mainStageController.initStage(root);
+            sponsorWindowController.initStage(root);
         } catch (IOException ex) {
             Logger.getLogger(CreateModifyController.class.getName())
                     .log(Level.SEVERE, null, ex);
@@ -165,19 +183,23 @@ public class MenuController {
         try {
             Stage mainStage = new Stage();
             URL viewLink = getClass().getResource(
-                    "/ofc2_cliente/ui/ventanaModificarEvento.fxml");
+                    "/ofc2_cliente/ui/commentWindow.fxml");
             // initialition loader
             FXMLLoader loader = new FXMLLoader(viewLink);
             //make the root with the loader
             Parent root = (Parent) loader.load();
             //Get the controller
-            CreateModifyController mainStageController
-                    = ((CreateModifyController) loader.getController());
+            CommentWindowController commentWindowController
+                    = ((CommentWindowController) loader.getController());
             //set the stage
-            mainStageController.setStage(mainStage);
-
-            //start the stage
-            mainStageController.initStage(root);
+            commentWindowController.setStage(mainStage);
+            commentWindowController.getUser(user);
+            try {
+                //start the stage
+                commentWindowController.initStage(root);
+            } catch (BusinessLogicException ex) {
+                Logger.getLogger(MenuController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } catch (IOException ex) {
             Logger.getLogger(CreateModifyController.class.getName())
                     .log(Level.SEVERE, null, ex);
@@ -186,23 +208,23 @@ public class MenuController {
         }
     }
     
-    public void showProfileWindow(ActionEvent event){
+    public void showProfileWindow(ActionEvent event) {
         try {
             Stage mainStage = new Stage();
             URL viewLink = getClass().getResource(
-                    "/ofc2_cliente/ui/ventanaModificarEvento.fxml");
+                    "/ofc2_cliente/ui/profileWindow.fxml");
             // initialition loader
             FXMLLoader loader = new FXMLLoader(viewLink);
             //make the root with the loader
             Parent root = (Parent) loader.load();
             //Get the controller
-            CreateModifyController mainStageController
-                    = ((CreateModifyController) loader.getController());
+            ProfileWindowController profileWindowController
+                    = ((ProfileWindowController) loader.getController());
             //set the stage
-            mainStageController.setStage(mainStage);
-
+            profileWindowController.setStage(mainStage);
+            profileWindowController.getUser(user);
             //start the stage
-            mainStageController.initStage(root);
+            profileWindowController.initStage(root);
         } catch (IOException ex) {
             Logger.getLogger(CreateModifyController.class.getName())
                     .log(Level.SEVERE, null, ex);
@@ -236,6 +258,5 @@ public class MenuController {
                         .log(Level.SEVERE, null, ex);
             }
     }*/
-    
     
 }

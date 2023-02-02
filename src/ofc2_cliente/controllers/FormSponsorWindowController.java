@@ -40,15 +40,17 @@ import ofc2_cliente.model.Admin;
 import ofc2_cliente.model.Event;
 import ofc2_cliente.model.Sponsor;
 import ofc2_cliente.model.User;
+
 /**
- * This class will be controller all in the FormSponsorWindow FXML 
+ * This class will be controller all in the FormSponsorWindow FXML
  *
  * @author Elias
  */
-public class FormSponsorWindowController{
-   private static String regexEmail = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+public class FormSponsorWindowController {
+
+    private static String regexEmail = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
             + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-   private static String regexNumber = "[0-9]+";
+    private static String regexNumber = "[0-9]+";
     private Stage stage;
     private Sponsor sponsor;
     private AdType ad;
@@ -86,18 +88,19 @@ public class FormSponsorWindowController{
     private DatePicker dpDate;
     Event eventos = new Event();
     SponsorManagerFactory sponsorFactory = new SponsorManagerFactory();
-    private static final Logger LOGGER=Logger.getLogger("ofc2_cliente.controller.FormSponsorWindowController");
+    private static final Logger LOGGER = Logger.getLogger("ofc2_cliente.controller.FormSponsorWindowController");
 
-     public void setStage(Stage stage) {
+    public void setStage(Stage stage) {
         this.stage = stage;
     }
+
     /**
      * This method will start the window
      *
      * @author Elias
      * @param root
      */
-    public void initStage(Parent root){
+    public void initStage(Parent root) {
         //Create a scene associated to the node graph root.
         Scene scene = new Scene(root);
         scene.getStylesheets().addAll(this.getClass().getResource("/ofc2_cliente/ui/resources/style.css").toExternalForm());
@@ -116,11 +119,13 @@ public class FormSponsorWindowController{
         //Show window
         stage.show();
     }
+
     /**
-     * This method show the confirm button will be disabled, 
-     * the focus will be on the name field and the combobox will 
-     * have different choices of ad types.
-     * @param event 
+     * This method show the confirm button will be disabled, the focus will be
+     * on the name field and the combobox will have different choices of ad
+     * types.
+     *
+     * @param event
      */
     private void windowShowing(WindowEvent event) {
         LOGGER.info("Window Showing");
@@ -130,18 +135,20 @@ public class FormSponsorWindowController{
         txtFPhone.setOnKeyReleased(this::enableConfirmBtn);
         txtFEmail.setOnKeyReleased(this::enableConfirmBtn);
         dpDate.setOnKeyReleased(this::enableConfirmBtn);
-        cmbAdType.getItems().addAll(ad.VIDEO.toString(), 
+        cmbAdType.getItems().addAll(ad.VIDEO.toString(),
                 ad.PANCARTA.toString(), ad.POSTER.toString());
     }
+
     /**
      * This method returns to the previous window by closing the form window.
-     * @param event 
+     *
+     * @param event
      */
     @FXML
     private void returnSponsorWindow(ActionEvent event) {
         try {
             LOGGER.info("Return to the Sponsor Window");
-             Stage mainStage = new Stage();
+            Stage mainStage = new Stage();
             URL viewLink = getClass().getResource(
                     "/ofc2_cliente/ui/SponsorWindow.fxml");
             // initialition loader
@@ -156,18 +163,20 @@ public class FormSponsorWindowController{
             //start the stage
             mainStageController.initStage(root);
             this.stage.close();
-            
+
         } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, "Error al volver a la ventana anterior", 
+            LOGGER.log(Level.SEVERE, "Error al volver a la ventana anterior",
                     ex.getMessage());
         }
     }
- 
+
     /**
-     * This method fills in the form fields with data from the Sponsor in order to make changes. 
+     * This method fills in the form fields with data from the Sponsor in order
+     * to make changes.
+     *
      * @param sp Sponsor Object
      */
-    public void loadData(Sponsor sp){
+    public void loadData(Sponsor sp) {
         LOGGER.info("Load fields from Sponsor Data");
         this.sponsor = sp;
         txtFName.setText(sp.getName());
@@ -178,35 +187,39 @@ public class FormSponsorWindowController{
         cmbAdType.getSelectionModel().select(sp.getAd());
         chbxState.setSelected(sp.getStatus());
     }
+
     /**
-     * This method checks that the text fields are informed to enable the confirm button, 
-     * otherwise it is disabled.
+     * This method checks that the text fields are informed to enable the
+     * confirm button, otherwise it is disabled.
+     *
      * @param event KeyEvent
      */
     private void enableConfirmBtn(KeyEvent event) {
         try {
-            
-            if(!this.txtFName.getText().isEmpty() 
+
+            if (!this.txtFName.getText().isEmpty()
                     && !this.txtFPhone.getText().isEmpty()
                     && !this.txtFEmail.getText().isEmpty()
                     && !dpDate.toString().isEmpty()
                     && !cmbAdType.getItems().isEmpty()
-                    && !dpDate.toString().isEmpty()){
-            LOGGER.info("Enable the confirm Button");
+                    && !dpDate.toString().isEmpty()) {
+                LOGGER.info("Enable the confirm Button");
                 confirmBtn.setDisable(false);
-            } else{
+            } else {
                 LOGGER.info("Disable the confirm Button");
                 confirmBtn.setDisable(true);
             }
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error al habilitar el boton confirm", 
+            LOGGER.log(Level.SEVERE, "Error al habilitar el boton confirm",
                     e.getMessage());
         }
     }
+
     /**
-     * This method validates the text fields and depending on the action 
-     * will create a new Sponsor or update an existing one.
-     * @param event 
+     * This method validates the text fields and depending on the action will
+     * create a new Sponsor or update an existing one.
+     *
+     * @param event
      */
     @FXML
     private void createAndUpdateSponsor(ActionEvent event) {
@@ -233,7 +246,7 @@ public class FormSponsorWindowController{
             if (!this.txtFEmail.getText().matches(regexEmail)) {
                 throw new Exception("El campo Email no tiene el formato adecuado");
             }
-            
+
             try {
                 //If Sponsor object is exist you can change the data
                 //Then Factory call method to update Sponsor data
@@ -245,11 +258,12 @@ public class FormSponsorWindowController{
                     this.sponsor.setStatus(chbxState.isSelected());
                     this.sponsor.setDate(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
                     this.sponsor.setAd(AdType.valueOf(cmbAdType.getSelectionModel().getSelectedItem().toString()));
+                    admin.setId(1L);
                     this.sponsor.setAdmin((Admin) admin);
                     sponsorFactory.createSponsorManager().edit_XML(this.sponsor);
-                //or if not exist you can create a new Sponsor data
-                //And Factory call method to create Sponsor
-                }else {
+                    //or if not exist you can create a new Sponsor data
+                    //And Factory call method to create Sponsor
+                } else {
                     LOGGER.info("Creating a new Sponsor");
                     Sponsor sponsorD = new Sponsor();
                     sponsorD.setName(txtFName.getText());
@@ -258,14 +272,15 @@ public class FormSponsorWindowController{
                     sponsorD.setStatus(chbxState.isSelected());
                     sponsorD.setDate(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
                     sponsorD.setAd(AdType.valueOf(cmbAdType.getSelectionModel().getSelectedItem().toString()));
+                    admin.setId(1L);
                     sponsorD.setAdmin((Admin) admin);
                     sponsorFactory.createSponsorManager().create_XML(sponsorD);
                 }
                 returnSponsorWindow(event);
-                
+
             } catch (BusinessLogicException ex) {
                 LOGGER.log(Level.SEVERE, "Error al abrir la ventana,"
-                        + "o al crear el nuevo anuncio o al actualizar el anuncio", 
+                        + "o al crear el nuevo anuncio o al actualizar el anuncio",
                         ex.getMessage());
             }
         } catch (Exception e) {
@@ -274,15 +289,17 @@ public class FormSponsorWindowController{
                     .showAndWait();
         }
     }
+
     /**
      * This method get Sponsor object
+     *
      * @return Sponsor Object
      */
     public Sponsor getSponsor() {
         return sponsor;
     }
-    
-     /**
+
+    /**
      * This Method confirm if the user want to close the window
      *
      * @author Elias
@@ -303,9 +320,5 @@ public class FormSponsorWindowController{
             event.consume();
         }
     }
-    
-    
-    
-    
-    
+
 }

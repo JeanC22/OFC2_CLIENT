@@ -25,7 +25,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import ofc2_cliente.model.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -112,8 +111,8 @@ public class CommentWindowController {
     private Integer posicionComent;
     private User client = new Client();
     private Integer commentCount = 0;
-    private ofc2_cliente.model.Event eventoo;
-    private User user;
+    private Event eventoo = new Event();
+    private User user = new User();
     private Coment coment;
 
     CommentFactoryManager commentFactory = new CommentFactoryManager();
@@ -248,6 +247,19 @@ public class CommentWindowController {
         createNewCommentMenuIt.setOnAction((ActionEvent e) -> {
             ZoneId defaultZoneId = ZoneId.systemDefault();
             LocalDate localDate = LocalDate.now();
+            //En caso que el evento no venga con id o el usuario no tenga id 
+            System.out.println(this.eventoo.getId());
+            System.out.println(this.user.getId());
+            if (this.eventoo.getId() == null || this.user.getId() == null) {
+                if (this.user.getId() == null) {
+                    this.user.setId(7L);
+                }
+                if (this.eventoo.getId() == null) {
+                    this.eventoo.setId(6L);
+                }
+            }
+            System.out.println(this.eventoo.getId());
+            System.out.println(this.user.getId());
             Date date = Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
             Coment comment = new Coment(this.eventoo.getId(), this.user.getId(), date, date, addMessage
                     .getPromptText(), addRating.getPromptText(),
@@ -515,6 +527,8 @@ public class CommentWindowController {
             String clientID = String.valueOf(commentTableView.getSelectionModel().getSelectedItem().getComentid().getClient_id());
             String eventID = String.valueOf(commentTableView.getSelectionModel().getSelectedItem().getComentid().getEvent_id());
             commentRest.deleteComent(clientID, eventID);
+            commentTableView.getSelectionModel().clearSelection();
+            showCommentBTN.setDisable(true);
         }
 
     }

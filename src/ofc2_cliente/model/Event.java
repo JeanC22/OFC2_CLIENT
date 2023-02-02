@@ -58,10 +58,10 @@ public class Event implements Serializable {
 
     public Event() {
         this.admin = admin;
-        
+
     }
-    
-    public Event(Long id){
+
+    public Event(Long id) {
         this.id = id;
     }
 
@@ -72,6 +72,7 @@ public class Event implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
     @XmlElement(name = "name")
     public String getName() {
         return name;
@@ -80,7 +81,8 @@ public class Event implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-    @XmlElement(name = "activity") 
+
+    @XmlElement(name = "activity")
     public String getActivity() {
         return activity;
     }
@@ -88,6 +90,7 @@ public class Event implements Serializable {
     public void setActivity(String activity) {
         this.activity = activity;
     }
+
     @XmlElement(name = "date")
     public Date getDate() {
         return date;
@@ -96,6 +99,7 @@ public class Event implements Serializable {
     public void setDate(Date date) {
         this.date = date;
     }
+
     @XmlElement(name = "capacity")
     public Integer getCapacity() {
         return capacity;
@@ -104,6 +108,7 @@ public class Event implements Serializable {
     public void setCapacity(Integer capacity) {
         this.capacity = capacity;
     }
+
     @XmlElement(name = "price")
     public Float getPrice() {
         return price;
@@ -112,6 +117,7 @@ public class Event implements Serializable {
     public void setPrice(Float price) {
         this.price = price;
     }
+
     @XmlElement(name = "place")
     public String getPlace() {
         return place;
@@ -169,7 +175,7 @@ public class Event implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.User1[ id=" + id + " ]";
+        return this.getName();
     }
 
 }

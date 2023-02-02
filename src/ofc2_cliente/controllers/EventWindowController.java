@@ -63,6 +63,7 @@ import ofc2_cliente.model.User;
  */
 public class EventWindowController {
 
+    private MenuController menu;
     private Stage stage;
     @FXML
     private TextField dataFld;
@@ -105,7 +106,6 @@ public class EventWindowController {
     @FXML
     private Button helpBtn;
     private User user;
-    MenuController menu;
     private Event evento;
     private EventFactory eventFact = new EventFactory();
     ObservableList<Event> events;
@@ -155,7 +155,7 @@ public class EventWindowController {
             comboFind.getItems();
             comboFind.getSelectionModel().selectFirst();
             eventTable.setContextMenu(menuCont);
-
+            stage.setResizable(false);
             eventTable.getSelectionModel().selectedItemProperty().addListener(this::setVisibleButtonss);
             stage.setOnShowing(this::windowShow);
             stage.setOnCloseRequest(this::cerrarVentana);
@@ -173,6 +173,45 @@ public class EventWindowController {
 
             stage.show();
 
+            LOGGER.info("Stage Started");
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "El servidor glashfish no se encuentra disponible", ButtonType.OK);
+            alert.showAndWait();
+        }
+    }
+
+    public void initStage2(Parent root) {
+        try {
+
+            LOGGER.info("Starting Stage");
+            //init the scene with the root you got from singInController
+            Scene scene = new Scene(root);
+            scene.getStylesheets().addAll(this.getClass().getResource("/ofc2_cliente/ui/resources/style.css").toExternalForm());
+            stage.setScene(scene);
+
+            stage.setTitle("OFC Event");
+            modifyBtn.setDisable(true);
+            delBtn.setDisable(true);
+            comboFind.setItems(combo);
+            comboFind.getItems();
+            comboFind.getSelectionModel().selectFirst();
+            eventTable.setContextMenu(menuCont);
+            stage.setResizable(false);
+            eventTable.getSelectionModel().selectedItemProperty().addListener(this::setVisibleButtonss);
+            stage.setOnShowing(this::windowShow);
+            stage.setOnCloseRequest(this::cerrarVentana);
+            createBtn.setOnAction(this::createModifyWindowCre);
+            reportBtn.setOnAction(this::generateReport);
+            delBtn.setOnAction(this::deleteData);
+            modifyBtn.setOnAction(this::createModifyWindowMod);
+            comboFind.valueProperty().addListener(this::showMessage);
+            findBtn.setOnAction(this::find);
+            modifyMenu.setOnAction(this::createModifyWindowMod);
+            deleteMenu.setOnAction(this::deleteData);
+            showComents.setOnAction(this::showComent);
+            helpBtn.setOnAction(this::showWindowHelper);
+            stage.show();
+            menu.setStage2(this.stage);
             LOGGER.info("Stage Started");
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "El servidor glashfish no se encuentra disponible", ButtonType.OK);

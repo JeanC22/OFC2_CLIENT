@@ -9,9 +9,6 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -22,8 +19,7 @@ import javax.persistence.TemporalType;
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
     private Long id;
 
     private String username;
@@ -33,6 +29,17 @@ public class User implements Serializable {
     private String fullName;
 
     public User(Long id) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.fullName = fullName;
+        this.lastPasswordChange = lastPasswordChange;
+        this.status = status;
+        this.privilege = privilege;
+        this.password = password;
+    }
+
+    public User() {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -129,10 +136,6 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public User() {
-        super();
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -155,7 +158,7 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return this.getUsername();
+        return this.username;
     }
 
 }

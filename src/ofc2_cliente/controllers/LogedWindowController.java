@@ -34,7 +34,6 @@ import ofc2_cliente.model.User;
  * @author Jp
  */
 public class LogedWindowController {
-
     private User user;
     private Stage stage;
     @FXML
@@ -117,7 +116,6 @@ public class LogedWindowController {
             //set the stage
             mainStageController.setStage(mainStage);
             //start the stage
-            welcomeString.setText("Welcome " + this.user.getUsername());
             mainStageController.initStage(root);
             //close the actually View
             this.stage.close();
@@ -216,7 +214,7 @@ public class LogedWindowController {
             FXMLLoader loader = new FXMLLoader(viewLink);
             //make the root with the loader
             Parent root = (Parent) loader.load();
-            stage.getIcons().add(new Image(this.getClass().getResource("/ofc2_cliente/ui/resources/favicon.png").toString()));
+            stage.getIcons().add(new Image(this.getClass().getResource("/ofc2_cliente/ui/resources/favicon.ico").toString()));
             //Get the controller
             CommentWindowController commentWindowController
                     = ((CommentWindowController) loader.getController());
@@ -268,7 +266,8 @@ public class LogedWindowController {
                     .log(Level.SEVERE, null, ex);
         }
     }
-       public void openRoutineWindow(MouseEvent event) {
+
+    public void openRoutineWindow(MouseEvent event) {
         try {
             //Gonna initialition a new Stage
             Stage mainStage = new Stage();
@@ -295,6 +294,7 @@ public class LogedWindowController {
                     .log(Level.SEVERE, null, ex);
         }
     }
+
     /**
      * This Method get the userLogin from the SignInWindow
      *
