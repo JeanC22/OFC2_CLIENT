@@ -8,20 +8,9 @@ package ofc2_cliente.model;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -29,33 +18,27 @@ import javax.xml.bind.annotation.XmlTransient;
  *
  * @author Aritz
  */
-
+@XmlRootElement(name="routine")
 public class Routine implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+   
     private Long id;
 
+    
     private String name;
 
-    @Temporal(TemporalType.TIMESTAMP)
+   
     private Date start_date;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    
     private Date end_date;
     
     private Double kcal;
     
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="clie_id")
+   
     private Client clie;
 
-    /**
-     * @associates 
-     */
-    @ManyToMany(fetch= FetchType.EAGER)
-    @JoinTable(name="routine_exercises", schema="OFC_DB")
     private List<Exercise> exercises;
     
     private Float routineTime;
@@ -68,6 +51,7 @@ public class Routine implements Serializable {
         this.id = id;
     }
 
+     @XmlElement(name="clie")
     public Client getClie() {
         return clie;
     }
@@ -76,6 +60,7 @@ public class Routine implements Serializable {
         this.clie = clie;
     }
 
+     @XmlElement(name="name")
     public String getName() {
         return name;
     }
@@ -84,6 +69,7 @@ public class Routine implements Serializable {
         this.name = name;
     }
 
+     @XmlElement(name="start_date")
     public Date getStart_date() {
         return start_date;
     }
@@ -92,6 +78,7 @@ public class Routine implements Serializable {
         this.start_date = start_date;
     }
 
+    @XmlElement(name="end_date")
     public Date getEnd_date() {
         return end_date;
     }
@@ -100,6 +87,7 @@ public class Routine implements Serializable {
         this.end_date = end_date;
     }
 
+     @XmlElement(name="kcal")
     public Double getKcal() {
         return kcal;
     }
@@ -108,7 +96,7 @@ public class Routine implements Serializable {
         this.kcal = kcal;
     }
 
-    @XmlTransient
+    @XmlElement(name="exercises")
     public List<Exercise> getEjercicios() {
         return exercises;
     }
@@ -116,7 +104,7 @@ public class Routine implements Serializable {
     public void setEjercicios(List<Exercise> exercises) {
         this.exercises = exercises;
     }
-
+    @XmlElement(name="time")
     public Float getTime() {
         return routineTime;
     }

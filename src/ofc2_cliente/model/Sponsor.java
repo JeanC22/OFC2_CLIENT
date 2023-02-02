@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package ofc2_cliente.model;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;

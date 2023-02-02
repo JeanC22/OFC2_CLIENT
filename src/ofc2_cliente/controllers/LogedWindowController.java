@@ -89,6 +89,7 @@ public class LogedWindowController {
         eventBTN.setOnMouseClicked(this::openEventWindow);
         comentBTN.setOnMouseClicked(this::openCommentWindow);
         sponsorBTN.setOnMouseClicked(this::openSponsorWindow);
+        routineBTN.setOnMouseClicked(this::openRoutineWindow);
         stage.show();
         LOGGER.info("Stage Started");
     }
@@ -267,14 +268,12 @@ public class LogedWindowController {
                     .log(Level.SEVERE, null, ex);
         }
     }
-
-    /* 
        public void openRoutineWindow(MouseEvent event) {
         try {
             //Gonna initialition a new Stage
             Stage mainStage = new Stage();
             // we gonna create a URL for get the fxml view
-            URL viewLink = getClass().getResource("/ofc2_cliente/ui/profileWindow.fxml");
+            URL viewLink = getClass().getResource("/ofc2_cliente/ui/RoutineWindow.fxml");
 
             // initialition loader
             FXMLLoader loader = new FXMLLoader(viewLink);
@@ -282,13 +281,13 @@ public class LogedWindowController {
             Parent root = (Parent) loader.load();
             stage.getIcons().add(new Image(this.getClass().getResource("/ofc2_cliente/ui/resources/favicon.png").toString()));
             //Get the controller
-            RoutineWindowController profileStageController
-                    = ((RoutineWindowController) loader.getController());
-            profileStageController.getUser(this.user);
+            RoutineController routineController
+                    = ((RoutineController) loader.getController());
+            routineController.getUser(this.user);
             //set the stage
-            profileStageController.setStage(mainStage);
+            routineController.setStage(mainStage);
             //start the stage
-            profileStageController.initStage(root);
+            routineController.initStage(root);
             //close the actually View
             this.stage.close();
         } catch (IOException ex) {
@@ -296,7 +295,6 @@ public class LogedWindowController {
                     .log(Level.SEVERE, null, ex);
         }
     }
-     */
     /**
      * This Method get the userLogin from the SignInWindow
      *
