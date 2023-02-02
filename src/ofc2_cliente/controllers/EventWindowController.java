@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -28,7 +27,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -36,8 +34,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -45,13 +41,9 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javax.ws.rs.core.GenericType;
-import static mondrian.olap.fun.vba.Vba.date;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -62,6 +54,7 @@ import net.sf.jasperreports.view.JasperViewer;
 import ofc2_cliente.logic.BusinessLogicException;
 import ofc2_cliente.logic.EventFactory;
 import ofc2_cliente.model.Event;
+import ofc2_cliente.model.User;
 
 /**
  * FXML Controller class
@@ -86,7 +79,7 @@ public class EventWindowController {
     @FXML
     private Button reportBtn;
     @FXML
-    private TableView eventTable;
+    private TableView<Event> eventTable;
     @FXML
     private TableColumn colName;
     @FXML
@@ -111,8 +104,9 @@ public class EventWindowController {
     private MenuItem showComents = new MenuItem();
     @FXML
     private Button helpBtn;
-
+    private User user;
     MenuController menu;
+    private Event evento;
     private EventFactory eventFact = new EventFactory();
     ObservableList<Event> events;
     ObservableList<String> combo = FXCollections.observableArrayList("FindByActivity", "FindByName", "FindByDate", "FindAll");
@@ -126,6 +120,15 @@ public class EventWindowController {
     public void setStage(Stage stage) {
 
         this.stage = stage;
+    }
+
+    /**
+     * This Method get the userLogin from the SignInWindow
+     *
+     * @param userLogin
+     */
+    public void getUser(User userLogin) {
+        this.user = userLogin;
     }
 
     /**
@@ -165,17 +168,16 @@ public class EventWindowController {
             modifyMenu.setOnAction(this::createModifyWindowMod);
             deleteMenu.setOnAction(this::deleteData);
             showComents.setOnAction(this::showComent);
+
             helpBtn.setOnAction(this::showWindowHelper);
 
             stage.show();
 
             LOGGER.info("Stage Started");
         } catch (Exception e) {
-
             Alert alert = new Alert(Alert.AlertType.ERROR, "El servidor glashfish no se encuentra disponible", ButtonType.OK);
             alert.showAndWait();
         }
-
     }
 
     /**
@@ -465,28 +467,35 @@ public class EventWindowController {
      * comments associated to the events, for this we send the event in
      * question.
      *
-     * @param event
+     * @param e
+     * @throws ofc2_cliente.logic.BusinessLogicException
      */
-    public void showComent(ActionEvent event) {
-        Event even = ((Event) eventTable.getSelectionModel().getSelectedItem());
-
+    public void showComent(ActionEvent e) {
+        Event eventooo = new Event();
         try {
+            eventooo = eventTable.getSelectionModel().getSelectedItem();
             Stage mainStage = new Stage();
-            URL viewLink = getClass().getResource(
-                    "/ofc2_cliente/ui/commentWindow.fxml");
+            URL viewLink = getClass().getResource("/ofc2_cliente/ui/commentWindow.fxml");
+
             // initialition loader
             FXMLLoader loader = new FXMLLoader(viewLink);
             //make the root with the loader
             Parent root = (Parent) loader.load();
             //Get the controller
-            CreateModifyController mainStageController
-                    = ((CreateModifyController) loader.getController());
+            CommentWindowController commentWindowController
+                    = ((CommentWindowController) loader.getController());
             //set the stage
-            mainStageController.setStage(mainStage);
+            commentWindowController.getEvent(eventooo);
+            commentWindowController.getUser(user);
+            commentWindowController.setStage(mainStage);
             //start the stage
-            mainStageController.initStage(root);
-            mainStageController.loadDate(even);
+            try {
+                commentWindowController.initStage(root);
+            } catch (BusinessLogicException ex) {
+                Logger.getLogger(EventWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            }
             this.stage.close();
+            e.consume();
         } catch (IOException ex) {
             Logger.getLogger(CreateModifyController.class.getName())
                     .log(Level.SEVERE, null, ex);

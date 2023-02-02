@@ -161,13 +161,14 @@ public class SignInWindowController {
                         + "de 6 caracteres o maximo de 12").showAndWait();
             }
 
-            User user = new User();
+            this.userLoged = new User();
 
-            user.setUsername(userNameTxTF.getText());
-            user.setPassword(passwdTxPF.getText());
+            userLoged.setUsername(userNameTxTF.getText());
+            userLoged.setPassword(passwdTxPF.getText());
+            /*
             try {
                 userFac.getFactory().find_XML(new GenericType<List<User>>() {
-                }, user.getUsername(), user.getPassword());
+                }, userLoged.getUsername(), userLoged.getPassword());
             } catch (Exception ex) {
                 try {
                     throw new Exception(ex.getMessage());
@@ -178,7 +179,8 @@ public class SignInWindowController {
                     alert.showAndWait();
                 }
             }
-
+            */
+            
             Stage loginStage = new Stage();
 
             URL viewLink = getClass().getResource("/ofc2_cliente/ui/LogedWindow.fxml");

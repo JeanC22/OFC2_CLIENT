@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
@@ -8,7 +9,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="OFC_LOGED" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" stylesheets="@resources/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofc2_cliente.controllers.LogedWindowController">
+<Pane fx:id="OFC_LOGED" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" stylesheets="@resources/style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofc2_cliente.controllers.LogedWindowController">
     <children>
         <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0">
             <children>
@@ -32,15 +33,49 @@
                         <Image url="@resources/logoutIcon.png" />
                     </image>
                 </ImageView>
-                <Button fx:id="eventBtn" layoutX="221.0" layoutY="294.0" mnemonicParsing="false" prefHeight="157.0" prefWidth="210.0" text="EVENTO" />
+                <Button fx:id="eventBTN" layoutX="221.0" layoutY="294.0" mnemonicParsing="false" prefHeight="157.0" prefWidth="210.0" text="Event">
+               <font>
+                  <Font size="24.0" />
+               </font>
+               <graphic>
+                  <ImageView fitHeight="79.0" fitWidth="52.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@resources/calendar.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
                 <ImageView fitHeight="134.0" fitWidth="291.0" layoutX="359.0" layoutY="61.0" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@resources/OFCLogo.png" />
                     </image>
                 </ImageView>
-                <Button fx:id="eventBtn1" layoutX="588.0" layoutY="294.0" mnemonicParsing="false" prefHeight="157.0" prefWidth="210.0" text="Comentario" />
-                <Button fx:id="eventBtn11" layoutX="588.0" layoutY="518.0" mnemonicParsing="false" prefHeight="157.0" prefWidth="210.0" text="Sponsor" />
-                <Button fx:id="eventBtn111" layoutX="221.0" layoutY="518.0" mnemonicParsing="false" prefHeight="157.0" prefWidth="210.0" text="Rutina" />
+                <Button fx:id="comentBTN" layoutX="588.0" layoutY="294.0" mnemonicParsing="false" prefHeight="157.0" prefWidth="210.0" text="Comentario">
+               <graphic>
+                  <ImageView fitHeight="79.0" fitWidth="52.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@resources/chat.png" />
+                     </image>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </ImageView>
+               </graphic></Button>
+                <Button fx:id="sponsorBTN" layoutX="588.0" layoutY="518.0" mnemonicParsing="false" prefHeight="157.0" prefWidth="210.0" text="Sponsor">
+               <graphic>
+                  <ImageView fitHeight="79.0" fitWidth="52.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@resources/cost.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
+                <Button fx:id="routineBTN" layoutX="221.0" layoutY="518.0" mnemonicParsing="false" prefHeight="157.0" prefWidth="210.0" text="Rutina">
+               <graphic>
+                  <ImageView fitHeight="79.0" fitWidth="52.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@resources/fitness.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
             </children>
         </AnchorPane>
     </children>

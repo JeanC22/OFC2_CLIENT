@@ -20,6 +20,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -63,6 +64,8 @@ public class CommentModalController {
             stage.setTitle("OFC Modal Comment");
             scene.getStylesheets().addAll(this.getClass().getResource("/ofc2_cliente/ui/resources/style.css").toExternalForm());
             stage.resizableProperty().set(false);
+            stage.getIcons().add(new Image(this.getClass().getResource("/ofc2_cliente/ui/resources/favicon.png").toString()));
+
             usersTxTF.setText(this.comment.getComClie().getUsername());
 
             subjectTxTF.setText(this.comment.getSubject());
@@ -89,7 +92,7 @@ public class CommentModalController {
         event.consume();
     }
 
-   public Stage GetStage() {
+    public Stage GetStage() {
 
         return this.stage;
     }

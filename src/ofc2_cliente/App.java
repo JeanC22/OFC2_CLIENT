@@ -35,8 +35,8 @@ public class App extends Application {
             //initialization the root (Parent) with the FXML Loader.load
             Parent root = (Parent) loader.load();
             //initialization the singInController
-            SignInWindowController mainStageController
-                    = ((SignInWindowController) loader.getController());
+            SponsorWindowController mainStageController
+                    = ((SponsorWindowController) loader.getController());
             //set the Stage to the controll
             mainStageController.setStage(stage);
             //Start the Stage

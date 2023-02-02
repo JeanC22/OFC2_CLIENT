@@ -5,8 +5,6 @@
  */
 package ofc2_cliente.controllers;
 
-import ofc2_cliente.controllers.CommentModalController;
-import ofc2_cliente.controllers.ComentWindowHelpController;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -28,6 +26,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import ofc2_cliente.model.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -111,9 +110,11 @@ public class CommentWindowController {
     private TableColumn<Coment, String> ratingComment;
     private ObservableList<Coment> comments;
     private Integer posicionComent;
-    private Event event = null;
     private User client = new Client();
     private Integer commentCount = 0;
+    private ofc2_cliente.model.Event eventoo;
+    private User user;
+    private Coment coment;
 
     CommentFactoryManager commentFactory = new CommentFactoryManager();
     CommetRESTClient commentRest = (CommetRESTClient) commentFactory.getFactory();
@@ -123,6 +124,24 @@ public class CommentWindowController {
 
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    /**
+     * This Method get the userLogin from the EventWindow
+     *
+     * @param userLogin
+     */
+    public void getUser(User userLogin) {
+        this.user = userLogin;
+    }
+
+    /**
+     * This Method get the eventSelected from the EventWindow
+     *
+     * @param eventSelected
+     */
+    public void getEvent(ofc2_cliente.model.Event eventSelected) {
+        this.eventoo = eventSelected;
     }
 
     /**
@@ -230,7 +249,7 @@ public class CommentWindowController {
             ZoneId defaultZoneId = ZoneId.systemDefault();
             LocalDate localDate = LocalDate.now();
             Date date = Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
-            Coment comment = new Coment(1L, 2L, date, date, addMessage
+            Coment comment = new Coment(this.eventoo.getId(), this.user.getId(), date, date, addMessage
                     .getPromptText(), addRating.getPromptText(),
                     Boolean.TRUE, addSubject.getPromptText());
             comments.add(comment);
@@ -268,6 +287,7 @@ public class CommentWindowController {
                 this.deleteComment();
                 commentTableView.getItems().remove(commentTableView
                         .getSelectionModel().getSelectedItem());
+                event.consume();
             } catch (BusinessLogicException ex) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
                 alert.showAndWait();
@@ -282,9 +302,7 @@ public class CommentWindowController {
 
             if (commentTableView.getSelectionModel().getSelectedItem() != null
                     && e.getCode() == KeyCode.ENTER) {
-
                 try {
-                    //Coment comentModify = commentTableView.getSelectionModel().getSelectedItem();
                     commentRest.editComent_XML(commentTableView
                             .getSelectionModel().getSelectedItem());
                     commentTableView.refresh();
@@ -497,8 +515,6 @@ public class CommentWindowController {
             String clientID = String.valueOf(commentTableView.getSelectionModel().getSelectedItem().getComentid().getClient_id());
             String eventID = String.valueOf(commentTableView.getSelectionModel().getSelectedItem().getComentid().getEvent_id());
             commentRest.deleteComent(clientID, eventID);
-        } else {
-            event.consume();
         }
 
     }
@@ -526,8 +542,8 @@ public class CommentWindowController {
         posicionComent = comments.indexOf(coment);
     }
 
-    public void getComment(Event event) {
-        this.event = event;
+    public void getComment(Coment coment) {
+        this.coment = coment;
     }
 
     // sub class Editar comment

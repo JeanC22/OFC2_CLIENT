@@ -19,11 +19,13 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import ofc2_cliente.logic.BusinessLogicException;
 import ofc2_cliente.model.User;
 
 /**
@@ -44,30 +46,33 @@ public class LogedWindowController {
     private ImageView profileImage;
     @FXML
     private ImageView logoutImage;
-        private static final Logger LOGGER = Logger.getLogger("model.controllers.LogedWindowController");
+    private static final Logger LOGGER = Logger.getLogger("model.controllers.LogedWindowController");
     @FXML
     private Pane OFC_LOGED;
     @FXML
-    private Button eventBtn;
+    private Button comentBTN;
     @FXML
-    private Button eventBtn1;
+    private Button sponsorBTN;
     @FXML
-    private Button eventBtn11;
+    private Button routineBTN;
     @FXML
-    private Button eventBtn111;
+    private Button eventBTN;
 
     /**
      * setStage
-     * @param stage 
+     *
+     * @param stage
      */
     public void setStage(Stage stage) {
 
         this.stage = stage;
     }
+
     /**
      * this Method will start the stage
+     *
      * @author Jp
-     * @param root 
+     * @param root
      */
     public void initStage(Parent root) {
         LOGGER.info("Starting Stage");
@@ -75,70 +80,229 @@ public class LogedWindowController {
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.setTitle("OFC SIGN IN");
-        //get the user from the singInController and init on the local User
-        this.user = getUser(user);
         //set the Welcome Message
-        welcomeString.setText(user.getFullName() + "Welcome");
         stage.setOnCloseRequest(this::cerrarVentana);
         logoutImage.setOnMouseClicked(this::logout);
         logoutLabel.setOnMouseClicked(this::logout);
+        profileImage.setOnMouseClicked(this::openPorfileWindow);
+        profileLabel.setOnMouseClicked(this::openPorfileWindow);
+        eventBTN.setOnMouseClicked(this::openEventWindow);
+        comentBTN.setOnMouseClicked(this::openCommentWindow);
+        sponsorBTN.setOnMouseClicked(this::openSponsorWindow);
         stage.show();
         LOGGER.info("Stage Started");
     }
 
     /**
      * this Method will be close LogedWindow and start the SingInWindow
-     * @author Jp 
+     *
+     * @author Jp
      */
     @FXML
     public void logout(MouseEvent event) {
-            try {
-                //Gonna initialition a new Stage
-                Stage mainStage = new Stage();
-                // we gonna create a URL for get the fxml view
-                URL viewLink = getClass().getResource(
-                        "/model/views/SignInWindow.fxml");
-                // initialition loader
-                FXMLLoader loader = new FXMLLoader(viewLink);
-                //make the root with the loader
-                Parent root = (Parent) loader.load();
-                //Get the controller
-                SignInWindowController mainStageController
-                        = ((SignInWindowController) loader.getController());
-                //set the stage
-                mainStageController.setStage(mainStage);
-                //start the stage
-                mainStageController.initStage(root);
-                //close the actually View
-                this.stage.close();
-            } catch (IOException ex) {
-                Logger.getLogger(LogedWindowController.class.getName())
-                        .log(Level.SEVERE, null, ex);
-            }
+        try {
+            //Gonna initialition a new Stage
+            Stage mainStage = new Stage();
+            // we gonna create a URL for get the fxml view
+            URL viewLink = getClass().getResource("/ofc2_cliente/ui/SignInWindow.fxml");
+
+            // initialition loader
+            FXMLLoader loader = new FXMLLoader(viewLink);
+            //make the root with the loader
+            Parent root = (Parent) loader.load();
+            //Get the controller
+            SignInWindowController mainStageController
+                    = ((SignInWindowController) loader.getController());
+            //set the stage
+            mainStageController.setStage(mainStage);
+            //start the stage
+            welcomeString.setText("Welcome " + this.user.getUsername());
+            mainStageController.initStage(root);
+            //close the actually View
+            this.stage.close();
+            event.consume();
+        } catch (IOException ex) {
+            Logger.getLogger(LogedWindowController.class.getName())
+                    .log(Level.SEVERE, null, ex);
+        }
     }
+
     /**
      * This Method confirm if the user want to close the window
+     *
      * @author Iker
-     * @param event 
+     * @param event
      */
-    public void cerrarVentana(WindowEvent event){
-        
+    public void cerrarVentana(WindowEvent event) {
+
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setContentText("Quiere salir de la aplicacion?");
-        
+
         Optional<ButtonType> result = alert.showAndWait();
-        if(result.get() == ButtonType.OK){
+        if (result.get() == ButtonType.OK) {
             Platform.exit();
-        }else {
+        } else {
             event.consume();
         }
     }
-    
-    
-    public User getUser(User user){
-        
-        return user;
+
+    public void openPorfileWindow(MouseEvent event) {
+        try {
+            //Gonna initialition a new Stage
+            Stage mainStage = new Stage();
+            // we gonna create a URL for get the fxml view
+            URL viewLink = getClass().getResource("/ofc2_cliente/ui/profileWindow.fxml");
+
+            // initialition loader
+            FXMLLoader loader = new FXMLLoader(viewLink);
+            //make the root with the loader
+            Parent root = (Parent) loader.load();
+            stage.getIcons().add(new Image(this.getClass().getResource("/ofc2_cliente/ui/resources/favicon.png").toString()));
+            //Get the controller
+            ProfileWindowController profileStageController
+                    = ((ProfileWindowController) loader.getController());
+            profileStageController.getUser(this.user);
+            //set the stage
+            profileStageController.setStage(mainStage);
+            //start the stage
+            profileStageController.initStage(root);
+            //close the actually View
+            this.stage.close();
+            event.consume();
+        } catch (IOException ex) {
+            Logger.getLogger(LogedWindowController.class.getName())
+                    .log(Level.SEVERE, null, ex);
+        }
     }
-    
-    
+
+    public void openEventWindow(MouseEvent event) {
+        try {
+            //Gonna initialition a new Stage
+            Stage mainStage = new Stage();
+            // we gonna create a URL for get the fxml view
+            URL viewLink = getClass().getResource("/ofc2_cliente/ui/EventWindow.fxml");
+
+            // initialition loader
+            FXMLLoader loader = new FXMLLoader(viewLink);
+            //make the root with the loader
+            Parent root = (Parent) loader.load();
+            stage.getIcons().add(new Image(this.getClass().getResource("/ofc2_cliente/ui/resources/favicon.png").toString()));
+            //Get the controller
+            EventWindowController eventWindowController
+                    = ((EventWindowController) loader.getController());
+            eventWindowController.getUser(this.user);
+            //set the stage
+            eventWindowController.setStage(mainStage);
+            //start the stage
+            eventWindowController.initStage(root);
+            //close the actually View
+            this.stage.close();
+            event.consume();
+        } catch (IOException ex) {
+            Logger.getLogger(LogedWindowController.class.getName())
+                    .log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void openCommentWindow(MouseEvent event) {
+        try {
+            //Gonna initialition a new Stage
+            Stage mainStage = new Stage();
+            // we gonna create a URL for get the fxml view
+            URL viewLink = getClass().getResource("/ofc2_cliente/ui/commentWindow.fxml");
+
+            // initialition loader
+            FXMLLoader loader = new FXMLLoader(viewLink);
+            //make the root with the loader
+            Parent root = (Parent) loader.load();
+            stage.getIcons().add(new Image(this.getClass().getResource("/ofc2_cliente/ui/resources/favicon.png").toString()));
+            //Get the controller
+            CommentWindowController commentWindowController
+                    = ((CommentWindowController) loader.getController());
+            commentWindowController.getUser(this.user);
+            //set the stage
+            commentWindowController.setStage(mainStage);
+            try {
+                //start the stage
+                commentWindowController.initStage(root);
+            } catch (BusinessLogicException ex) {
+                Logger.getLogger(LogedWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                Alert alert = new Alert(Alert.AlertType.ERROR, "El servidor glashfish no se encuentra disponible", ButtonType.OK);
+                alert.showAndWait();
+            }
+            //close the actually View
+            this.stage.close();
+            event.consume();
+        } catch (IOException ex) {
+            Logger.getLogger(LogedWindowController.class.getName())
+                    .log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void openSponsorWindow(MouseEvent event) {
+        try {
+            //Gonna initialition a new Stage
+            Stage mainStage = new Stage();
+            // we gonna create a URL for get the fxml view
+            URL viewLink = getClass().getResource("/ofc2_cliente/ui/SponsorWindow.fxml");
+
+            // initialition loader
+            FXMLLoader loader = new FXMLLoader(viewLink);
+            //make the root with the loader
+            Parent root = (Parent) loader.load();
+            stage.getIcons().add(new Image(this.getClass().getResource("/ofc2_cliente/ui/resources/favicon.png").toString()));
+            //Get the controller
+            SponsorWindowController sponsorWindowController
+                    = ((SponsorWindowController) loader.getController());
+            sponsorWindowController.getUser(this.user);
+            //set the stage
+            sponsorWindowController.setStage(mainStage);
+            //start the stage
+            sponsorWindowController.initStage(root);
+            //close the actually View
+            this.stage.close();
+            event.consume();
+        } catch (IOException ex) {
+            Logger.getLogger(LogedWindowController.class.getName())
+                    .log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /* 
+       public void openRoutineWindow(MouseEvent event) {
+        try {
+            //Gonna initialition a new Stage
+            Stage mainStage = new Stage();
+            // we gonna create a URL for get the fxml view
+            URL viewLink = getClass().getResource("/ofc2_cliente/ui/profileWindow.fxml");
+
+            // initialition loader
+            FXMLLoader loader = new FXMLLoader(viewLink);
+            //make the root with the loader
+            Parent root = (Parent) loader.load();
+            stage.getIcons().add(new Image(this.getClass().getResource("/ofc2_cliente/ui/resources/favicon.png").toString()));
+            //Get the controller
+            RoutineWindowController profileStageController
+                    = ((RoutineWindowController) loader.getController());
+            profileStageController.getUser(this.user);
+            //set the stage
+            profileStageController.setStage(mainStage);
+            //start the stage
+            profileStageController.initStage(root);
+            //close the actually View
+            this.stage.close();
+        } catch (IOException ex) {
+            Logger.getLogger(LogedWindowController.class.getName())
+                    .log(Level.SEVERE, null, ex);
+        }
+    }
+     */
+    /**
+     * This Method get the userLogin from the SignInWindow
+     *
+     * @param userLogin
+     */
+    public void getUser(User userLogin) {
+        this.user = userLogin;
+    }
 }

@@ -155,7 +155,7 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return getUsername();
+        return this.getUsername();
     }
 
 }
