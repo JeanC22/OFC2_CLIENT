@@ -16,6 +16,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import ofc2_cliente.controllers.EventWindowController;
+import ofc2_cliente.controllers.SignInWindowController;
 
 /**
  *
@@ -30,14 +31,14 @@ public class App extends Application {
         
         try {
             //link to get the FXML file
-            URL viewLink = getClass().getResource("/ofc2_cliente/ui/EventWindow.fxml");
+            URL viewLink = getClass().getResource("/ofc2_cliente/ui/SignInWindow.fxml");
             //initialization the loader witk the FXML file
             FXMLLoader loader = new FXMLLoader(viewLink);
             //initialization the root (Parent) with the FXML Loader.load
             Parent root = (Parent) loader.load();
             //initialization the singInController
-            EventWindowController mainStageController
-                    = ((EventWindowController) loader.getController());
+            SignInWindowController mainStageController
+                    = ((SignInWindowController) loader.getController());
             //set the Stage to the controll
             mainStageController.setStage(stage);
             //Start the Stage
