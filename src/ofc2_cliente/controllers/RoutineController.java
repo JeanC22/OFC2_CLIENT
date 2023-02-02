@@ -145,6 +145,9 @@ public class RoutineController {
     @FXML
     private MenuItem deleteMn;
     
+    @FXML
+    private Button helpBtn;
+    
     private Client cli;
     
     
@@ -164,9 +167,7 @@ public class RoutineController {
         LOGGER.info("starting initStage(SignIN)");
         //Create a scene associated to the node graph root.
         Scene scene = new Scene(root);
-        //scene.getStylesheets().addAll(this.getClass().getResource("C:\\Users\\2dam\\Desktop\\Reto2\\Cliente\\OFC2_CLIENT\\src\\ofc2_cliente\\ui\\resources\\style.css").toExternalForm());
-        
-        //Associate scene to primaryStage(Window)
+       
         stage.setScene(scene);
         //title of the window: OFC SIGN IN.
         stage.setTitle("OFC SING IN");
@@ -177,16 +178,21 @@ public class RoutineController {
         updateMn.setDisable(true);
         findBtn.setDisable(true);
         findMn.setDisable(true);
-        ObservableList<String> list= FXCollections.observableArrayList("Routine", "Routine exerise");
+        ObservableList<String> list= FXCollections.observableArrayList("Routine name", "All routines");
         filterCH.setItems(list);
+        filterCH.getItems();
+        filterCH.getSelectionModel().selectFirst();
+        
         setTooltips();
         deleteMn.setOnAction(this::deleteRoutine);
         updateMn.setOnAction(this::routineDataWindowUpdate);
         createMn.setOnAction(this::routineDataWindowCreate);
-        reportBtn.setDisable(true);
+        helpBtn.setOnAction(this::showHelpWindow);
+        
         findBtn.setOnAction(this::filterMethod);
         findMn.setOnAction(this::filterMethod);
         nameTxTF.setOnKeyReleased(this::enabledFindBtn);
+        
         
         deleteBtn.setOnAction(this::deleteRoutine);
         createBtn.setOnAction(this::routineDataWindowCreate);
@@ -219,39 +225,84 @@ public class RoutineController {
         }
     }
     
+    /**
+     * This method opens the RoutineHelpWindow
+     * @param event 
+     */
+    private void showHelpWindow(ActionEvent event){
+        try {
+            Stage mainStage = new Stage();
+            URL viewLink = getClass().getResource(
+                    "/ofc2_cliente/ui/RoutineHelpWindow.fxml");
+            // initialition loader
+            FXMLLoader loader = new FXMLLoader(viewLink);
+            //make the root with the loader
+            Parent root = (Parent) loader.load();
+            //Get the controller
+            RoutineHelpWindowController mainStageController
+                    =  loader.getController();
+            
+            mainStageController.setStage(mainStage);
+            
+            //start the stage
+            mainStageController.initStage(root);
+        } catch (IOException ex) {
+            Logger.getLogger(RoutineController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     private void filterMethod(ActionEvent event) {
         ObservableList<Routine> list = null;
 
-        try {
+
             switch (filterCH.getSelectionModel().getSelectedItem().toString()) {
 
-                case "Routine":
+                case "Routine name":
 
-                    list = FXCollections.observableArrayList(routineREST.consultRoutinesByName_XML(new GenericType<List<Routine>>() {
+                    try {
+                        list = FXCollections.observableArrayList(routineREST.consultRoutinesByName_XML(new GenericType<List<Routine>>() {
                     }, nameTxTF.getText()));
-
+                    } catch (Exception e) {
+                       Alert a = new Alert(Alert.AlertType.ERROR, "", ButtonType.OK);
+                       a.setContentText("No se han encontrado rutinas con el nombre introducido");
+                       a.showAndWait();
+                    }
+                   
                     break;
 
-                case "Routine exercise":
-                    list = FXCollections.observableArrayList(routineREST.consultRoutinesByName_XML(new GenericType<List<Routine>>() {
-                    }, nameTxTF.getText()));
+                case "All routines":
+
+                    if (nameTxTF.getText().equalsIgnoreCase("all")) {
+                        try {
+                             list = FXCollections.observableArrayList(routineREST.consultAllRoutines_XML(new GenericType<List<Routine>>() {
+                        }));
+                            
+                        } catch (Exception e) {
+                            Alert a= new Alert(Alert.AlertType.ERROR,"",ButtonType.OK);
+                            a.setContentText("No hay rutinas");
+                            a.showAndWait();
+                        }
+                       
+                    }else{
+                         Alert a= new Alert(Alert.AlertType.INFORMATION,"",ButtonType.OK);
+                            a.setContentText("Para buscar todas las rutinas escriba all en name y tenga seleccionada la opcion All routines");
+                            a.showAndWait();
+                    }
                     break;
-            }
-            if (list.isEmpty()) {
-            Alert a= new Alert(Alert.AlertType.INFORMATION,"", ButtonType.OK);
-            a.setContentText("No se han encontrado ninguna rutina con ese nombre");
-            a.showAndWait();
-        }else{
-            routineTable.getItems().remove(routineList);
-            routineTable.setItems(list);
-            }
-        } catch (BusinessLogicException ex) {
-            Alert a =new Alert(Alert.AlertType.ERROR,"", ButtonType.OK);
-            a.setContentText("Ha habido un error a la hora de hacer la petición: "+ex.getLocalizedMessage());
-            Logger.getLogger(RoutineController.class.getName()).log(Level.SEVERE, null, ex);
+            
+          
+           
         }
-
+              if (list!=null) {
+                Alert a = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+                a.setContentText("Se ha encontrado rutina/s");
+                a.showAndWait();
+                routineTable.getItems().remove(routineList);
+                routineTable.setItems(list);
+            }
     }
+
+    
 
     /**
      * This method enables or disables deleteBtn and updateBtn depending on
@@ -261,7 +312,7 @@ public class RoutineController {
         ObservableList<Routine> routines;
         try {
             //routines= FXCollections.observableArrayList(routineREST.consultRoutinesByName_XML(new GenericType<List<Routine>>() {},nameTxTF.getText()));
-            
+
             routineTable.getItems().remove(routineList);
             //routineList=routines;
             routineTable.setItems(routineList);
@@ -273,12 +324,15 @@ public class RoutineController {
         
     }
     
+    /**
+     * This method charge the table with the new routines
+     */
     public void refreshTable(){
         try {
-            //routineTable.getItems().remove(this.routineList);
+            
             routineList= FXCollections.observableArrayList(routineREST.consultAllRoutines_XML(new GenericType<List<Routine>>() {}));
             chargeTable(routineList);
-            //routineTable.refresh();
+          
         } catch (BusinessLogicException ex) {
             Logger.getLogger(RoutineController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -299,7 +353,7 @@ public class RoutineController {
     }
     
     /**
-     * 
+     * This method opens RoutineDataWindow  to update the routine
      * @param event 
      */
     private void routineDataWindowUpdate(ActionEvent event) {
@@ -324,6 +378,7 @@ public class RoutineController {
             
             mainStageController.setRoutineController(this.mainStageController);
             mainStageController.getRoutine(routine);
+            mainStageController.setRoutineList(routineTable.getItems());
             
             //set the stage
             mainStageController.setStage(mainStage);
@@ -335,12 +390,16 @@ public class RoutineController {
             LOGGER.info("Method routineDataWindow is finished");
 
         } catch (IOException ex) {
-            Logger.getLogger(SignInWindowController.class.getName())
+            Logger.getLogger(RoutineDataWindowController.class.getName())
                     .log(Level.SEVERE, ex.getMessage(), ex);
         }
 
     }
     
+    /**
+     * This method opens RoutineDataWindow  to create a new routine
+     * @param event 
+     */
     private void routineDataWindowCreate(ActionEvent event) {
         LOGGER.info("Method signUpWindow is starting");
         
@@ -367,17 +426,22 @@ public class RoutineController {
             LOGGER.info("Method routineDataWindow is finished");
 
         } catch (IOException ex) {
-            Logger.getLogger(SignInWindowController.class.getName())
+            Logger.getLogger(RoutineDataWindowController.class.getName())
                     .log(Level.SEVERE, ex.getMessage(), ex);
         }
         routineTable.getSelectionModel().clearSelection();
 
     }
     
+    /**
+     * This method open the table report
+     * @param event 
+     */
     private void showReport(ActionEvent event){
         
         try {
-            JasperReport jr= JasperCompileManager.compileReport("\\ofc2_cliente\\report\\RoutineReport.jrxml");
+            JasperReport jr= JasperCompileManager.compileReport(getClass()
+                            .getResourceAsStream("/ofc2_cliente/reports/RoutineReport.jrxml"));
             JRBeanCollectionDataSource dataItems=
                     new JRBeanCollectionDataSource((Collection<Routine>)this.routineTable.getItems());
             
@@ -387,13 +451,19 @@ public class RoutineController {
             JasperPrint jasperPrint = JasperFillManager.fillReport(jr,parameters,dataItems);
             //Create and show the report window. The second parameter false value makes 
             //report window not to close app.
-            JasperViewer jasperViewer = new JasperViewer(jasperPrint);
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
             jasperViewer.setVisible(true);
         } catch (JRException ex) {
             Logger.getLogger(RoutineController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
+    /**
+     * This method enable or deisable 
+     * @param observableValue
+     * @param oldValue
+     * @param newValue 
+     */
     private void tableControl(ObservableValue observableValue, Object oldValue, Object newValue){
        
        if (newValue!=null) {
@@ -401,13 +471,13 @@ public class RoutineController {
             deleteMn.setDisable(false);
             updateBtn.setDisable(false);
             updateMn.setDisable(false);
-            reportBtn.setDisable(false);
+           
         }else{
             deleteBtn.setDisable(true);
             deleteMn.setDisable(true);
             updateBtn.setDisable(true);
             updateMn.setDisable(true);
-            reportBtn.setDisable(true);
+            
         }
     }
     
@@ -458,7 +528,7 @@ public class RoutineController {
             LOGGER.info("Method routineDataWindow is finished");
 
         } catch (IOException ex) {
-            Logger.getLogger(SignInWindowController.class.getName())
+            Logger.getLogger(ExerciseWindowController.class.getName())
                     .log(Level.SEVERE, ex.getMessage(), ex);
         }
 }     
@@ -482,12 +552,7 @@ public class RoutineController {
     }
 
     private void chargeTable(ObservableList<Routine> routineList) {
-        for (int i = 0; i < routineList.size(); i++) {
-      
-            routineList.get(i).setStart_date(Date.from(routineList.get(i).getStart_date().toInstant()));//atStartOfDay(ZoneId.systemDefault()).toInstant()));
-            routineList.get(i).setEnd_date(Date.from(routineList.get(i).getStart_date().toInstant()));//atStartOfDay(ZoneId.systemDefault()).toInstant()));
-                            
-        }
+        
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         //exerciseColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         kcalColumn.setCellValueFactory(new PropertyValueFactory<>("kcal"));
@@ -552,6 +617,7 @@ public class RoutineController {
             chargeTable(routineList);
             } catch (BusinessLogicException ex) {
             //Logger.getLogger(RoutineController.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.info(ex.getMessage());
         }
             
             deleteMn.setText("Delete");
@@ -560,16 +626,7 @@ public class RoutineController {
             createMn.setText("Create");
             
             nameTxTF.requestFocus();
-            //The field (userNameTxTF) will be shown with a ToolTip the message “max 15 characters”.
-            //filterCH.setTooltip(new Tooltip("Filter by name or exercise"));
-            //The field (usernameTT) will be shown with a ToolTip the message “max 15 characters”.
-            //Tooltip.install(usernameTT, new Tooltip("max 15 characters"));
-            //The field (passwdTxPF) will be shown with a ToolTip the message “min 6 max 12 characters”
-            //passwdTxPF.setTooltip(new Tooltip("min 6 max 12 characters"));
-            //The field (passwrdTT) will be shown with a ToolTip the message “min 6 max 12 characters”
-            //Tooltip.install(passwrdTT, new Tooltip("min 6 max 12 characters"));
-            //The HyperLink (signUpLink) will be shown with a ToolTip the message “Click para abrir la ventana de registro”.
-            //signUpLink.setTooltip(new Tooltip("Click para abrir la ventana de registro"));
+            
             LOGGER.info("Method windowShowing is finished");
             
             Logger.getLogger(RoutineController.class.getName()).log(Level.SEVERE, null, ex);
@@ -583,9 +640,11 @@ public class RoutineController {
         deleteBtn.setTooltip(new Tooltip("First select the row you want to delete"));
         updateBtn.setTooltip(new Tooltip("First select the row you want to update"));
         nameTxTF.setTooltip(new Tooltip("Max 30 characters"));
+        nameTxTF.setTooltip(new Tooltip("Max 30 characters"));
+        Tooltip.install(filterCH, new Tooltip("To find all write in name: all"));
         createBtn.setTooltip(new Tooltip("Open the form"));
         findBtn.setTooltip(new Tooltip("First complite filter components"));
-        Tooltip.install(filterCH, new Tooltip("Choose the search mode"));
+        //Tooltip.install(filterCH, new Tooltip("Choose the search mode"));
 
     }
     

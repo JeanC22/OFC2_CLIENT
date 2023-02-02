@@ -107,6 +107,8 @@ public class RoutineDataWindowController {
             
     private static final Logger LOGGER = Logger.getLogger("of2_cliente.controllers.RoutineDataWindowController");
     
+    private ObservableList routineTableList;
+    
    
     
     
@@ -219,6 +221,9 @@ public class RoutineDataWindowController {
             a.showAndWait();
             nameTxTF1.setText("");
             
+        }else if(this.routineTableList.contains(nameTxTF1.getText())){
+            Alert a= new Alert(Alert.AlertType.ERROR,"",ButtonType.OK);
+            a.setContentText("El nombre introducido ya existe");
         }else{
             enableDisableCreateUpdateBtn();
         }
@@ -226,6 +231,9 @@ public class RoutineDataWindowController {
         
         
     }
+    
+    
+    
     
       private void updateRoutine(ActionEvent event){
         Routine updatedRoutine=new Routine();
@@ -240,7 +248,7 @@ public class RoutineDataWindowController {
         
         updatedRoutine.setTime(Float.valueOf(timeTxTF.getText()));
         updatedRoutine.setStart_date(routine.getStart_date());
-        
+        updatedRoutine.setId(this.routine.getId());
         
          try {
             routineREST.edit_XML(updatedRoutine);
@@ -427,6 +435,10 @@ public class RoutineDataWindowController {
             Logger.getLogger(RoutineDataWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }*/
 
+    }
+
+    void setRoutineList(ObservableList List) {
+        this.routineTableList=List;
     }
 
  
