@@ -80,7 +80,7 @@ public class SignInWindowController {
         //Set window properties
         stage.setTitle("OFC SING IN");
         stage.setResizable(false);
-        stage.getIcons().add(new Image(this.getClass().getResource("/ofc2_cliente/ui/resources/favicon.png").toString()));
+        stage.getIcons().add(new Image(this.getClass().getResource("/ofc2_cliente/ui/resources/favicon.ico").toString()));
         stage.setOnShowing(this::windowShowing);
         singInBtn.setOnAction(this::signIn);
         signUpLink.setOnAction(this::singUpWindow);
@@ -169,17 +169,16 @@ public class SignInWindowController {
             try {
                 userFac.getFactory().find_XML(new GenericType<List<User>>() {
                 }, userLoged.getUsername(), userLoged.getPassword());
-            } catch (Exception ex) {
-                try {
-                    throw new Exception(ex.getMessage());
-                } catch (Exception e) {
+            } catch (Exception e) {
+                Logger.getLogger(SignInWindowController.class.getName()).log(Level.SEVERE, null, e);
                     LOGGER.severe(e.getMessage());
                     Alert alert = new Alert(Alert.AlertType.ERROR,
                             e.getMessage(), ButtonType.OK);
                     alert.showAndWait();
-                }
+                
             }
             */
+            
             
             Stage loginStage = new Stage();
 

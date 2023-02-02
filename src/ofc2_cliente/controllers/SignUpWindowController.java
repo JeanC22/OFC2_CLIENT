@@ -25,7 +25,10 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import ofc2_cliente.cifrado.Cifrar;
 import ofc2_cliente.logic.UserFactory;
+import ofc2_cliente.model.Admin;
+import ofc2_cliente.model.Client;
 import ofc2_cliente.model.User;
 
 /**
@@ -130,7 +133,8 @@ public class SignUpWindowController {
      */
     private void signUp(ActionEvent event) {
         try {
-            User user = new User();
+            User user = new Client();
+            Cifrar cif = new Cifrar();
             
             
                 if (!typeShow) {
@@ -202,15 +206,16 @@ public class SignUpWindowController {
                         + "(example@example.com)");
             }
             user.setUsername(this.userNameTxTF.getText());
-            user.setPassword(this.passwdTxPF.getText());
+            //user.setPassword(cif.cifrarTexto(passwdTxPF.getText()));
+            user.setPassword(passwdTxPF.getText());
             user.setFullName(this.fullNameTxTF.getText());
             user.setEmail(this.eMailTxTF.getText());
             
             
            
             try {
-                userFac.getFactory().create_XML(user);
                 
+                //userFac.getFactory().create_XML(user);
                 Stage primaryStage = new Stage();
 
                 //link to get the FXML file
@@ -235,8 +240,10 @@ public class SignUpWindowController {
                 throw new Exception(ex.getMessage());
 
             }
+            
 
         } catch (Exception e) {
+            Logger.getLogger(SignUpWindowController.class.getName()).log(Level.SEVERE, null, e);
             Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
             alert.showAndWait();
             setEmptyAllField();

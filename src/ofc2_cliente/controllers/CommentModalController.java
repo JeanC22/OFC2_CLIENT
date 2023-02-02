@@ -64,7 +64,7 @@ public class CommentModalController {
             stage.setTitle("OFC Modal Comment");
             scene.getStylesheets().addAll(this.getClass().getResource("/ofc2_cliente/ui/resources/style.css").toExternalForm());
             stage.resizableProperty().set(false);
-            stage.getIcons().add(new Image(this.getClass().getResource("/ofc2_cliente/ui/resources/favicon.png").toString()));
+            stage.getIcons().add(new Image(this.getClass().getResource("/ofc2_cliente/ui/resources/favicon.ico").toString()));
 
             usersTxTF.setText(this.comment.getComClie().getUsername());
 

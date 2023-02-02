@@ -70,7 +70,7 @@ public class ProfileWindowController {
         //get the user from the singInController and init on the local User
         //set the Welcome Message
         stage.setOnCloseRequest(this::cerrarVentana);
-        stage.getIcons().add(new Image(this.getClass().getResource("/ofc2_cliente/ui/resources/favicon.png").toString()));
+        stage.getIcons().add(new Image(this.getClass().getResource("/ofc2_cliente/ui/resources/favicon.ico").toString()));
 
         usernameLabel.setText(this.user.getUsername());
         stage.setTitle("OFC Profile View");

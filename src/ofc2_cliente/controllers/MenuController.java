@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -27,9 +28,10 @@ import ofc2_cliente.model.User;
  * @author iker
  */
 public class MenuController {
-    
+
     private User user;
-    private Stage stage2;
+    CommentWindowController c;
+
     private Stage stage;
     @FXML
     private MenuItem eventMenu;
@@ -43,6 +45,8 @@ public class MenuController {
     private MenuItem showProfile;
     @FXML
     private MenuItem logoutMenu;
+    
+    
 
     /**
      * setStage
@@ -50,18 +54,8 @@ public class MenuController {
      * @param stage
      */
     public void setStage(Stage stage) {
-        
-        this.stage = stage;
-    }
 
-    /**
-     * setStage
-     *
-     * @param anotherStage
-     */
-    public void setStage2(Stage anotherStage) {
-        
-        this.stage2 = anotherStage;
+        this.stage = stage;
     }
 
     /**
@@ -90,17 +84,18 @@ public class MenuController {
             routineMenu.setOnAction(this::showRoutineWindow);
             sponsorMenu.setOnAction(this::showSponsorWindow);
             CommentMenu.setOnAction(this::showCommentWindow);
-            
+
             showProfile.setOnAction(this::showProfileWindow);
             
+
             stage.show();
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "El servidor glashfish no se encuentra disponible", ButtonType.OK);
             alert.showAndWait();
         }
-        
+
     }
-    
+
     public void showEventWindow(ActionEvent event) {
         try {
             Stage mainStage = new Stage();
@@ -109,6 +104,7 @@ public class MenuController {
             // initialition loader
             FXMLLoader loader = new FXMLLoader(viewLink);
             //make the root with the loader
+
             Parent root = (Parent) loader.load();
             //Get the controller
             EventWindowController eventWindowController
@@ -118,7 +114,6 @@ public class MenuController {
             eventWindowController.setStage(mainStage);
             //start the stage
             eventWindowController.initStage(root);
-            stage2.close();
         } catch (IOException ex) {
             Logger.getLogger(CreateModifyController.class.getName())
                     .log(Level.SEVERE, null, ex);
@@ -126,10 +121,10 @@ public class MenuController {
             alert.showAndWait();
         }
     }
-    
+
     public void showRoutineWindow(ActionEvent event) {
         try {
-            
+
             Stage mainStage = new Stage();
             URL viewLink = getClass().getResource(
                     "/ofc2_cliente/ui/RoutineWindow.fxml");
@@ -152,7 +147,7 @@ public class MenuController {
             alert.showAndWait();
         }
     }
-    
+
     public void showSponsorWindow(ActionEvent event) {
         try {
             Stage mainStage = new Stage();
@@ -171,6 +166,7 @@ public class MenuController {
 
             //start the stage
             sponsorWindowController.initStage(root);
+
         } catch (IOException ex) {
             Logger.getLogger(CreateModifyController.class.getName())
                     .log(Level.SEVERE, null, ex);
@@ -178,7 +174,7 @@ public class MenuController {
             alert.showAndWait();
         }
     }
-    
+
     public void showCommentWindow(ActionEvent event) {
         try {
             Stage mainStage = new Stage();
@@ -207,7 +203,7 @@ public class MenuController {
             alert.showAndWait();
         }
     }
-    
+
     public void showProfileWindow(ActionEvent event) {
         try {
             Stage mainStage = new Stage();
@@ -232,7 +228,7 @@ public class MenuController {
             alert.showAndWait();
         }
     }
-    /*
+    
     public void logOut(){
             try {
                 //Gonna initialition a new Stage
@@ -245,8 +241,8 @@ public class MenuController {
                 //make the root with the loader
                 Parent root = (Parent) loader.load();
                 //Get the controller
-                SingInWindowController mainStageController
-                        = ((SingInWindowController) loader.getController());
+                SignInWindowController mainStageController
+                        = ((SignInWindowController) loader.getController());
                 //set the stage
                 mainStageController.setStage(mainStage);
                 //start the stage
@@ -257,6 +253,5 @@ public class MenuController {
                 Logger.getLogger(LogedWindowController.class.getName())
                         .log(Level.SEVERE, null, ex);
             }
-    }*/
-    
+    }
 }

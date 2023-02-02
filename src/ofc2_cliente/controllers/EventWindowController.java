@@ -211,7 +211,6 @@ public class EventWindowController {
             showComents.setOnAction(this::showComent);
             helpBtn.setOnAction(this::showWindowHelper);
             stage.show();
-            menu.setStage2(this.stage);
             LOGGER.info("Stage Started");
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "El servidor glashfish no se encuentra disponible", ButtonType.OK);

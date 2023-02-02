@@ -28,6 +28,7 @@ import javafx.event.ActionEvent;
 import ofc2_cliente.model.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -165,7 +166,7 @@ public class CommentWindowController {
         //title of the window: OFC SIGN IN.
         stage.setTitle("Comment Window");
         stage.setResizable(false);
-        stage.getIcons().add(new Image(this.getClass().getResource("/ofc2_cliente/ui/resources/favicon.png").toString()));
+        stage.getIcons().add(new Image(this.getClass().getResource("/ofc2_cliente/ui/resources/favicon.ico").toString()));
         //Set factories for cell values in users table columns.
         subjectComment.setCellValueFactory(
                 new PropertyValueFactory<>("subject"));
@@ -691,4 +692,5 @@ public class CommentWindowController {
     public Integer btnStatus(Integer count) {
         return this.commentCount = count;
     }
+    
 }

@@ -31,7 +31,7 @@ public class Cifrar {
         String password = null;
         try {
             // Recuperar Clave pública
-            String publicKeyString=ResourceBundle.getBundle("ofc2_cliente.PropertiesFile").getString("PublicKey");
+            String publicKeyString=ResourceBundle.getBundle("ofc2_cliente.config.RESTful").getString("PublicKey");
             byte fileKey[] = hexStringToByteArray(publicKeyString);
             System.out.println("Tamaño Publica -> " + fileKey.length + " bytes");
 
@@ -132,4 +132,5 @@ public class Cifrar {
         c.cifrarTexto("Prueba");
         //c.generatePrivateKey();
     }
+      
 }

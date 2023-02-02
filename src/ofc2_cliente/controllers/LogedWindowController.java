@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -156,7 +157,7 @@ public class LogedWindowController {
             FXMLLoader loader = new FXMLLoader(viewLink);
             //make the root with the loader
             Parent root = (Parent) loader.load();
-            stage.getIcons().add(new Image(this.getClass().getResource("/ofc2_cliente/ui/resources/favicon.png").toString()));
+            stage.getIcons().add(new Image(this.getClass().getResource("/ofc2_cliente/ui/resources/favicon.ico").toString()));
             //Get the controller
             ProfileWindowController profileStageController
                     = ((ProfileWindowController) loader.getController());
@@ -185,7 +186,7 @@ public class LogedWindowController {
             FXMLLoader loader = new FXMLLoader(viewLink);
             //make the root with the loader
             Parent root = (Parent) loader.load();
-            stage.getIcons().add(new Image(this.getClass().getResource("/ofc2_cliente/ui/resources/favicon.png").toString()));
+            stage.getIcons().add(new Image(this.getClass().getResource("/ofc2_cliente/ui/resources/favicon.ico").toString()));
             //Get the controller
             EventWindowController eventWindowController
                     = ((EventWindowController) loader.getController());
@@ -249,7 +250,7 @@ public class LogedWindowController {
             FXMLLoader loader = new FXMLLoader(viewLink);
             //make the root with the loader
             Parent root = (Parent) loader.load();
-            stage.getIcons().add(new Image(this.getClass().getResource("/ofc2_cliente/ui/resources/favicon.png").toString()));
+            stage.getIcons().add(new Image(this.getClass().getResource("/ofc2_cliente/ui/resources/favicon.ico").toString()));
             //Get the controller
             SponsorWindowController sponsorWindowController
                     = ((SponsorWindowController) loader.getController());
@@ -278,7 +279,7 @@ public class LogedWindowController {
             FXMLLoader loader = new FXMLLoader(viewLink);
             //make the root with the loader
             Parent root = (Parent) loader.load();
-            stage.getIcons().add(new Image(this.getClass().getResource("/ofc2_cliente/ui/resources/favicon.png").toString()));
+            stage.getIcons().add(new Image(this.getClass().getResource("/ofc2_cliente/ui/resources/favicon.ico").toString()));
             //Get the controller
             RoutineController routineController
                     = ((RoutineController) loader.getController());

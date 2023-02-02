@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="OFC_SIGN_UP" maxHeight="600.0" maxWidth="800.0" minHeight="600.0" minWidth="800.0" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #000;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="model.controllers.SignUpWindowController">
+<Pane fx:id="OFC_SIGN_UP" maxHeight="600.0" maxWidth="800.0" minHeight="600.0" minWidth="800.0" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #000;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofc2_cliente.controllers.SignUpWindowController">
    <children>
       <AnchorPane disable="true" layoutX="242.0" layoutY="214.0" opacity="0.59" prefHeight="200.0" prefWidth="200.0" style="-fx-filter-blur: 10px;">
          <children>
