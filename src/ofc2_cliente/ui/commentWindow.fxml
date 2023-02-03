@@ -24,11 +24,6 @@
                 <TableColumn fx:id="ratingComment" minWidth="0.0" prefWidth="124.7999267578125" text="Rating" />
             </columns>
         </TableView>
-        <ImageView fitHeight="95.0" fitWidth="127.0" layoutX="40.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true" style="-fx-rotate: 0;">
-            <image>
-                <Image url="@resources/comment-solid.png" />
-            </image>
-        </ImageView>
         <TextField fx:id="findCommentTxTF" layoutX="706.0" layoutY="149.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="34.0" prefWidth="150.0" style="-fx-text-fill: black;" />
         <Button fx:id="searchButton" layoutX="870.0" layoutY="151.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="42.0" style="-fx-border-color: none; -fx-background-color: none;" text="0">
             <graphic>
