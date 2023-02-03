@@ -298,9 +298,6 @@ public class CommentWindowController {
         deleteCommentMenuIt.setOnAction((event) -> {
             try {
                 this.deleteComment();
-                commentTableView.getItems().remove(commentTableView
-                        .getSelectionModel().getSelectedItem());
-                event.consume();
             } catch (BusinessLogicException ex) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
                 alert.showAndWait();
@@ -528,6 +525,8 @@ public class CommentWindowController {
             String clientID = String.valueOf(commentTableView.getSelectionModel().getSelectedItem().getComentid().getClient_id());
             String eventID = String.valueOf(commentTableView.getSelectionModel().getSelectedItem().getComentid().getEvent_id());
             commentRest.deleteComent(clientID, eventID);
+            commentTableView.getItems().remove(commentTableView
+                    .getSelectionModel().getSelectedItem());
             commentTableView.getSelectionModel().clearSelection();
             showCommentBTN.setDisable(true);
         }
@@ -692,5 +691,5 @@ public class CommentWindowController {
     public Integer btnStatus(Integer count) {
         return this.commentCount = count;
     }
-    
+
 }
