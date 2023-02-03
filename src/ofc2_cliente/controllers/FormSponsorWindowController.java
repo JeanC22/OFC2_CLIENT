@@ -95,10 +95,9 @@ public class FormSponsorWindowController {
     }
 
     /**
-     * This method will start the window
-     *
      * @author Elias
      * @param root
+     * This method will start the window
      */
     public void initStage(Parent root) {
         //Create a scene associated to the node graph root.

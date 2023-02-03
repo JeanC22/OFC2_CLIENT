@@ -98,6 +98,7 @@ public class LogedWindowController {
      * this Method will be close LogedWindow and start the SingInWindow
      *
      * @author Jp
+     * @param event
      */
     @FXML
     public void logout(MouseEvent event) {

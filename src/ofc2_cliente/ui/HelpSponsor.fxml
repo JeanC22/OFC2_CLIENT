@@ -3,7 +3,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.web.WebView?>
 
-<AnchorPane fx:id="HelpPane" id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofc2_cliente.controller.HelpSponsorController">
+<AnchorPane fx:id="HelpPane" id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofc2_cliente.controllers.HelpSponsorController">
    <children>
       <WebView fx:id="webView" layoutX="5.0" layoutY="4.0" />
    </children>

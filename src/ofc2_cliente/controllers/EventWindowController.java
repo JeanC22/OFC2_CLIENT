@@ -281,6 +281,9 @@ public class EventWindowController {
     /**
      * the method is to enable and disable buttons depending on whether we have
      * selected a row in the table.
+     * @param a
+     * @param oldValue
+     * @param newValue
      */
     public void setVisibleButtonss(ObservableValue a, Object oldValue, Object newValue) {
         if (newValue != null) {
@@ -506,7 +509,6 @@ public class EventWindowController {
      * question.
      *
      * @param e
-     * @throws ofc2_cliente.logic.BusinessLogicException
      */
     public void showComent(ActionEvent e) {
         Event eventooo = new Event();

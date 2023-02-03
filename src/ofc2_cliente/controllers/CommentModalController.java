@@ -53,6 +53,7 @@ public class CommentModalController {
 
     /**
      * Initializes the controller class.
+     * @param root
      */
     public void initStage(Parent root) {
         try {

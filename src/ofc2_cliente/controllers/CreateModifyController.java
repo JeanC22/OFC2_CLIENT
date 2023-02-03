@@ -120,6 +120,7 @@ public class CreateModifyController {
 
     /**
      * This method modifies the selected event of the table in the database.
+     * @param event
      */
     public void modifyEvent(ActionEvent event) {
         Event eve = new Event();

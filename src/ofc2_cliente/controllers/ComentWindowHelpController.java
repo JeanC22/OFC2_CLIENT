@@ -18,7 +18,7 @@ import javafx.stage.WindowEvent;
 
 /**
  *
- * @author DarkD
+ * @author Jeanpierr Caraballo
  */
 public class ComentWindowHelpController {
 
@@ -33,6 +33,7 @@ public class ComentWindowHelpController {
 
     /**
      * Initializes the controller class.
+     * @param root
      */
     public void initStage(Parent root) {
 

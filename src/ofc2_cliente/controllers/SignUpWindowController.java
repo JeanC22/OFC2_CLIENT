@@ -27,7 +27,6 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import ofc2_cliente.cifrado.Cifrar;
 import ofc2_cliente.logic.UserFactory;
-import ofc2_cliente.model.Admin;
 import ofc2_cliente.model.Client;
 import ofc2_cliente.model.User;
 
@@ -35,7 +34,7 @@ import ofc2_cliente.model.User;
  * FXML Controller class
  *
  * @author iker
- * @colaborator Jp, Elias
+ * colaborator Jp, Elias
  */
 
 
@@ -300,7 +299,7 @@ public class SignUpWindowController {
     /**
      * @param event
      * @author Jp
-     * @colaborator Iker passwordField. when typeShow is true this will be set
+     * when typeShow is true this will be set
      * Visible passwordField when typeShow is false the passwd will ve set
      * visible
      * @return typeShow (boolean)

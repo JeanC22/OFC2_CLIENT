@@ -28,7 +28,6 @@ import javafx.event.ActionEvent;
 import ofc2_cliente.model.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -150,6 +149,7 @@ public class CommentWindowController {
      * @author Jp
      * @param root
      * @throws ofc2_cliente.logic.BusinessLogicException
+     * 
      */
     public void initStage(Parent root) throws BusinessLogicException {
 
@@ -552,8 +552,8 @@ public class CommentWindowController {
     }
 
     private void setCommentSelected() {
-        final Coment coment = getTableComentSelected();
-        posicionComent = comments.indexOf(coment);
+        final Coment comment = getTableComentSelected();
+        posicionComent = comments.indexOf(comment);
     }
 
     public void getComment(Coment coment) {

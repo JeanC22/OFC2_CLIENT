@@ -24,6 +24,7 @@ public interface SponsorManager {
     /**
      * Get Sponsor entity XML from SponsorRESTful web service
      * 
+     * @param <T>
      * @param responseType The class object
      * @param id The id of the instance in the server side
      * @return The object containing data.
@@ -43,6 +44,7 @@ public interface SponsorManager {
     public void create_JSON(Object requestEntity) throws BusinessLogicException;
     /**
      * Get All Sponsor entity XML from SponsorRESTful web service
+     * @param <T>
      * @param responseType The class object
      * @return List containing data
      * @throws BusinessLogicException If there is an error while processing
@@ -59,6 +61,7 @@ public interface SponsorManager {
     public void remove(String id) throws BusinessLogicException;
     /**
      * Get Sponsor by name from the SponsorRESTful web service.
+     * @param <T>
      * @param responseType The class object
      * @param name The name of the Sponsor
      * @return The object containing data.
@@ -69,6 +72,7 @@ public interface SponsorManager {
     public <T> T findSponsorByName_JSON(GenericType<T> responseType, String name) throws BusinessLogicException;
     /**
      * Get Sponsor by Date from the SponsorRESTful web service.
+     * @param <T>
      * @param responseType The class object
      * @param date The date of teh Sponsor
      * @return The object containing data.

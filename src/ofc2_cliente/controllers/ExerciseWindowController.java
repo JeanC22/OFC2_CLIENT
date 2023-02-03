@@ -6,11 +6,8 @@
 package ofc2_cliente.controllers;
 
 //import ofc2_cliente.ui.*;
-import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 import java.util.Optional;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -18,26 +15,21 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javax.ws.rs.core.GenericType;
-import net.sf.jasperreports.web.actions.AbstractAction;
 import ofc2_cliente.logic.BusinessLogicException;
 import ofc2_cliente.logic.ExerciseInterfaceFactory;
 import ofc2_cliente.logic.ExerciseRESTfulClient;
@@ -138,7 +130,7 @@ public class ExerciseWindowController {
             timeTxTF.setText("");
             }
             enableDisableCreateBtn();
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             Alert a= new Alert(Alert.AlertType.WARNING);
             a.setContentText("El campo time debe contener solo números");
             a.showAndWait();
