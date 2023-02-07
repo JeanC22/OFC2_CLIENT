@@ -11,11 +11,13 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author 2dam
  */
+@XmlRootElement(name = "users")
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;

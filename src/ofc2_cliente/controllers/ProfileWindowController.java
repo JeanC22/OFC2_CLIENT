@@ -5,22 +5,27 @@
  */
 package ofc2_cliente.controllers;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import ofc2_cliente.model.User;
@@ -41,7 +46,7 @@ public class ProfileWindowController {
     @FXML
     private Label fullnameLabel;
     @FXML
-    private ImageView changePasswdBtn;
+    private Button changePasswdBtn;
     private static final Logger LOGGER = Logger.getLogger(ProfileWindowController.class.getName());
     private Stage stage;
     private User user;
@@ -73,6 +78,9 @@ public class ProfileWindowController {
         stage.getIcons().add(new Image(this.getClass().getResource("/ofc2_cliente/ui/resources/favicon.ico").toString()));
 
         usernameLabel.setText(this.user.getUsername());
+        emailLabel.setText(this.user.getEmail());
+        fullnameLabel.setText(this.user.getFullName());
+        changePasswdBtn.setOnAction(this::openModalChangePasswd);
         stage.setTitle("OFC Profile View");
         stage.show();
         LOGGER.info("Stage Started");
@@ -104,6 +112,37 @@ public class ProfileWindowController {
         } else {
             event.consume();
         }
+    }
+
+    /**
+     * This Method confirm if the user want to close the window
+     *
+     * @author JP
+     * @param e
+     */
+    private void openModalChangePasswd(ActionEvent e) {
+        try {
+            Stage modalStage = new Stage();
+            URL viewLink = getClass().getResource("/ofc2_cliente/ui/changePasswordModal.fxml");
+            FXMLLoader loader = new FXMLLoader(viewLink);
+            Parent rootModal = (Parent) loader.load();
+            ChangePasswordModalController modalStageControllerProfile
+                    = ((ChangePasswordModalController) loader.getController());
+            LOGGER.info("sending the comment");
+            modalStageControllerProfile.getUser(this.user);
+            modalStage.initModality(Modality.APPLICATION_MODAL);
+            modalStageControllerProfile.setStage(modalStage);
+            modalStageControllerProfile.initStage(rootModal);
+            modalStage.show();
+
+            LOGGER.info("Method open modal finished");
+
+        } catch (IOException ex) {
+            Logger.getLogger(CommentWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
+            alert.showAndWait();
+        }
+
     }
 
     public void setDataUser(WindowEvent event) {

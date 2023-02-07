@@ -26,10 +26,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
 import ofc2_cliente.logic.UserFactory;
+import ofc2_cliente.model.Client;
 import ofc2_cliente.model.User;
 
 /**
@@ -59,6 +62,10 @@ public class SignInWindowController {
 
     private UserFactory userFac = new UserFactory();
     private static final Logger LOGGER = Logger.getLogger(SignInWindowController.class.getName());
+    @FXML
+    private Pane OFC_SIGN_IN;
+    @FXML
+    private Hyperlink forgotPassword;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -111,7 +118,6 @@ public class SignInWindowController {
      * @author Jp
      * @param event Action event
      */
-    @FXML
     private void singUpWindow(ActionEvent event) {
         try {
             Stage mainStage = new Stage();
@@ -165,36 +171,34 @@ public class SignInWindowController {
 
             userLoged.setUsername(userNameTxTF.getText());
             userLoged.setPassword(passwdTxPF.getText());
-            /*
+
             try {
-                userFac.getFactory().find_XML(new GenericType<List<User>>() {
+
+                userLoged = userFac.getFactory().find_XML(new GenericType<User>() {
                 }, userLoged.getUsername(), userLoged.getPassword());
+                Stage loginStage = new Stage();
+
+                URL viewLink = getClass().getResource("/ofc2_cliente/ui/LogedWindow.fxml");
+
+                FXMLLoader loader = new FXMLLoader(viewLink);
+                Parent root = (Parent) loader.load();
+                LogedWindowController logedStageController
+                        = ((LogedWindowController) loader.getController());
+                //send te user
+                logedStageController.getUser(userLoged);
+                logedStageController.setStage(loginStage);
+                logedStageController.initStage(root);
+
+                //close the actually View
+                this.stage.close();
             } catch (Exception e) {
                 Logger.getLogger(SignInWindowController.class.getName()).log(Level.SEVERE, null, e);
-                    LOGGER.severe(e.getMessage());
-                    Alert alert = new Alert(Alert.AlertType.ERROR,
-                            e.getMessage(), ButtonType.OK);
-                    alert.showAndWait();
-                
+                LOGGER.severe(e.getMessage());
+                Alert alert = new Alert(Alert.AlertType.ERROR,
+                        e.getMessage(), ButtonType.OK);
+                alert.showAndWait();
+
             }
-            */
-            
-            
-            Stage loginStage = new Stage();
-
-            URL viewLink = getClass().getResource("/ofc2_cliente/ui/LogedWindow.fxml");
-
-            FXMLLoader loader = new FXMLLoader(viewLink);
-            Parent root = (Parent) loader.load();
-            LogedWindowController logedStageController
-                    = ((LogedWindowController) loader.getController());
-            //send te user
-            logedStageController.getUser(userLoged);
-            logedStageController.setStage(loginStage);
-            logedStageController.initStage(root);
-
-            //close the actually View
-            this.stage.close();
 
         } catch (IOException ex) {
             Logger.getLogger(LogedWindowController.class.getName())
@@ -210,7 +214,6 @@ public class SignInWindowController {
      * @author Elias
      * @param event
      */
-    @FXML
     public void cerrarVentana(WindowEvent event) {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
