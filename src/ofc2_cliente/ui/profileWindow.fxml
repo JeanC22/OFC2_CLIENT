@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="OFC_LOGED" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" stylesheets="@resources/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofc2_cliente.controllers.ProfileWindowController">
+<Pane fx:id="OFC_LOGED" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" stylesheets="@resources/style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofc2_cliente.controllers.ProfileWindowController">
    <children>
       <fx:include fx:id="menuBar2" source="menu.fxml" />
       <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0">
@@ -53,9 +53,9 @@
                   <Font size="25.0" />
                </font>
             </Label>
-            <Button layoutX="613.0" layoutY="538.0" mnemonicParsing="false" prefHeight="67.0" prefWidth="74.0" style="-fx-background-color: none; -fx-border-color: none;">
+            <Button fx:id="changePasswdBtn" layoutX="613.0" layoutY="538.0" mnemonicParsing="false" prefHeight="67.0" prefWidth="74.0" style="-fx-background-color: none; -fx-border-color: none;">
                <graphic>
-                  <ImageView fx:id="changePasswdBtn" fitHeight="59.0" fitWidth="71.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="59.0" fitWidth="71.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@resources/icons8-password-key-48.png" />
                      </image>
