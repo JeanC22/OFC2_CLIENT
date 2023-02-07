@@ -18,6 +18,10 @@ public interface UserManager {
     public void edit_XML(Object requestEntity, String id) throws ClientErrorException;
     
     public void edit_JSON(Object requestEntity, String id) throws ClientErrorException;
+    
+    public void edit2_XML(Object requestEntity, String id, String newPassword, String oldPassword) throws ClientErrorException;
+    
+    public void edit2_JSON(Object requestEntity, String id, String newPassword, String oldPassword) throws ClientErrorException;
 
     public <T> T find_XML(GenericType<T> responseType, String username, String password) throws ClientErrorException;
 

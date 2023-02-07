@@ -57,14 +57,16 @@ public class ChangePasswordModalController {
         stage.getIcons().add(new Image(this.getClass().getResource("/ofc2_cliente/ui/resources/favicon.ico").toString()));
         stage.setTitle("OFC Modal password change");
         backBtn.setOnAction(this::closeWindow);
-
+        changeBTN.setOnAction(this::changePasswd);
+        
         stage.show();
         LOGGER.info("Stage Started");
     }
 
-    private void changePasswd(Long id, String newPassword, String oldPassword) {
+    private void changePasswd(ActionEvent event) {
         LOGGER.info("changin pass");
-        userFac.getFactory().
+        
+        userFac.getFactory().edit2_XML(user, user.getId().toString(), newPassword.getText(), user.getPassword());
         
     }
 
