@@ -25,6 +25,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javax.ws.rs.ClientErrorException;
 import ofc2_cliente.cifrado.Cifrar;
 import ofc2_cliente.logic.UserFactory;
 import ofc2_cliente.model.Client;
@@ -33,11 +34,8 @@ import ofc2_cliente.model.User;
 /**
  * FXML Controller class
  *
- * @author iker
- * colaborator Jp, Elias
+ * @author iker colaborator Jp, Elias
  */
-
-
 public class SignUpWindowController {
 
     /**
@@ -134,15 +132,14 @@ public class SignUpWindowController {
         try {
             User user = new Client();
             Cifrar cif = new Cifrar();
-            
-            
-                if (!typeShow) {
-                    passwdTxPF.setText(pass_text.getText());
-                    passwdTxPF.setVisible(true);
-                    pass_text.setVisible(false);
-                    typeShow = true;
-                }
-                
+
+            if (!typeShow) {
+                passwdTxPF.setText(pass_text.getText());
+                passwdTxPF.setVisible(true);
+                pass_text.setVisible(false);
+                typeShow = true;
+            }
+
             /**
              * Validate that the userName ,password ,fullName and eMail fields
              * are filled in. If they are not informed, an error message is
@@ -204,21 +201,29 @@ public class SignUpWindowController {
                 throw new Exception("El campo email notiene el formato adecuado"
                         + "(example@example.com)");
             }
-            user.setUsername(this.userNameTxTF.getText());
-            //user.setPassword(cif.cifrarTexto(passwdTxPF.getText()));
-            user.setPassword(passwdTxPF.getText());
-            user.setFullName(this.fullNameTxTF.getText());
-            user.setEmail(this.eMailTxTF.getText());
-            
-            
-           
             try {
-                
+                user.setUsername(this.userNameTxTF.getText());
+                user.setPassword(cif.cifrarTexto(passwdTxPF.getText()));
+                user.setPassword(passwdTxPF.getText());
+                user.setFullName(this.fullNameTxTF.getText());
+                user.setEmail(this.eMailTxTF.getText());
+
+                userFac.getFactory().create_XML(user);
+
+            } catch (ClientErrorException e) {
+                Logger.getLogger(SignUpWindowController.class.getName()).log(Level.SEVERE, null, e);
+                Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
+                alert.showAndWait();
+
+            }
+
+            try {
+
                 //userFac.getFactory().create_XML(user);
                 Stage primaryStage = new Stage();
 
                 //link to get the FXML file
-                URL viewLink = getClass().getResource("/model/views/SignInWindow.fxml");
+                URL viewLink = getClass().getResource("/ofc2_cliente/ui/SignInWindow.fxml");
                 //initialization the loader witk the FXML file
                 FXMLLoader loader = new FXMLLoader(viewLink);
                 //initialization the root (Parent) with the FXML Loader.load
@@ -234,12 +239,11 @@ public class SignUpWindowController {
                 //close the actually View
                 this.stage.close();
 
-            } catch (Exception ex) {
+            } catch (IOException ex) {
                 LOGGER.severe(ex.getMessage());
                 throw new Exception(ex.getMessage());
 
             }
-            
 
         } catch (Exception e) {
             Logger.getLogger(SignUpWindowController.class.getName()).log(Level.SEVERE, null, e);
@@ -298,10 +302,8 @@ public class SignUpWindowController {
 
     /**
      * @param event
-     * @author Jp
-     * when typeShow is true this will be set
-     * Visible passwordField when typeShow is false the passwd will ve set
-     * visible
+     * @author Jp when typeShow is true this will be set Visible passwordField
+     * when typeShow is false the passwd will ve set visible
      * @return typeShow (boolean)
      */
     public Boolean showPasswd(ActionEvent event) {

@@ -120,6 +120,8 @@ public class CommentWindowController {
     ObservableList<String> options = FXCollections.observableArrayList("Find All", "Find By Subject");
     @FXML
     private Button helpBTN;
+    @FXML
+    private Button backBtn;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -263,8 +265,6 @@ public class CommentWindowController {
                     this.eventoo.setId(6L);
                 }
             }
-            System.out.println(this.eventoo.getId());
-            System.out.println(this.user.getId());
             Date date = Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
             Coment comment = new Coment(this.eventoo.getId(), this.user.getId(), date, date, addMessage
                     .getPromptText(), addRating.getPromptText(),
@@ -291,28 +291,32 @@ public class CommentWindowController {
             }
         });
 
-        contextMenu.getItems().add(createNewCommentMenuIt);
+        // contextMenu.getItems().add(createNewCommentMenuIt);
+        // DELETE COMMENT
+        MenuItem deleteCommentMenuIt = new MenuItem("Delete comment");
+        deleteCommentMenuIt.setOnAction((event) -> {
+            try {
+                this.deleteComment();
+            } catch (BusinessLogicException ex) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
+                alert.showAndWait();
+                Logger.getLogger(CommentWindowController.class.getName())
+                        .log(Level.SEVERE, null, ex);
+            }
+        });
         commentTableView.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent e) -> {
+            if (commentTableView.getSelectionModel().getSelectedItem() != null) {
+                contextMenu.getItems().add(deleteCommentMenuIt);
+            } else {
+                contextMenu.getItems().clear();
+                contextMenu.getItems().add(createNewCommentMenuIt);
+            }
             if (e.getButton() == MouseButton.SECONDARY) {
+
                 contextMenu.show(commentTableView, ((e.getScreenX()
                         - e.getX()) + (e.getSceneX() - 110)), e.getScreenY());
             }
         });
-
-        if (commentTableView.getSelectionModel().getSelectedItem() != null) {
-            MenuItem deleteCommentMenuIt = new MenuItem("Delete comment");
-            deleteCommentMenuIt.setOnAction((event) -> {
-                try {
-                    this.deleteComment();
-                } catch (BusinessLogicException ex) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
-                    alert.showAndWait();
-                    Logger.getLogger(CommentWindowController.class.getName())
-                            .log(Level.SEVERE, null, ex);
-                }
-            });
-            contextMenu.getItems().add(deleteCommentMenuIt);
-        }
 
         stage.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
 
@@ -352,6 +356,7 @@ public class CommentWindowController {
         stage.setOnCloseRequest(this::cerrarVentana);
         helpBTN.setOnAction(this::showWindowHelper);
         informeBtn.setOnAction(this::showReport);
+        backBtn.setOnAction(this::closeWindow);
         stage.show();
         LOGGER.info("finished initStage(CommentWindow)");
     }
@@ -681,13 +686,14 @@ public class CommentWindowController {
                 if (isEditing()) {
                     if (datePicker != null && getDate() == LocalDate.now()) {
                         datePicker.setValue(getDate());
+                        Alert alert = new Alert(Alert.AlertType.ERROR,
+                                "la fecha tiene que ser la actual", ButtonType.OK);
+                        alert.showAndWait();
                     }
                     setText(null);
                     setGraphic(datePicker);
                 } else {
-                    Alert alert = new Alert(Alert.AlertType.ERROR,
-                            "la fecha tiene que ser la actual", ButtonType.OK);
-                    alert.showAndWait();
+
                     setText(getDate().format(DateTimeFormatter
                             .ofLocalizedDate(FormatStyle.MEDIUM)));
                     setGraphic(null);
@@ -715,4 +721,32 @@ public class CommentWindowController {
         return this.commentCount = count;
     }
 
+    private void closeWindow(ActionEvent event) {
+        try {
+            //Gonna initialition a new Stage
+            Stage mainStage = new Stage();
+            // we gonna create a URL for get the fxml view
+            URL viewLink = getClass().getResource("/ofc2_cliente/ui/EventWindow.fxml");
+
+            // initialition loader
+            FXMLLoader loader = new FXMLLoader(viewLink);
+            //make the root with the loader
+            Parent root = (Parent) loader.load();
+            stage.getIcons().add(new Image(this.getClass().getResource("/ofc2_cliente/ui/resources/favicon.ico").toString()));
+            //Get the controller
+            EventWindowController eventWindowController
+                    = ((EventWindowController) loader.getController());
+            eventWindowController.getUser(this.user);
+            //set the stage
+            eventWindowController.setStage(mainStage);
+            //start the stage
+            eventWindowController.initStage(root);
+            //close the actually View
+            this.stage.close();
+            event.consume();
+        } catch (IOException ex) {
+            Logger.getLogger(LogedWindowController.class.getName())
+                    .log(Level.SEVERE, null, ex);
+        }
+    }
 }

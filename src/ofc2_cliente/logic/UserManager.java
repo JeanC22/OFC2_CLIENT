@@ -6,7 +6,6 @@
 package ofc2_cliente.logic;
 
 import javax.ws.rs.ClientErrorException;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 
 /**

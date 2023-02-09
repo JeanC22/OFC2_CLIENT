@@ -186,7 +186,7 @@ public class SignInWindowController {
                 LogedWindowController logedStageController
                         = ((LogedWindowController) loader.getController());
                 //send te user
-                logedStageController.getUser(userLoged);
+                logedStageController.getUser(client);
                 logedStageController.setStage(loginStage);
                 logedStageController.initStage(root);
 

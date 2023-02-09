@@ -36,7 +36,7 @@ import ofc2_cliente.model.User;
  * @author DarkD
  */
 public class ProfileWindowController {
-
+    
     @FXML
     private Pane OFC_LOGED;
     @FXML
@@ -50,6 +50,8 @@ public class ProfileWindowController {
     private static final Logger LOGGER = Logger.getLogger(ProfileWindowController.class.getName());
     private Stage stage;
     private User user;
+    @FXML
+    private Button backBtn;
 
     /**
      * setStage
@@ -57,7 +59,7 @@ public class ProfileWindowController {
      * @param stage
      */
     public void setStage(Stage stage) {
-
+        
         this.stage = stage;
     }
 
@@ -76,11 +78,12 @@ public class ProfileWindowController {
         //set the Welcome Message
         stage.setOnCloseRequest(this::cerrarVentana);
         stage.getIcons().add(new Image(this.getClass().getResource("/ofc2_cliente/ui/resources/favicon.ico").toString()));
-
+        
         usernameLabel.setText(this.user.getUsername());
         emailLabel.setText(this.user.getEmail());
         fullnameLabel.setText(this.user.getFullName());
         changePasswdBtn.setOnAction(this::openModalChangePasswd);
+        backBtn.setOnAction(this::closeWindow);
         stage.setTitle("OFC Profile View");
         stage.show();
         LOGGER.info("Stage Started");
@@ -102,10 +105,10 @@ public class ProfileWindowController {
      * @param event
      */
     public void cerrarVentana(WindowEvent event) {
-
+        
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setContentText("Quiere salir de la aplicacion?");
-
+        
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
             Platform.exit();
@@ -134,20 +137,50 @@ public class ProfileWindowController {
             modalStageControllerProfile.setStage(modalStage);
             modalStageControllerProfile.initStage(rootModal);
             modalStage.show();
-
+            
             LOGGER.info("Method open modal finished");
-
+            
         } catch (IOException ex) {
             Logger.getLogger(CommentWindowController.class.getName()).log(Level.SEVERE, null, ex);
             Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
             alert.showAndWait();
         }
-
+        
     }
-
+    
     public void setDataUser(WindowEvent event) {
         usernameLabel.setText(user.getUsername());
-
+        
     }
+    
+    private void closeWindow(ActionEvent event) {
+        try {
+            //Gonna initialition a new Stage
+            Stage mainStage = new Stage();
+            // we gonna create a URL for get the fxml view
+            URL viewLink = getClass().getResource("/ofc2_cliente/ui/LogedWindow.fxml");
 
+            // initialition loader
+            FXMLLoader loader = new FXMLLoader(viewLink);
+            //make the root with the loader
+            Parent root = (Parent) loader.load();
+            stage.getIcons().add(new Image(this.getClass().getResource("/ofc2_cliente/ui/resources/favicon.ico").toString()));
+            //Get the controller
+            LogedWindowController logedWindowController
+                    = ((LogedWindowController) loader.getController());
+            logedWindowController.getUser(this.user);
+            //set the stage
+            logedWindowController.setStage(mainStage);
+            //start the stage
+            logedWindowController.initStage(root);
+            //close the actually View
+            this.stage.close();
+            event.consume();
+        } catch (IOException ex) {
+            Logger.getLogger(LogedWindowController.class.getName())
+                    .log(Level.SEVERE, null, ex);
+        }
+        this.stage.close();
+        event.consume();
+    }
 }

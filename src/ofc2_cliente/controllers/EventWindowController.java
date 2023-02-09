@@ -40,6 +40,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -111,6 +112,8 @@ public class EventWindowController {
     ObservableList<Event> events;
     ObservableList<String> combo = FXCollections.observableArrayList("FindByActivity", "FindByName", "FindByDate", "FindAll");
     private static final Logger LOGGER = Logger.getLogger("ofc2_cliente.Controllers");
+    @FXML
+    private Button backBtn;
 
     /**
      * setStage
@@ -168,7 +171,7 @@ public class EventWindowController {
             modifyMenu.setOnAction(this::createModifyWindowMod);
             deleteMenu.setOnAction(this::deleteData);
             showComents.setOnAction(this::showComent);
-
+            backBtn.setOnAction(this::closeWindow);
             helpBtn.setOnAction(this::showWindowHelper);
 
             stage.show();
@@ -281,6 +284,7 @@ public class EventWindowController {
     /**
      * the method is to enable and disable buttons depending on whether we have
      * selected a row in the table.
+     *
      * @param a
      * @param oldValue
      * @param newValue
@@ -303,6 +307,7 @@ public class EventWindowController {
      *
      * @param event
      */
+    @FXML
     public void deleteData(ActionEvent event) {
 
         Event even = ((Event) eventTable.getSelectionModel().getSelectedItem());
@@ -334,6 +339,7 @@ public class EventWindowController {
      *
      * @param event
      */
+    @FXML
     public void generateReport(ActionEvent event) {
         try {
             JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/ofc2_cliente/report/eventReport.jrxml"));
@@ -356,6 +362,7 @@ public class EventWindowController {
      *
      * @param event
      */
+    @FXML
     public void createModifyWindowCre(ActionEvent event) {
 
         try {
@@ -390,6 +397,7 @@ public class EventWindowController {
      *
      * @param event
      */
+    @FXML
     public void createModifyWindowMod(ActionEvent event) {
         Event even = ((Event) eventTable.getSelectionModel().getSelectedItem());
 
@@ -419,6 +427,7 @@ public class EventWindowController {
 
     }
 
+    @FXML
     public void showWindowHelper(ActionEvent event) {
 
         try {
@@ -451,6 +460,7 @@ public class EventWindowController {
      *
      * @param event
      */
+    @FXML
     public void find(ActionEvent event) {
         String value;
         ObservableList<Event> events = null;
@@ -526,7 +536,7 @@ public class EventWindowController {
                     = ((CommentWindowController) loader.getController());
             //set the stage
             commentWindowController.getEvent(eventooo);
-            commentWindowController.getUser(user);
+            commentWindowController.getUser(this.user);
             commentWindowController.setStage(mainStage);
             //start the stage
             try {
@@ -570,6 +580,37 @@ public class EventWindowController {
         } else {
             event.consume();
         }
+    }
+
+    private void closeWindow(ActionEvent event) {
+        try {
+            //Gonna initialition a new Stage
+            Stage mainStage = new Stage();
+            // we gonna create a URL for get the fxml view
+            URL viewLink = getClass().getResource("/ofc2_cliente/ui/LogedWindow.fxml");
+
+            // initialition loader
+            FXMLLoader loader = new FXMLLoader(viewLink);
+            //make the root with the loader
+            Parent root = (Parent) loader.load();
+            stage.getIcons().add(new Image(this.getClass().getResource("/ofc2_cliente/ui/resources/favicon.ico").toString()));
+            //Get the controller
+            LogedWindowController logedWindowController
+                    = ((LogedWindowController) loader.getController());
+            logedWindowController.getUser(this.user);
+            //set the stage
+            logedWindowController.setStage(mainStage);
+            //start the stage
+            logedWindowController.initStage(root);
+            //close the actually View
+            this.stage.close();
+            event.consume();
+        } catch (IOException ex) {
+            Logger.getLogger(LogedWindowController.class.getName())
+                    .log(Level.SEVERE, null, ex);
+        }
+        this.stage.close();
+        event.consume();
     }
 
     private LocalDate getDate(Date date) {
