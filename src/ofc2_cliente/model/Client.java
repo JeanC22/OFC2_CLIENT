@@ -5,28 +5,25 @@
  */
 package ofc2_cliente.model;
 
-
-
 import java.io.Serializable;
 import java.util.List;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-
 
 /**
  *
  * @author 2dam
  */
-
+@XmlRootElement
 public class Client extends User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private List<Coment> comentarios;
-    
+
     private List<Routine> rutinas;
 
     private List<Event> events;
-
 
     public List<Event> getEvents() {
         return events;
@@ -34,8 +31,8 @@ public class Client extends User implements Serializable {
 
     public void setEvents(List<Event> events) {
         this.events = events;
-    }    
-    
+    }
+
     @XmlTransient
     public List<Coment> getComentarios() {
         return comentarios;
@@ -54,6 +51,4 @@ public class Client extends User implements Serializable {
         this.rutinas = rutinas;
     }
 
-  
-    
 }

@@ -66,6 +66,7 @@ public class SignInWindowController {
     private Pane OFC_SIGN_IN;
     @FXML
     private Hyperlink forgotPassword;
+    private User client;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -171,10 +172,10 @@ public class SignInWindowController {
 
             userLoged.setUsername(userNameTxTF.getText());
             userLoged.setPassword(passwdTxPF.getText());
-
+            client = new Client();
             try {
 
-                userLoged = userFac.getFactory().find_XML(new GenericType<User>() {
+                this.client = userFac.getFactory().find_XML(new GenericType<Client>() {
                 }, userLoged.getUsername(), userLoged.getPassword());
                 Stage loginStage = new Stage();
 

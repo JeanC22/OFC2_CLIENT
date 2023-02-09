@@ -149,7 +149,7 @@ public class CommentWindowController {
      * @author Jp
      * @param root
      * @throws ofc2_cliente.logic.BusinessLogicException
-     * 
+     *
      */
     public void initStage(Parent root) throws BusinessLogicException {
 
@@ -214,10 +214,14 @@ public class CommentWindowController {
                 });
         //Show window.messageComment.setCellValueFactory(
         try {
+            LOGGER.severe("FIND ALL COMMENTS");
+            LOGGER.severe("--------------------SEARCHING FOR A COMMENT----------------");
             comments = FXCollections.observableArrayList(commentFactory.getFactory().
                     findAllComents_XML(new GenericType<List<Coment>>() {
                     }));
+            LOGGER.severe("--------------------COMMENTS SEARCHED----------------");
             commentTableView.setItems(comments);
+            LOGGER.severe("--------------------COMMENTS SETTED----------------");
 
         } catch (BusinessLogicException ex) {
             Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
@@ -294,27 +298,35 @@ public class CommentWindowController {
                         - e.getX()) + (e.getSceneX() - 110)), e.getScreenY());
             }
         });
-        MenuItem deleteCommentMenuIt = new MenuItem("Delete comment");
-        deleteCommentMenuIt.setOnAction((event) -> {
-            try {
-                this.deleteComment();
-            } catch (BusinessLogicException ex) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
-                alert.showAndWait();
-                Logger.getLogger(CommentWindowController.class.getName())
-                        .log(Level.SEVERE, null, ex);
-            }
-        });
 
-        contextMenu.getItems().add(deleteCommentMenuIt);
+        if (commentTableView.getSelectionModel().getSelectedItem() != null) {
+            MenuItem deleteCommentMenuIt = new MenuItem("Delete comment");
+            deleteCommentMenuIt.setOnAction((event) -> {
+                try {
+                    this.deleteComment();
+                } catch (BusinessLogicException ex) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
+                    alert.showAndWait();
+                    Logger.getLogger(CommentWindowController.class.getName())
+                            .log(Level.SEVERE, null, ex);
+                }
+            });
+            contextMenu.getItems().add(deleteCommentMenuIt);
+        }
 
         stage.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
 
             if (commentTableView.getSelectionModel().getSelectedItem() != null
                     && e.getCode() == KeyCode.ENTER) {
+                LOGGER.severe("UPDATING A COMMENT");
+
                 try {
                     commentRest.editComent_XML(commentTableView
                             .getSelectionModel().getSelectedItem());
+                    LOGGER.severe("--------------------COMMENT UPDATED----------------");
+                    LOGGER.severe(commentTableView
+                            .getSelectionModel().getSelectedItem().toString());
+                    LOGGER.severe("----------------------------------------------------");
                     commentTableView.refresh();
                 } catch (BusinessLogicException ex) {
                     Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
@@ -405,7 +417,7 @@ public class CommentWindowController {
                 //will use different search engines.
                 switch (optionSelected) {
                     case "Find All":
-
+                        LOGGER.severe("Searching A COMMENT");
                         coments = FXCollections.observableArrayList(commentRest.
                                 findAllComents_XML(new GenericType<List<Coment>>() {
                                 }));
@@ -502,9 +514,13 @@ public class CommentWindowController {
     }
 
     private void newCommentCommit(Coment coment) throws BusinessLogicException {
+        LOGGER.severe("CREATING A NEW COMMENT");
         try {
             commentRest.createComent_XML(coment);
             commentTableView.refresh();
+            LOGGER.severe("--------------------COMMENT CREATED----------------");
+            LOGGER.severe(coment.toString());
+            LOGGER.severe("----------------------------------------------------");
         } catch (BusinessLogicException ex) {
             Logger.getLogger(CommentWindowController.class.getName())
                     .log(Level.SEVERE, null, ex);
@@ -516,15 +532,19 @@ public class CommentWindowController {
     }
 
     private void deleteComment() throws BusinessLogicException {
-
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setContentText("Do you want to delete this comment?");
         Optional<ButtonType> result = alert.showAndWait();
+        LOGGER.severe("DELETING A COMMENT");
         if (result.get() == ButtonType.OK) {
             System.out.println("Deleting: " + this.comments.toString());
             String clientID = String.valueOf(commentTableView.getSelectionModel().getSelectedItem().getComentid().getClient_id());
             String eventID = String.valueOf(commentTableView.getSelectionModel().getSelectedItem().getComentid().getEvent_id());
             commentRest.deleteComent(clientID, eventID);
+            LOGGER.severe("--------------------COMMENT DELETED----------------");
+            LOGGER.severe(commentTableView
+                    .getSelectionModel().getSelectedItem().toString());
+            LOGGER.severe("----------------------------------------------------");
             commentTableView.getItems().remove(commentTableView
                     .getSelectionModel().getSelectedItem());
             commentTableView.getSelectionModel().clearSelection();
@@ -659,12 +679,15 @@ public class CommentWindowController {
                 setGraphic(null);
             } else {
                 if (isEditing()) {
-                    if (datePicker != null) {
+                    if (datePicker != null && getDate() == LocalDate.now()) {
                         datePicker.setValue(getDate());
                     }
                     setText(null);
                     setGraphic(datePicker);
                 } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR,
+                            "la fecha tiene que ser la actual", ButtonType.OK);
+                    alert.showAndWait();
                     setText(getDate().format(DateTimeFormatter
                             .ofLocalizedDate(FormatStyle.MEDIUM)));
                     setGraphic(null);
