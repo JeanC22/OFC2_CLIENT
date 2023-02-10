@@ -10,7 +10,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" stylesheets="@resources/style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofc2_cliente.controllers.CommentWindowController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" stylesheets="@resources/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ofc2_cliente.controllers.CommentWindowController">
     <children>
         <fx:include fx:id="menuBar" source="menu.fxml" /> 
         <TableView fx:id="commentTableView" editable="true" layoutX="112.0" layoutY="200.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" style="-fx-border-radius: 10; -fx-border-color: #FFE98F; -fx-border-width: 2px; -fx-border-insets: -3;">
@@ -42,7 +42,7 @@
                 <Image url="@resources/OFCLogo.png" />
             </image>
         </ImageView>
-        <ComboBox fx:id="filterMenu" layoutX="543.0" layoutY="148.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="150.0" style="-fx-text-fill: #fff; -fx-border-color: #000;" />
+        <ComboBox fx:id="filterMenu" layoutX="515.0" layoutY="148.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="178.0" style="-fx-text-fill: #fff; -fx-border-color: #000;" />
       <Button fx:id="helpBTN" defaultButton="true" layoutX="693.0" layoutY="667.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="76.0" text="Help" />
       <Button fx:id="backBtn" layoutX="92.0" layoutY="83.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="45.0" prefWidth="65.0" style="-fx-background-color: none; -fx-border-color: none;">
          <graphic>

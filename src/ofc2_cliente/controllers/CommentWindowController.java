@@ -216,14 +216,14 @@ public class CommentWindowController {
                 });
         //Show window.messageComment.setCellValueFactory(
         try {
-            LOGGER.severe("FIND ALL COMMENTS");
-            LOGGER.severe("--------------------SEARCHING FOR A COMMENT----------------");
+            LOGGER.info("FIND ALL COMMENTS");
+            LOGGER.info("--------------------SEARCHING FOR A COMMENT----------------");
             comments = FXCollections.observableArrayList(commentFactory.getFactory().
                     findAllComents_XML(new GenericType<List<Coment>>() {
                     }));
-            LOGGER.severe("--------------------COMMENTS SEARCHED----------------");
+            LOGGER.info("--------------------COMMENTS SEARCHED----------------");
             commentTableView.setItems(comments);
-            LOGGER.severe("--------------------COMMENTS SETTED----------------");
+            LOGGER.info("--------------------COMMENTS SETTED----------------");
 
         } catch (BusinessLogicException ex) {
             Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
@@ -306,6 +306,7 @@ public class CommentWindowController {
         });
         commentTableView.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent e) -> {
             if (commentTableView.getSelectionModel().getSelectedItem() != null) {
+                contextMenu.getItems().clear();
                 contextMenu.getItems().add(deleteCommentMenuIt);
             } else {
                 contextMenu.getItems().clear();
@@ -322,15 +323,15 @@ public class CommentWindowController {
 
             if (commentTableView.getSelectionModel().getSelectedItem() != null
                     && e.getCode() == KeyCode.ENTER) {
-                LOGGER.severe("UPDATING A COMMENT");
+                LOGGER.info("UPDATING A COMMENT");
 
                 try {
                     commentRest.editComent_XML(commentTableView
                             .getSelectionModel().getSelectedItem());
-                    LOGGER.severe("--------------------COMMENT UPDATED----------------");
-                    LOGGER.severe(commentTableView
+                    LOGGER.info("--------------------COMMENT UPDATED----------------");
+                    LOGGER.info(commentTableView
                             .getSelectionModel().getSelectedItem().toString());
-                    LOGGER.severe("----------------------------------------------------");
+                    LOGGER.info("----------------------------------------------------");
                     commentTableView.refresh();
                 } catch (BusinessLogicException ex) {
                     Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
@@ -422,7 +423,7 @@ public class CommentWindowController {
                 //will use different search engines.
                 switch (optionSelected) {
                     case "Find All":
-                        LOGGER.severe("Searching A COMMENT");
+                        LOGGER.info("Searching ALL COMMENTS");
                         coments = FXCollections.observableArrayList(commentRest.
                                 findAllComents_XML(new GenericType<List<Coment>>() {
                                 }));
@@ -431,6 +432,8 @@ public class CommentWindowController {
                         }
                         break;
                     case "Find By Subject":
+                        LOGGER.info("Searching BY SUBJECT");
+
                         coments = FXCollections
                                 .observableArrayList(commentFactory.getFactory()
                                         .find_XML(new GenericType<List<Coment>>() {
@@ -519,13 +522,13 @@ public class CommentWindowController {
     }
 
     private void newCommentCommit(Coment coment) throws BusinessLogicException {
-        LOGGER.severe("CREATING A NEW COMMENT");
+        LOGGER.info("CREATING A NEW COMMENT");
         try {
             commentRest.createComent_XML(coment);
             commentTableView.refresh();
-            LOGGER.severe("--------------------COMMENT CREATED----------------");
-            LOGGER.severe(coment.toString());
-            LOGGER.severe("----------------------------------------------------");
+            LOGGER.info("--------------------COMMENT CREATED----------------");
+            LOGGER.info(coment.toString());
+            LOGGER.info("----------------------------------------------------");
         } catch (BusinessLogicException ex) {
             Logger.getLogger(CommentWindowController.class.getName())
                     .log(Level.SEVERE, null, ex);
@@ -540,16 +543,16 @@ public class CommentWindowController {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setContentText("Do you want to delete this comment?");
         Optional<ButtonType> result = alert.showAndWait();
-        LOGGER.severe("DELETING A COMMENT");
+        LOGGER.info("DELETING A COMMENT");
         if (result.get() == ButtonType.OK) {
             System.out.println("Deleting: " + this.comments.toString());
             String clientID = String.valueOf(commentTableView.getSelectionModel().getSelectedItem().getComentid().getClient_id());
             String eventID = String.valueOf(commentTableView.getSelectionModel().getSelectedItem().getComentid().getEvent_id());
             commentRest.deleteComent(clientID, eventID);
-            LOGGER.severe("--------------------COMMENT DELETED----------------");
-            LOGGER.severe(commentTableView
+            LOGGER.info("--------------------COMMENT DELETED----------------");
+            LOGGER.info(commentTableView
                     .getSelectionModel().getSelectedItem().toString());
-            LOGGER.severe("----------------------------------------------------");
+            LOGGER.info("----------------------------------------------------");
             commentTableView.getItems().remove(commentTableView
                     .getSelectionModel().getSelectedItem());
             commentTableView.getSelectionModel().clearSelection();
@@ -684,12 +687,14 @@ public class CommentWindowController {
                 setGraphic(null);
             } else {
                 if (isEditing()) {
-                    if (datePicker != null && getDate() == LocalDate.now()) {
+                    Date n = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
+                    Date d = Date.from(datePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+                    if (datePicker != null && n == d) {
                         datePicker.setValue(getDate());
-                        Alert alert = new Alert(Alert.AlertType.ERROR,
-                                "la fecha tiene que ser la actual", ButtonType.OK);
-                        alert.showAndWait();
                     }
+                    Alert alert = new Alert(Alert.AlertType.ERROR,
+                            "la fecha tiene que ser la actual arriba", ButtonType.OK);
+                    alert.showAndWait();
                     setText(null);
                     setGraphic(datePicker);
                 } else {
@@ -706,8 +711,17 @@ public class CommentWindowController {
             datePicker.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
             datePicker.setOnAction((e) -> {
                 System.out.println("Committed: " + datePicker.getValue().toString());
-                commitEdit(Date.from(datePicker.getValue()
-                        .atStartOfDay(ZoneId.systemDefault()).toInstant()));
+                Date d = Date.from(datePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+                Date n = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
+                if (d.equals(n)) {
+                    commitEdit(Date.from(datePicker.getValue()
+                            .atStartOfDay(ZoneId.systemDefault()).toInstant()));
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR,
+                            "la fecha tiene que ser la actual", ButtonType.OK);
+                    alert.showAndWait();
+                }
+
             });
         }
 
